@@ -1,0 +1,2332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OrbitRP — Police SOPs</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Roboto+Condensed:wght@300;400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:        #0a0c10;
+  --surface:   #111318;
+  --surface2:  #171b22;
+  --surface3:  #1e2330;
+  --border:    #252b38;
+  --border2:   #2e3648;
+  --accent:    #2d7dd2;
+  --accent2:   #1a5fa8;
+  --accent-glow: rgba(45,125,210,0.18);
+  --gold:      #e8b84b;
+  --gold-dim:  rgba(232,184,75,0.12);
+  --red:       #e03c3c;
+  --red-dim:   rgba(224,60,60,0.12);
+  --green:     #3cb872;
+  --green-dim: rgba(60,184,114,0.12);
+  --amber:     #e87c3e;
+  --amber-dim: rgba(232,124,62,0.12);
+  --purple:    #9b6dff;
+  --purple-dim:rgba(155,109,255,0.12);
+  --text:      #dce2ee;
+  --text-dim:  #8b95aa;
+  --text-muted:#525c72;
+  --sidebar-w: 270px;
+  --font-head: 'Rajdhani', sans-serif;
+  --font-body: 'Roboto Condensed', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:18px;line-height:1.65;display:flex;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--accent2)}
+
+/* SIDEBAR */
+#sidebar{width:var(--sidebar-w);height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;overflow-y:auto;overflow-x:hidden;z-index:100;transition:transform .3s ease;scrollbar-width:thin;scrollbar-color:var(--border2) var(--surface)}
+#sidebar::-webkit-scrollbar{width:8px}
+#sidebar::-webkit-scrollbar-track{background:var(--surface)}
+#sidebar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;border:1px solid var(--surface)}
+#sidebar::-webkit-scrollbar-thumb:hover{background:var(--accent2)}
+.sidebar-brand{padding:24px 20px 20px;border-bottom:1px solid var(--border)}
+.brand-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent-glow);border:1px solid var(--accent2);border-radius:4px;padding:3px 10px;font-family:var(--font-mono);font-size:13px;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.brand-badge::before{content:'●';font-size:10px;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.brand-title{font-family:var(--font-head);font-size:25px;font-weight:700;color:#fff;line-height:1.1;letter-spacing:.5px}
+.brand-sub{font-size:14px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px;font-family:var(--font-mono)}
+.sidebar-search{padding:14px 14px 0}
+.search-wrap{position:relative}
+.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none}
+#search{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:8px 10px 8px 34px;color:var(--text);font-family:var(--font-body);font-size:13px;outline:none;transition:border-color .2s}
+#search::placeholder{color:var(--text-muted)}
+#search:focus{border-color:var(--accent)}
+.nav-section-label{padding:18px 16px 6px;font-family:var(--font-mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;color:var(--text-dim);text-decoration:none;font-size:15px;font-family:var(--font-body);border-left:2px solid transparent;transition:all .2s;cursor:pointer}
+.nav-item:hover{background:var(--surface2);color:var(--text);border-left-color:var(--border2)}
+.nav-item.active{background:var(--accent-glow);color:var(--accent);border-left-color:var(--accent)}
+.nav-icon{width:16px;text-align:center;font-size:17px;flex-shrink:0}
+.nav-num{margin-left:auto;font-family:var(--font-mono);font-size:13px;color:var(--text-muted);background:var(--surface3);padding:1px 6px;border-radius:10px}
+
+/* MAIN */
+#main{margin-left:var(--sidebar-w);flex:1;max-width:1500px;padding:48px 52px}
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.version-badge{font-family:var(--font-mono);font-size:13px;padding:3px 10px;border-radius:20px;border:1px solid var(--border2);color:var(--text-muted);letter-spacing:1px}
+.status-pill{font-family:var(--font-mono);font-size:13px;padding:3px 10px;border-radius:20px;background:var(--green-dim);border:1px solid var(--green);color:var(--green);letter-spacing:1px}
+.status-pill::before{content:'● ';font-size:11px}
+.page-header{margin-bottom:52px}
+.dept-stripe{width:48px;height:4px;background:linear-gradient(90deg,var(--accent),var(--purple));border-radius:2px;margin-bottom:16px}
+.page-title{font-family:var(--font-head);font-size:50px;font-weight:700;color:#fff;line-height:1;letter-spacing:.5px;margin-bottom:10px}
+.page-sub{color:var(--text-dim);font-size:25px;max-width:800px;line-height:1.6}
+
+/* SECTION */
+.sop-section{margin-bottom:56px;animation:fadeUp .4s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.section-header{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.section-num{font-family:var(--font-mono);font-size:15px;color:var(--text-muted);background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 8px;letter-spacing:1px;flex-shrink:0}
+.section-icon{font-size:25px}
+.section-title{font-family:var(--font-head);font-size:29px;font-weight:700;color:#fff;letter-spacing:.3px;flex:1}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:10px;overflow:hidden;transition:border-color .2s}
+.card:hover{border-color:rgba(255,255,255,0.55);box-shadow:0 0 0 1px rgba(255,255,255,0.15)}
+.card-header{display:flex;align-items:center;gap:15px;padding:14px 18px;cursor:pointer;user-select:none}
+.card-id{font-family:var(--font-mono);font-size:15px;color:var(--accent);flex-shrink:0;min-width:36px}
+.card-title{font-family:var(--font-head);font-size:20px;font-weight:600;color:var(--text);flex:1;letter-spacing:.2px}
+.card-chevron{color:var(--text-muted);font-size:15px;transition:transform .2s;flex-shrink:0}
+.card.open .card-chevron{transform:rotate(180deg)}
+.card.open .card-title{color:#fff}
+.card.open{border-color:var(--accent2)}
+.card-body{display:none;padding:0 18px 18px;border-top:1px solid var(--border)}
+.card.open .card-body{display:block;padding-top:16px}
+.card-body p{color:var(--text-dim);font-size:17px;margin-bottom:10px}
+.card-body p:last-child{margin-bottom:0}
+.card-body strong{color:var(--text);font-weight:700}
+
+/* STATE GRID */
+.state-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:640px){.state-grid{grid-template-columns:1fr}}
+.state-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;display:flex;align-items:flex-start;gap:14px;transition:border-color .2s,transform .15s}
+.state-card:hover{border-color:var(--border2);transform:translateY(-1px)}
+.state-badge{font-family:var(--font-mono);font-size:15px;font-weight:500;padding:4px 10px;border-radius:5px;letter-spacing:.5px;flex-shrink:0;min-width:72px;text-align:center;margin-top:2px}
+.s-green{background:var(--green-dim);border:1px solid var(--green);color:var(--green)}
+.s-blue{background:var(--accent-glow);border:1px solid var(--accent);color:var(--accent)}
+.s-amber{background:var(--amber-dim);border:1px solid var(--amber);color:var(--amber)}
+.s-red{background:var(--red-dim);border:1px solid var(--red);color:var(--red)}
+.s-purple{background:var(--purple-dim);border:1px solid var(--purple);color:var(--purple)}
+.s-gold{background:var(--gold-dim);border:1px solid var(--gold);color:var(--gold)}
+.s-grey{background:var(--surface3);border:1px solid var(--border2);color:var(--text-muted)}
+.state-info .state-name{font-family:var(--font-head);font-size:20px;font-weight:700;color:#fff;letter-spacing:.2px}
+.state-info .state-desc{font-size:16px;color:var(--text-dim);margin-top:2px;line-height:1.4}
+
+/* NOTICE */
+.notice{border-radius:6px;padding:13px 16px;margin:14px 0;font-size:16px;display:flex;gap:10px;align-items:flex-start;line-height:1.5}
+.notice-icon{flex-shrink:0;margin-top:1px}
+.notice.info{background:var(--accent-glow);border-left:3px solid var(--accent);color:var(--text-dim)}
+.notice.warn{background:var(--amber-dim);border-left:3px solid var(--amber);color:var(--text-dim)}
+.notice.danger{background:var(--red-dim);border-left:3px solid var(--red);color:var(--text-dim)}
+.notice.success{background:var(--green-dim);border-left:3px solid var(--green);color:var(--text-dim)}
+.notice strong{color:var(--text)}
+
+/* LISTS */
+.sop-list{list-style:none;padding:0;margin:10px 0}
+.sop-list li{display:flex;gap:10px;padding:5px 0;font-size:18px;color:var(--text-dim);border-bottom:1px dashed var(--border)}
+.sop-list li:last-child{border-bottom:none}
+.sop-list li::before{content:'›';color:var(--accent);font-weight:700;flex-shrink:0}
+.sop-ol{list-style:none;counter-reset:sop;padding:0;margin:10px 0}
+.sop-ol li{counter-increment:sop;display:flex;gap:12px;align-items:baseline;padding:6px 0;font-size:18px;color:var(--text-dim);border-bottom:1px dashed var(--border)}
+.sop-ol li:last-child{border-bottom:none}
+.sop-ol li::before{content:counter(sop,decimal-leading-zero);font-family:var(--font-mono);font-size:15px;color:var(--accent);flex-shrink:0;min-width:20px}
+
+/* TABLE */
+.sop-table{width:100%;border-collapse:collapse;font-size:20px;margin:10px 0}
+.sop-table th{background:var(--surface3);color:var(--text);font-family:var(--font-mono);font-size:15px;letter-spacing:1.5px;text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border2)}
+.sop-table td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--text-dim);vertical-align:top}
+.sop-table tr:last-child td{border-bottom:none}
+.sop-table tr:hover td{background:var(--surface2)}
+.sop-table td:first-child{font-family:var(--font-mono);font-size:15px;color:var(--accent)}
+
+/* HIGHLIGHTS */
+.hl{color:var(--gold);font-weight:700}
+.hl-r{color:var(--red);font-weight:700}
+.hl-crit{background:var(--red-dim);color:var(--red);font-weight:700;padding:1px 7px;border-radius:4px;border:1px solid rgba(224,60,60,0.45);text-shadow:0 0 1px rgba(224,60,60,0.3)}
+.hl-g{color:var(--green);font-weight:700}
+.hl-b{color:var(--accent);font-weight:700}
+.hl-p{color:var(--purple);font-weight:700}
+
+/* SEARCH RESULTS */
+#search-results{display:none}
+#search-results.active{display:block}
+.result-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 18px;margin-bottom:8px;cursor:pointer;transition:border-color .2s}
+.result-item:hover{border-color:var(--accent2)}
+.result-section{font-family:var(--font-mono);font-size:15px;color:var(--text-muted);margin-bottom:4px;letter-spacing:1px}
+.result-title{font-family:var(--font-head);font-size:20px;color:#fff;font-weight:600}
+.result-snippet{font-size:16px;color:var(--text-muted);margin-top:4px}
+mark{background:var(--gold-dim);color:var(--gold);border-radius:2px;padding:0 2px}
+
+/* BACK TO TOP */
+#back-top{position:fixed;bottom:28px;right:28px;width:40px;height:40px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text-dim);cursor:pointer;font-size:20px;transition:all .2s;opacity:0;pointer-events:none}
+#back-top.visible{opacity:1;pointer-events:all}
+#back-top:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* TRAINING MODULE CARDS — top-level group dropdowns */
+.module-card{background:var(--surface2);border:1px solid var(--border2);border-radius:10px;margin-bottom:14px;overflow:hidden;transition:border-color .2s}
+.module-card:hover{border-color:var(--accent2)}
+.module-card.open{border-color:var(--accent)}
+.module-header{display:flex;align-items:center;gap:14px;padding:18px 22px;cursor:pointer;user-select:none;background:linear-gradient(90deg,var(--surface3),var(--surface2))}
+.module-num{font-family:var(--font-mono);font-size:13px;color:var(--text-muted);background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:3px 8px;letter-spacing:1px;flex-shrink:0}
+.module-icon{font-size:22px;flex-shrink:0}
+.module-title{font-family:var(--font-head);font-size:22px;font-weight:700;color:#fff;letter-spacing:.3px;flex:1}
+.module-meta{font-family:var(--font-mono);font-size:12px;color:var(--text-muted);letter-spacing:1px;background:var(--surface);padding:3px 8px;border-radius:10px;border:1px solid var(--border)}
+.module-chevron{color:var(--text-muted);font-size:16px;transition:transform .2s;flex-shrink:0}
+.module-card.open .module-chevron{transform:rotate(180deg)}
+.module-body{display:none;padding:18px 22px 6px;border-top:1px solid var(--border)}
+.module-card.open .module-body{display:block}
+.module-body .card{background:var(--surface)}
+
+/* MOBILE */
+.mob-toggle{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;cursor:pointer;font-size:21px}
+@media(max-width:760px){.mob-toggle{display:flex;align-items:center}#sidebar{transform:translateX(-100%)}#sidebar.open{transform:translateX(0)}#main{margin-left:0;padding:32px 20px;padding-top:64px}}
+
+/* FOOTER */
+.footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);font-family:var(--font-mono);font-size:15px;color:var(--text-muted);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+</style>
+</head>
+<body>
+
+<div class="mob-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</div>
+
+<nav id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-badge">ORBIT RP</div>
+    <div class="brand-title">Police</div>
+    <div class="brand-sub">Standard Operating Procedures</div>
+  </div>
+  <div class="sidebar-search">
+    <div class="search-wrap">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input id="search" type="text" placeholder="Search SOPs…" autocomplete="off"/>
+    </div>
+  </div>
+  <div class="nav-section-label">Contents</div>
+  <a class="nav-item active" href="#state-codes" onclick="setActive(this)"><span class="nav-icon">📡</span> State Codes <span class="nav-num">13</span></a>
+  <a class="nav-item" href="#conduct" onclick="setActive(this)"><span class="nav-icon">📋</span> General Conduct <span class="nav-num">6</span></a>
+  <a class="nav-item" href="#conduct-regs" onclick="setActive(this)"><span class="nav-icon">⚖️</span> Conduct Regulations <span class="nav-num">5</span></a>
+  <a class="nav-item" href="#roles" onclick="setActive(this)"><span class="nav-icon">🎖️</span> Role Responsibilities <span class="nav-num">7</span></a>
+  <a class="nav-item" href="#radio" onclick="setActive(this)"><span class="nav-icon">🎙️</span> Radio Procedures <span class="nav-num">6</span></a>
+  <a class="nav-item" href="#patrol" onclick="setActive(this)"><span class="nav-icon">🚔</span> Patrol Duties <span class="nav-num">5</span></a>
+  <a class="nav-item" href="#powers" onclick="setActive(this)"><span class="nav-icon">⚖️</span> Powers &amp; Offences <span class="nav-num">5</span></a>
+  <a class="nav-item" href="#stop-search" onclick="setActive(this)"><span class="nav-icon">🔍</span> Stop &amp; Search <span class="nav-num">6</span></a>
+  <a class="nav-item" href="#arrest" onclick="setActive(this)"><span class="nav-icon">🚨</span> Arrest Procedures <span class="nav-num">7</span></a>
+  <a class="nav-item" href="#pursuits" onclick="setActive(this)"><span class="nav-icon">🏎️</span> Vehicle Pursuits <span class="nav-num">6</span></a>
+  <a class="nav-item" href="#uof" onclick="setActive(this)"><span class="nav-icon">⚡</span> Use of Force <span class="nav-num">4</span></a>
+  <a class="nav-item" href="#scene" onclick="setActive(this)"><span class="nav-icon">🔶</span> Scene Management <span class="nav-num">6</span></a>
+  <a class="nav-item" href="#situations" onclick="setActive(this)"><span class="nav-icon">🗂️</span> Situational Guidance <span class="nav-num">10</span></a>
+  <a class="nav-item" href="#firearms" onclick="setActive(this)"><span class="nav-icon">🔫</span> Firearms Protocols <span class="nav-num">3</span></a>
+  <a class="nav-item" href="#mdt" onclick="setActive(this)"><span class="nav-icon">💻</span> MDT Usage <span class="nav-num">5</span></a>
+  <a class="nav-item" href="#critical" onclick="setActive(this)"><span class="nav-icon">🔴</span> Critical Incidents <span class="nav-num">4</span></a>
+  <a class="nav-item" href="#reports" onclick="setActive(this)"><span class="nav-icon">📝</span> Reports &amp; Logging <span class="nav-num">4</span></a>
+  <div class="nav-section-label" style="padding-top:20px;">Training</div>
+  <a class="nav-item" href="#training" onclick="setActive(this)"><span class="nav-icon">🎓</span> Training Modules <span class="nav-num">2</span></a>
+  <div class="nav-section-label" style="padding-top:20px;">Version</div>
+  <div style="padding:8px 16px 20px;font-family:var(--font-mono);font-size:10px;color:var(--text-muted)">SOP v2.8 · City of Orbit<br>Created by SR-1 C/Supt R.Jones</div>
+</nav>
+
+<main id="main">
+  <div class="topbar">
+    <span class="version-badge">SOP v2.8</span>
+    <span class="status-pill">IN EFFECT</span>
+  </div>
+
+  <header class="page-header">
+    <div class="dept-stripe"></div>
+    <h1 class="page-title">Police<br>Standard Operating Procedures</h1>
+    <p class="page-sub">This document sets out the official SOPs governing all officers of the Orbit Police Force operating within the City of Orbit. All procedures are aligned to a UK law enforcement framework. Officers are expected to be fully familiar with and adhere to these procedures at all times.</p>
+  </header>
+
+  <div id="search-results"></div>
+
+  <!-- STATE CODES -->
+  <section class="sop-section" id="state-codes">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <span class="section-icon">📡</span>
+      <h2 class="section-title">State Codes</h2>
+    </div>
+    <div class="notice info">
+      <span class="notice-icon">ℹ️</span>
+      <div>State codes must be broadcast over the main radio channel whenever your status changes. Your state must be <strong>accurate and kept up to date at all times</strong>. Incorrect state codes may result in unnecessary deployments and resource mismanagement.</div>
+    </div>
+    <div class="state-grid">
+      <div class="state-card" style="border-color:var(--red);box-shadow:0 0 0 1px var(--red-dim)"><span class="state-badge s-red">STATE 0</span><div class="state-info"><div class="state-name">Panic / Emergency</div><div class="state-desc">Extreme emergency only. Officer seriously injured in the line of duty or in immediate life-threatening danger. Press panic button simultaneously. All units respond at once.</div></div></div>
+      <div class="state-card"><span class="state-badge s-green">STATE 1</span><div class="state-info"><div class="state-name">Active</div><div class="state-desc">On duty and fully active. Ready for tasking and immediate deployment.</div></div></div>
+      <div class="state-card"><span class="state-badge s-green">STATE 2</span><div class="state-info"><div class="state-name">On Patrol</div><div class="state-desc">Active on patrol within the city. Available for calls and self-initiated activity.</div></div></div>
+      <div class="state-card"><span class="state-badge s-blue">STATE 3</span><div class="state-info"><div class="state-name">At Station, Available</div><div class="state-desc">Present at the station but available for deployment if required.</div></div></div>
+      <div class="state-card"><span class="state-badge s-grey">STATE 4</span><div class="state-info"><div class="state-name">On Break</div><div class="state-desc">On an authorised refreshment or rest break. Not available for tasking.</div></div></div>
+      <div class="state-card"><span class="state-badge s-blue">STATE 5</span><div class="state-info"><div class="state-name">En Route to Incident</div><div class="state-desc">Responding to an assigned call. Destination and call reference must be declared.</div></div></div>
+      <div class="state-card"><span class="state-badge s-blue">STATE 6</span><div class="state-info"><div class="state-name">At Scene</div><div class="state-desc">Physically present and actively dealing with an incident on the ground.</div></div></div>
+      <div class="state-card"><span class="state-badge s-amber">STATE 7</span><div class="state-info"><div class="state-name">Committed, Deployable</div><div class="state-desc">Currently dealing with a task but can be redeployed to a higher-priority incident.</div></div></div>
+      <div class="state-card"><span class="state-badge s-red">STATE 8</span><div class="state-info"><div class="state-name">Committed, Not Deployable</div><div class="state-desc">Fully committed to a task. Cannot be redeployed until released by a Sergeant.</div></div></div>
+      <div class="state-card"><span class="state-badge s-amber">STATE 9</span><div class="state-info"><div class="state-name">Prisoner Transport / Escort</div><div class="state-desc">Transporting or escorting a detainee. Destination must be declared over radio.</div></div></div>
+      <div class="state-card"><span class="state-badge s-purple">STATE 10</span><div class="state-info"><div class="state-name">Court</div><div class="state-desc">Attending court proceedings. Not available for operational deployment.</div></div></div>
+      <div class="state-card"><span class="state-badge s-grey">STATE 11</span><div class="state-info"><div class="state-name">Off Duty</div><div class="state-desc">End of shift. Signed off from active service. Vehicle must be returned to station.</div></div></div>
+      <div class="state-card"><span class="state-badge s-gold">STATE 12</span><div class="state-info"><div class="state-name">Confidential Message</div><div class="state-desc">Officer has a message or information that requires a secure, private channel. Do not discuss on open radio.</div></div></div>
+    </div>
+  </section>
+
+  <!-- GENERAL CONDUCT -->
+  <section class="sop-section" id="conduct">
+    <div class="section-header"><span class="section-num">02</span><span class="section-icon">📋</span><h2 class="section-title">General Conduct</h2></div>
+
+    <div class="card" data-section="General Conduct" data-title="Professional Standards">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">2.1</span><span class="card-title">Professional Standards</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>All Constables must maintain a high standard of conduct at all times. You are a representative of the force and your actions reflect on the division as a whole.</p>
+        <ul class="sop-list">
+          <li>Maintain a professional and respectful tone with the public, suspects, and colleagues at all times.</li>
+          <li>Uniform must be worn correctly at all times when on duty.</li>
+          <li>Officers must not engage in or condone misconduct by peers.</li>
+          <li>Do not discriminate, harass, or demean any individual regardless of their in-character status.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="General Conduct" data-title="Chain of Command">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">2.2</span><span class="card-title">Chain of Command</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The chain of command must be respected at all times. Orders from Sergeants and above must be followed unless clearly unlawful or in direct breach of these SOPs.</p>
+        <table class="sop-table">
+          <thead><tr><th>Rank</th><th>Command Tier</th><th>Role</th></tr></thead>
+          <tbody>
+            <!-- <tr><td>Chief Superintendent</td><td><span class="hl-p">Silver Command</span></td><td>Senior tactical command. Division-wide authority.</td></tr> -->
+            <tr><td>Superintendent</td><td><span class="hl-p">Silver Command</span></td><td>Tactical command. Supports Chief Inspectors across divisions and relays divisional matters to Gold Command.</td></tr>
+            <tr><td>Chief Inspector</td><td><span class="hl-b">Bronze Command</span></td><td>Scene and shift command. Manages Inspector-level deployments.</td></tr>
+            <tr><td>Inspector</td><td><span class="hl-b">Bronze Command</span></td><td>On-scene command. Authorises S60, pursuits, and key tactical decisions.</td></tr>
+            <tr><td>Sergeant</td><td><span class="hl-b">Bronze Command</span></td><td>Direct unit supervision. First point of escalation for officers.</td></tr>
+            <tr><td>Police Constable</td><td>Officer</td><td>Front-line response. Core operational unit.</td></tr>
+            <tr><td>Probationary PC</td><td>Officer (Probationer)</td><td>Front-line response under supervised development.</td></tr>
+          </tbody>
+        </table>
+        <div class="notice info">
+          <span class="notice-icon">ℹ️</span>
+          <div><strong>Escalation Protocol:</strong> Issues should be raised to the rank <strong>immediately above your own</strong>. That rank may resolve the matter or pass it further up the chain as appropriate. <span class="hl-r">No officer should skip a rank to raise an issue unless it is absolutely necessary</span> — for example, where the immediate superior is implicated, unavailable, or the situation demands urgent senior intervention.</div>
+        </div>
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>If you have a concern with an order, raise it <strong>after the incident</strong> through proper channels. Do not argue or refuse on scene unless the order is clearly unlawful.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="General Conduct" data-title="Uniform & Equipment Standards">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">2.3</span><span class="card-title">Uniform &amp; Equipment Standards</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <ul class="sop-list">
+          <li>Constables wear <span class="hl-b">standard patrol uniform</span> — high-vis or non-hi-vis depending on deployment type.</li>
+          <li>Body-worn video (BWV) must be activated prior to any engagement with a member of the public.</li>
+          <li>TASER must only be carried if the officer holds a valid <span class="hl">TASER Certification</span>.</li>
+          <li>Firearms are prohibited without an active Firearms Authority (FA).</li>
+          <li>Plain-clothes deployment is only authorised by Detective rank or above.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="General Conduct" data-title="Conduct Towards the Public">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">2.4</span><span class="card-title">Conduct Towards the Public</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Officers must treat every member of the public with dignity and respect regardless of background or prior criminal history. De-escalation is always the preferred approach.</p>
+        <ul class="sop-list">
+          <li>Introduce yourself with your name and collar number when engaging with the public.</li>
+          <li>Explain your actions clearly and proportionally to those involved.</li>
+          <li>Avoid unnecessary confrontation or inflammatory language.</li>
+          <li>Safeguarding of vulnerable individuals must always be considered.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="General Conduct" data-title="Complaints & Misconduct">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">2.5</span><span class="card-title">Complaints &amp; Misconduct</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Complaints fall into two categories: <strong>public complaints</strong> made against an officer by a member of the public, and <strong>internal complaints</strong> raised between colleagues or by an officer about another officer.</p>
+
+        <p><strong>Public Complaints</strong></p>
+        <ul class="sop-list">
+          <li>Any formal complaint from a member of the public must be reported to a <span class="hl">Sergeant or above</span>.</li>
+          <li>Officers must <strong>not</strong> attempt to resolve the complaint informally on scene — refer the complainant to the station.</li>
+          <li>The receiving Sergeant logs the complaint and escalates to an Inspector for review.</li>
+          <li>Officers under investigation may be placed on restricted duties pending outcome.</li>
+        </ul>
+
+        <p><strong>Internal Complaints &amp; HR</strong></p>
+        <ul class="sop-list">
+          <li>Complaints between officers — bullying, harassment, discrimination, conflict of conduct — are raised through the <span class="hl">HR function</span>.</li>
+          <li>HR matters are handled <strong>confidentially</strong> and outside the operational chain of command.</li>
+          <li>If the immediate supervisor is the subject of the complaint, raise it to the next available rank up the chain or directly to HR.</li>
+          <li>Retaliation against an officer who raises an internal complaint is itself a strikeable offence.</li>
+          <li>HR may refer matters to <span class="hl">Silver / Gold Command</span> for formal investigation where conduct breaches are identified.</li>
+        </ul>
+
+        <div class="notice danger"><span class="notice-icon">🚫</span><div>Officers must <strong>not</strong> interfere with, delay, or discourage a complaint from being made — public or internal. Doing so constitutes a <span class="hl-crit">SERIOUS BREACH OF PROFESSIONAL STANDARDS.</span></div></div>
+      </div>
+    </div>
+
+    <div class="card" data-section="General Conduct" data-title="Duty Log & Accountability">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">2.6</span><span class="card-title">Duty Log &amp; Accountability</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Officers must sign on and off duty via the MDT. All deployments, stops, and arrests must be logged accurately on the MDT within a reasonable timeframe of the incident occurring.</p>
+
+        <p><strong>Required content of an MDT entry:</strong></p>
+        <table class="sop-table">
+          <thead><tr><th>Field</th><th>Detail</th></tr></thead>
+          <tbody>
+            <tr><td>Names</td><td>Full name of every person involved — suspect(s), victim(s), and witnesses. Use PNC to confirm identity where possible.</td></tr>
+            <tr><td>Location</td><td>Exact location of the incident — street name, building, landmark, grid reference where available.</td></tr>
+            <tr><td>Time &amp; Date</td><td>Start and end time of the incident. Dates must be accurate to the day of occurrence.</td></tr>
+            <tr><td>Officer Details</td><td>Your name, collar number, and the names &amp; collar numbers of any supporting officers on scene.</td></tr>
+            <tr><td>Statement</td><td>A written, factual, first-person account of what occurred — what you saw, said, and did. No speculation or opinion.</td></tr>
+            <tr><td>Photographs</td><td>Photos of the scene, evidence in situ, injuries, vehicle positions, weapons, damage. Attach all relevant images to the log.</td></tr>
+            <tr><td>BWV Reference</td><td>Body-worn video footage reference for the incident. Every engagement that had BWV running must have the footage flagged on the MDT.</td></tr>
+            <tr><td>Outcome</td><td>Action taken — arrest, FPN, caution, no further action — and the offence(s) charged where applicable.</td></tr>
+            <tr><td>Exhibits</td><td>List every exhibit seized with its exhibit reference number.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>Incomplete MDT logs weaken cases and may lead to evidence being challenged at court. <strong>If a field is not applicable, mark it so — never leave it blank.</strong> Logs left open or missing key content may result in a strike.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POLICE CONDUCT REGULATIONS -->
+  <section class="sop-section" id="conduct-regs">
+    <div class="section-header"><span class="section-num">02b</span><span class="section-icon">⚖️</span><h2 class="section-title">Police Conduct Regulations</h2></div>
+
+    <div class="notice info">
+      <span class="notice-icon">ℹ️</span>
+      <div>This register sets out the conduct standards expected of every officer in the Orbit Police Force and the strike level applied where those standards are breached. All strikes are recorded on the officer's professional standards file. Repeated strikes at any level may escalate to the next tier at the reviewing officer's discretion.</div>
+    </div>
+
+    <div class="card" data-section="Conduct Regulations" data-title="Strike Tier Overview">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">CR.1</span><span class="card-title">Strike Tier Overview</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The Police Department operates a three-tier strike system. Each tier defines who investigates the breach, who authorises the strike, and the severity of conduct it covers.</p>
+        <table class="sop-table">
+          <thead><tr><th>Tier</th><th>Investigated By</th><th>Authorised By</th><th>Typical Severity</th></tr></thead>
+          <tbody>
+            <tr><td><span class="hl-g">Level 1</span></td><td>Sergeant</td><td>Sergeant</td><td>Minor breach &mdash; performance or procedural lapse</td></tr>
+            <tr><td><span class="hl">Level 2</span></td><td>Inspector</td><td>Chief Inspector</td><td>Moderate breach &mdash; meaningful misconduct or repeat L1</td></tr>
+            <tr><td><span class="hl-r">Level 3</span></td><td>Gold Command</td><td>Gold Command</td><td>Serious breach &mdash; significant misconduct, may lead to dismissal review</td></tr>
+            <tr><td><span class="hl-p">Dismissal</span></td><td>Gold Command</td><td>Gold Command</td><td>Gross misconduct &mdash; removal from the Force</td></tr>
+          </tbody>
+        </table>
+        <div class="notice warn">
+          <span class="notice-icon">&#9888;&#65039;</span>
+          <div>Three Level 1 strikes in a rolling period may escalate to a Level 2. Two Level 2 strikes may escalate to a Level 3. A Level 3 strike places the officer on a formal performance review and may trigger a Reg 15 (regulation 15 notice).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Conduct Regulations" data-title="Level 1 &mdash; Minor Breach">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">CR.2</span><span class="card-title">Level 1 &mdash; Minor Breach</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p><span class="state-badge s-green" style="display:inline-block;margin-bottom:10px">LEVEL 1 STRIKE</span></p>
+        <p>Level 1 strikes cover minor breaches of procedure, professionalism, or performance. These are addressed through correction and a written record &mdash; they do not on their own threaten the officer's position.</p>
+        <ul class="sop-list">
+          <li>Uniform standards not met whilst on duty.</li>
+          <li>BWV not activated for a routine engagement where it should have been.</li>
+          <li>Incorrect or outdated state code on radio.</li>
+          <li>Late submission of MDT logs (without prior approval).</li>
+          <li>Late submission of a Use of Force report (within 24 hrs of the deadline).</li>
+          <li>Minor radio discipline issues &mdash; talking over transmissions, unnecessary radio traffic.</li>
+          <li>Missing or incomplete handover at end of shift.</li>
+          <li>Failure to attend a shift briefing without a valid reason.</li>
+          <li>Minor procedural lapse during a stop or search (e.g. one GOWISELY element delivered out of order).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Conduct Regulations" data-title="Level 2 &mdash; Moderate Breach">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">CR.3</span><span class="card-title">Level 2 &mdash; Moderate Breach</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p><span class="state-badge s-amber" style="display:inline-block;margin-bottom:10px">LEVEL 2 STRIKE</span></p>
+        <p>Level 2 strikes cover meaningful breaches of conduct, repeated Level 1 behaviour, or actions that materially undermine the standards of the Force. A Level 2 strike sits permanently on the officer's record and may affect promotion.</p>
+        <ul class="sop-list">
+          <li>Repeatedly failing to activate BWV for engagements with the public.</li>
+          <li>Failing to deliver the full GOWISELY script during stop and search.</li>
+          <li>Failing to read formal rights at the point of detention.</li>
+          <li>Use of force without recording it on the MDT.</li>
+          <li>Driving without due care during a non-emergency response (no collision).</li>
+          <li>Disrespectful or unprofessional language towards the public, suspects, or colleagues.</li>
+          <li>Failing to follow a lawful order from a supervising rank without justification.</li>
+          <li>Breaching the chain of command &mdash; skipping ranks without legitimate reason.</li>
+          <li>Misuse of equipment for which the officer is trained (incorrect or careless deployment, no harm caused).</li>
+          <li>Three or more Level 1 strikes within a rolling period.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Conduct Regulations" data-title="Level 3 &mdash; Serious Breach">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">CR.4</span><span class="card-title">Level 3 &mdash; Serious Breach</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p><span class="state-badge s-red" style="display:inline-block;margin-bottom:10px">LEVEL 3 STRIKE</span></p>
+        <p>Level 3 strikes cover serious breaches that significantly undermine the integrity, safety, or legitimacy of the Force. A Level 3 places the officer on a formal performance review and may trigger a Reg 15. Two Level 3 strikes are grounds for a dismissal hearing.</p>
+        <ul class="sop-list">
+          <li>Disproportionate or unjustified use of force.</li>
+          <li>Deploying TASER, PAVA, baton or firearms without the required training ticket.</li>
+          <li>Unlawful stop and search &mdash; no reasonable grounds, or no GOWISELY at all.</li>
+          <li>Unlawful arrest &mdash; no grounds or no necessity test satisfied.</li>
+          <li>Falsifying or materially altering an MDT entry, statement, or exhibit log.</li>
+          <li>Discriminatory conduct towards the public or colleagues.</li>
+          <li>Interfering with, delaying, or discouraging a public complaint.</li>
+          <li>Engaging in a pursuit without authority or continuing one after abandonment was ordered.</li>
+          <li>Running PNC / MDT checks for personal reasons or on behalf of a third party.</li>
+          <li>Leaving a detainee unsupervised in a police vehicle.</li>
+          <li>Breaching the integrity of a critical incident scene.</li>
+          <li>Two or more Level 2 strikes within a rolling period.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Conduct Regulations" data-title="Gross Misconduct &mdash; Dismissal">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">CR.5</span><span class="card-title">Gross Misconduct &mdash; Dismissal</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p><span class="state-badge s-purple" style="display:inline-block;margin-bottom:10px">DISMISSAL</span></p>
+        <p>Gross misconduct is conduct so serious that the officer's continued service is incompatible with the standards of the Force. Dismissal is investigated by the Superintendent and authorised by Gold Command following a tribunal panel.</p>
+        <ul class="sop-list">
+          <li>Committing a criminal offence whilst on or off duty.</li>
+          <li>Corruption &mdash; accepting bribes, gratuities, or favours in exchange for police action or inaction.</li>
+          <li>Deliberately fabricating evidence, witness statements, or exhibits.</li>
+          <li>Disclosing confidential police information to unauthorised persons.</li>
+          <li>Assault on a member of the public, colleague, or detainee that is not lawful use of force.</li>
+          <li>Deliberate, malicious use of force causing serious injury.</li>
+          <li>Unauthorised discharge of a firearm.</li>
+          <li>Theft from the Force, a colleague, the public, or evidence stores.</li>
+          <li>Repeated dishonesty &mdash; lying to a Sergeant or above, in reports, or on the MDT.</li>
+          <li>Abuse of position for personal gain or to harm another.</li>
+          <li>Three or more Level 3 strikes within a rolling period.</li>
+        </ul>
+        <div class="notice danger">
+          <span class="notice-icon">&#128683;</span>
+          <div>Gross misconduct findings are recorded permanently and reported to Gold Command. The officer may be suspended from duty pending the outcome of the tribunal.</div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ROLE RESPONSIBILITIES -->
+  <section class="sop-section" id="roles">
+    <div class="section-header"><span class="section-num">03</span><span class="section-icon">🎖️</span><h2 class="section-title">Role Responsibilities</h2></div>
+
+    <div class="notice info">
+      <span class="notice-icon">ℹ️</span>
+      <div>The table below defines the key responsibilities assigned to each rank within the Police Department. Ranks are grouped by operational function: <strong>Executes</strong> (carry out day-to-day operations), <strong>Plans</strong> (develops and directs tactics), and <strong>Sets Priority Level</strong> (strategic command and governance).</div>
+    </div>
+
+    <div class="card" data-section="Role Responsibilities" data-title="Sergeants">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">3.1</span><span class="card-title">Sergeants</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p><span class="state-badge s-green" style="display:inline-block;margin-bottom:10px">EXECUTES</span></p>
+        <ul class="sop-list">
+          <li>Training and refreshers (Divisional)</li>
+          <li>Completing interviews (Response)</li>
+          <li>Overseeing PCs' day-to-day (Divisional)</li>
+          <li>Scene management (ALL)</li>
+          <li>Handling public complaints (ALL)</li>
+          <li>Authorise Level One Strikes (ALL)</li>
+          <li>PPC checklists (Response)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Role Responsibilities" data-title="Inspectors">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">3.2</span><span class="card-title">Inspectors</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p><span class="state-badge s-green" style="display:inline-block;margin-bottom:10px">EXECUTES</span></p>
+        <ul class="sop-list">
+          <li>Overseeing Sergeants (ALL)</li>
+          <li>Review complaints (ALL)</li>
+          <li>Issue Level Two Strikes (ALL)</li>
+          <li>Maintaining order of Sergeants (ALL)</li>
+          <li>Lead performance reviews (ALL)</li>
+          <li>Conduct / Initiate Reg 15s (ALL)</li>
+          <li>Authorise Level Two Strikes (ALL)</li>
+          <li>Divisional Intake — Interviews &amp; Applications</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Role Responsibilities" data-title="Chief Inspectors">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">3.3</span><span class="card-title">Chief Inspectors</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p><span class="state-badge s-blue" style="display:inline-block;margin-bottom:10px">PLANS</span></p>
+        <ul class="sop-list">
+          <li>Implements the daily focus from SUPT</li>
+          <li>Reviews complaint outcomes</li>
+          <li>Ensures policy and procedure</li>
+          <li>Acts as incident command for complex situations</li>
+          <li>Authorise Level Three Strikes (ALL)</li>
+          <li>Divisional Intake — Approval</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Role Responsibilities" data-title="Superintendent">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">3.4</span><span class="card-title">Superintendent</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p><span class="state-badge s-purple" style="display:inline-block;margin-bottom:10px">SILVER COMMAND</span></p>
+        <ul class="sop-list">
+          <li>Support the Chief Inspector in running the divisions</li>
+          <li>Assist Gold Command in implementing PD-wide changes</li>
+          <li>Present divisional changes &amp; proposals to Gold Command</li>
+          <li>Lead Major Operations within their division</li>
+          <li>Responsible for large-scale incident command</li>
+          <li>Responsible for performance, discipline and training standards</li>
+          <li>Authorise Level Three Strikes (ALL)</li>
+          <li>Budget Allocation</li>
+        </ul>
+      </div>
+    </div>
+
+    <!--
+    HIDDEN RANK — Chief Superintendent (may return; do not delete)
+    <div class="card" data-section="Role Responsibilities" data-title="Chief Superintendent">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">3.5</span><span class="card-title">Chief Superintendent</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p><span class="state-badge s-red" style="display:inline-block;margin-bottom:10px">SETS PRIORITY</span></p>
+        <ul class="sop-list">
+          <li>Lead Major Operations within their departments</li>
+          <li>Sets tactical plans based on Gold's direction</li>
+          <li>Oversees resource allocation (Units, Officers, etc.)</li>
+          <li>Responsible for large-scale incident command</li>
+          <li>Ensures the departments are working together</li>
+          <li>Authorise Dismissal (ALL)</li>
+          <li>Relay Major divisional changes to Gold</li>
+        </ul>
+      </div>
+    </div>
+    -->
+
+    <div class="card" data-section="Role Responsibilities" data-title="Gold Command">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">3.6</span><span class="card-title">Gold Command</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p><span class="state-badge s-gold" style="display:inline-block;margin-bottom:10px">GOLD</span></p>
+        <ul class="sop-list">
+          <li>Run the Police Department</li>
+          <li>Set strategic direction for the PD</li>
+          <li>Review tribunals as a panel</li>
+          <li>Authorise use of firearms</li>
+          <li>Authorise PD-wide changes</li>
+          <li>Authorise major divisional changes</li>
+          <li>Authorise Dismissal (ALL)</li>
+          <li>Ultimate final say on all departmental matters</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Role Responsibilities" data-title="Divisional Training Tickets">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">3.7</span><span class="card-title">Divisional Training Tickets</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The following specialist training tickets are available per division. Officers must hold the relevant ticket before using the associated equipment or tactic.</p>
+        <table class="sop-table">
+          <thead><tr><th>Response</th><th>CID</th><th>Traffic</th></tr></thead>
+          <tbody>
+            <tr><td>Air (Helicopter)</td><td>Spyglass</td><td>Interceptor</td></tr>
+            <tr><td>TASER</td><td>Drones</td><td>Spikes</td></tr>
+            <tr><td>Off-road</td><td>Stormrams</td><td>Bike</td></tr>
+            <tr><td>Scene Set-ups (Props)</td><td>Undercover</td><td>Pursuits</td></tr>
+            <tr><td></td><td>Forensics</td><td></td></tr>
+          </tbody>
+        </table>
+        <div class="notice warn"><span class="notice-icon">⚠️</span><div>Using equipment or tactics for which you do not hold a current, valid training ticket is a <strong>serious breach of professional standards</strong> and may constitute misconduct.</div></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- RADIO PROCEDURES -->
+  <section class="sop-section" id="radio">
+    <div class="section-header"><span class="section-num">04</span><span class="section-icon">🎙️</span><h2 class="section-title">Radio Procedures</h2></div>
+
+    <div class="card" data-section="Radio Procedures" data-title="Radio Discipline">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">4.1</span><span class="card-title">Radio Discipline</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Clear and concise radio communication is critical in operational policing. All transmissions must be professional, purposeful, and kept as brief as possible.</p>
+        <ul class="sop-list">
+          <li>Always identify yourself by <span class="hl-b">callsign and collar number</span> before transmitting.</li>
+          <li>Keep transmissions short — say what you need, then release the channel.</li>
+          <li>Do not talk over active transmissions; wait for a clear channel.</li>
+          <li>Sensitive information must not be broadcast on the open channel — use a secure channel or MDT.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Radio Procedures" data-title="Channel Allocation">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">4.2</span><span class="card-title">Channel Allocation</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <table class="sop-table">
+          <thead><tr><th>Channel</th><th>Designation</th><th>Users</th></tr></thead>
+          <tbody>
+            <tr><td>CH 1</td><td>Main — Response</td><td>All on-duty Constables</td></tr>
+            <tr><td>CH 2</td><td>Tactical / Op Channel</td><td>Active operation units only</td></tr>
+            <tr><td>CH 3</td><td>ARV / Firearms</td><td>AFOs / ARV units</td></tr>
+            <tr><td>CH 4</td><td>Roads Policing Unit</td><td>RPU officers</td></tr>
+            <tr><td>CH 5</td><td>CID / Detective</td><td>CID &amp; detective officers</td></tr>
+            <tr><td>CH 9</td><td>Command</td><td>Sergeant and above only</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" data-section="Radio Procedures" data-title="NATO Phonetic Alphabet">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">4.3</span><span class="card-title">NATO Phonetic Alphabet</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Use the NATO phonetic alphabet when spelling names, registration plates, or any alphanumeric data over the radio.</p>
+        <table class="sop-table">
+          <thead><tr><th>Letter</th><th>Phonetic</th><th>Letter</th><th>Phonetic</th></tr></thead>
+          <tbody>
+            <tr><td>A</td><td>Alpha</td><td>N</td><td>November</td></tr>
+            <tr><td>B</td><td>Bravo</td><td>O</td><td>Oscar</td></tr>
+            <tr><td>C</td><td>Charlie</td><td>P</td><td>Papa</td></tr>
+            <tr><td>D</td><td>Delta</td><td>Q</td><td>Quebec</td></tr>
+            <tr><td>E</td><td>Echo</td><td>R</td><td>Romeo</td></tr>
+            <tr><td>F</td><td>Foxtrot</td><td>S</td><td>Sierra</td></tr>
+            <tr><td>G</td><td>Golf</td><td>T</td><td>Tango</td></tr>
+            <tr><td>H</td><td>Hotel</td><td>U</td><td>Uniform</td></tr>
+            <tr><td>I</td><td>India</td><td>V</td><td>Victor</td></tr>
+            <tr><td>J</td><td>Juliet</td><td>W</td><td>Whiskey</td></tr>
+            <tr><td>K</td><td>Kilo</td><td>X</td><td>X-ray</td></tr>
+            <tr><td>L</td><td>Lima</td><td>Y</td><td>Yankee</td></tr>
+            <tr><td>M</td><td>Mike</td><td>Z</td><td>Zulu</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" data-section="Radio Procedures" data-title="Radio Codes & Brevity Terms">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">4.4</span><span class="card-title">Radio Codes &amp; Brevity Terms</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <table class="sop-table">
+          <thead><tr><th>Code / Term</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>MISPER</td><td>Missing person</td></tr>
+            <tr><td>RTC</td><td>Road Traffic Collision</td></tr>
+            <tr><td>CAD</td><td>Computer Aided Despatch — incident log reference</td></tr>
+            <tr><td>PNC</td><td>Police National Computer check</td></tr>
+            <tr><td>VRM</td><td>Vehicle Registration Mark</td></tr>
+            <tr><td>ANPR</td><td>Automatic Number Plate Recognition</td></tr>
+            <tr><td>TDA / TWOC</td><td>Taking &amp; Driving Away / Taking Without Owner's Consent</td></tr>
+            <tr><td>FPN</td><td>Fixed Penalty Notice</td></tr>
+            <tr><td>IC1–IC6</td><td>Appearance coding for persons</td></tr>
+            <tr><td>GRADE 1</td><td>Emergency response (lights &amp; sirens)</td></tr>
+            <tr><td>GRADE 2</td><td>Urgent response (prompt but non-emergency)</td></tr>
+            <tr><td>GRADE 3</td><td>Routine / scheduled attendance</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" data-section="Radio Procedures" data-title="Declaring a State 0 Emergency">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">4.5</span><span class="card-title">Declaring a State 0 Emergency</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>If an officer is in immediate danger or seriously injured in the line of duty, declare a <span class="hl-r">State 0</span> over the main channel and simultaneously press your <span class="hl">panic button</span>. Use the following format:</p>
+        <div class="notice danger"><span class="notice-icon">🔴</span><div><strong>"[Callsign], State 0, State 0. [Location]. [Brief situation]. Require immediate units."</strong><br/><em>Example: "Alpha-1-2, State 0, State 0 — Moorfield Road near the petrol station. Subject with a weapon, officer down. Require immediate units."</em></div></div>
+        <p>All non-essential radio traffic must cease immediately until the incident is resolved or command confirms the channel is clear.</p>
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div><span class="hl-crit">STATE 0 IS RESERVED FOR EXTREME CIRCUMSTANCES ONLY.</span> You have been injured in the line of duty, or you face a serious, life-threatening emergency requiring immediate assistance from other officers. <span class="hl-r">It must not be used</span> for vehicle collisions where you require only medical assistance, minor injuries, or situations that do not involve an active threat to your life.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Radio Procedures" data-title="Handover & Briefing on Radio">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">4.6</span><span class="card-title">Incident Handover on Radio</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>When handing an incident over to another officer or shift, use a brief <span class="hl">IIMARCH</span>-style handover: <strong>Information, Intent, Method, Administration, Risk, Command, Humanitarian</strong>. A shorter format is acceptable for minor incidents.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PATROL DUTIES -->
+  <section class="sop-section" id="patrol">
+    <div class="section-header"><span class="section-num">05</span><span class="section-icon">🚔</span><h2 class="section-title">Patrol Duties</h2></div>
+
+    <div class="card" data-section="Patrol Duties" data-title="Signing On & Briefing">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">5.1</span><span class="card-title">Signing On &amp; Briefing</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Upon commencing duty, officers must complete the following before going mobile:</p>
+        <ol class="sop-ol">
+          <li>Log on to the MDT and confirm duty start time.</li>
+          <li>Set your radio call sign to: <span class="hl-b">[CALLSIGN] | [RANK] | (FirstCharacterOfFirstname).(Surname)</span> — for example: <span class="hl-b">R-1 | C/Insp | J.McLaren</span></li>
+          <li>Declare <span class="hl-g">State 1</span> on the main radio channel.</li>
+          <li>Conduct a vehicle and equipment check — equipment, in-vehicle kit.</li>
+          <li><strong>Activate your body-worn video (BWV)</strong> and confirm it is recording before leaving the station. BWV must remain on throughout the shift for every engagement with a member of the public.</li>
+          <li>Turn on <strong>Radar</strong> and <strong>Plate Reader</strong> before leaving the station.</li>
+          <li>Attend or receive any shift briefing from the on-duty Sergeant.</li>
+          <li>Commence patrol and declare <span class="hl-g">State 2</span> on radio unless requested to do a specific task.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="card" data-section="Patrol Duties" data-title="Patrol Areas & Deployment">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">5.2</span><span class="card-title">Patrol Areas &amp; Deployment</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Officers are expected to patrol <span class="hl-b">proactively</span> within the city. Patrol areas may be assigned by the on-duty Sergeant. Officers should vary their patrol routes to maintain a visible and effective presence.</p>
+        <ul class="sop-list">
+          <li>Avoid prolonged time at the station without operational justification.</li>
+          <li>When tasked to an area, confirm receipt over radio and update your state.</li>
+          <li>Double-crewing is encouraged but not mandatory for standard patrol.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Patrol Duties" data-title="Responding to Calls">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">5.3</span><span class="card-title">Responding to Calls</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>When responding to a CAD incident:</p>
+        <ol class="sop-ol">
+          <li>Acknowledge via MDT and confirm over radio: <em>"[Callsign] received, state 5."</em></li>
+          <li>Update state to <span class="hl-b">State 5</span> immediately.</li>
+          <li>Use lights and sirens only if the call grade warrants an emergency response (Grade 1).</li>
+          <li>On arrival, update to <span class="hl-b">State 6</span> and provide a brief scene assessment over radio.</li>
+        </ol>
+        <div class="notice warn"><span class="notice-icon">⚠️</span><div>Emergency response driving does <strong>not</strong> exempt an officer from road traffic law. Drive safely and proportionately at all times.</div></div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Patrol Duties" data-title="Welfare Checks & Vulnerable Persons">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">5.4</span><span class="card-title">Welfare Checks &amp; Vulnerable Persons</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Any attendance involving a potentially vulnerable person — mental health crisis, intoxicated individual, domestic incident — requires a safeguarding consideration. Document outcomes on the MDT and refer to appropriate services where required.</p>
+      </div>
+    </div>
+
+    <div class="card" data-section="Patrol Duties" data-title="End of Shift">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">5.5</span><span class="card-title">End of Shift</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <ol class="sop-ol">
+          <li>Complete and close all outstanding MDT logs from the shift.</li>
+          <li>Return all police vehicles to the designated station bay.</li>
+          <li>Secure all equipment and return any items that cannot leave the station.</li>
+          <li>Inform the on-duty Sergeant of any outstanding matters requiring handover.</li>
+          <li>Declare <span class="hl">State 11</span> on the main radio channel and sign off the MDT.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- POWERS & OFFENCES -->
+  <section class="sop-section" id="powers">
+    <div class="section-header"><span class="section-num">06</span><span class="section-icon">⚖️</span><h2 class="section-title">Common Powers &amp; Offences</h2></div>
+
+    <div class="notice info">
+      <span class="notice-icon">ℹ️</span>
+      <div>This section provides a quick reference to the most commonly used legislative powers and offences encountered by Constables on Orbit. Officers are expected to understand the scope and limitations of each power before applying it.</div>
+    </div>
+
+    <!-- PACE CODES -->
+    <div class="card" data-section="Powers & Offences" data-title="PACE 1984 — Key Sections">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">6.1</span><span class="card-title">Police and Criminal Evidence Act 1984 (PACE) — Key Sections</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>PACE 1984 is the primary legislation governing police powers in England and Wales. The following sections are most relevant to Constables.</p>
+        <table class="sop-table">
+          <thead><tr><th>Section</th><th>Power</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>S1 PACE</td><td>Stop &amp; Search — stolen articles / offensive weapons</td><td>Requires reasonable grounds. In a public place.</td></tr>
+            <tr><td>S17 PACE</td><td>Power to enter premises to arrest or save life</td><td>Can force entry without warrant in specified circumstances.</td></tr>
+            <tr><td>S18 PACE</td><td>Search premises after arrest</td><td>Inspector authority required unless impractical. Must be connected to the offence.</td></tr>
+            <tr><td>S24 PACE</td><td>Powers of arrest without warrant</td><td>Core arrest power. Necessity test must be satisfied.</td></tr>
+            <tr><td>S32 PACE</td><td>Search on arrest</td><td>Search person and immediate premises upon arrest.</td></tr>
+            <tr><td>S76 PACE</td><td>Admissibility of confessions</td><td>Confessions obtained by oppression are inadmissible.</td></tr>
+            <tr><td>S78 PACE</td><td>Exclusion of unfair evidence</td><td>Court may exclude evidence obtained unfairly — relevant to unlawful searches.</td></tr>
+            <tr><td><span class="hl">S117 PACE</span></td><td>Use of reasonable force</td><td>Authorises an officer to use <strong>reasonable force</strong> when exercising any PACE power where the person is unwilling to comply. Does not grant unlimited force — must still be proportionate.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S23 MDA -->
+    <div class="card" data-section="Powers & Offences" data-title="S23 Misuse of Drugs Act 1971">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">6.2</span><span class="card-title">S23 Misuse of Drugs Act 1971 — Drug Search Power</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p><span class="hl">Section 23 of the Misuse of Drugs Act 1971</span> grants officers the power to stop and search a person or vehicle if there are <span class="hl-b">reasonable grounds to suspect</span> they are in possession of a controlled drug.</p>
+        <table class="sop-table">
+          <thead><tr><th>Element</th><th>Detail</th></tr></thead>
+          <tbody>
+            <tr><td>Power</td><td>Search persons and vehicles for controlled drugs</td></tr>
+            <tr><td>Grounds required</td><td>Reasonable suspicion of possession of a controlled drug (Class A, B, or C)</td></tr>
+            <tr><td>Location</td><td>Any place — public or private</td></tr>
+            <tr><td>Can also seize</td><td>Any controlled drugs found, along with any related paraphernalia</td></tr>
+            <tr><td>Common examples</td><td>Cannabis, cocaine, MDMA, heroin, ketamine</td></tr>
+          </tbody>
+        </table>
+        <div class="notice warn"><span class="notice-icon">⚠️</span><div>The smell of cannabis alone <strong>can</strong> form part of reasonable grounds, but should be supported by other factors where possible. Record all grounds clearly on the MDT search log.</div></div>
+      </div>
+    </div>
+
+    <!-- ROAD TRAFFIC ACT -->
+    <div class="card" data-section="Powers & Offences" data-title="Road Traffic Act 1988 — S164-166">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">6.3</span><span class="card-title">Road Traffic Act 1988 — Sections 164–166</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <table class="sop-table">
+          <thead><tr><th>Section</th><th>Power / Offence</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><span class="hl">S163 RTA</span></td><td>Power to stop a vehicle</td><td>A uniformed officer may require any mechanically propelled vehicle to stop. Applies to any vehicle on a road — not just suspected offenders. The driver must stop and keep the vehicle stationary for as long as reasonably required. Failure to comply is a summary offence.</td></tr>
+            <tr><td><span class="hl">S164 RTA</span></td><td>Power to require production of driving licence</td><td>Officer may require any person driving or reasonably believed to have driven to produce their licence for inspection. Failure to produce is an offence.</td></tr>
+            <tr><td><span class="hl">S165 RTA</span></td><td>Power to require production of insurance &amp; test certificate</td><td>Officers may require a driver to produce proof of insurance and MOT. Failure to produce at the roadside allows for a HORT/1 (produce within 7 days at a police station).</td></tr>
+            <tr><td><span class="hl">S166 RTA</span></td><td>Failing to stop when directed — moving traffic</td><td>Applies specifically to failing to comply with a direction from a uniformed officer controlling traffic or conducting road checks. Commonly charged alongside pursuit offences and dangerous driving.</td></tr>
+          </tbody>
+        </table>
+        <div class="notice info"><span class="notice-icon">ℹ️</span><div><strong>S163 vs S166:</strong> S163 is the general power to stop <em>any</em> vehicle for any lawful policing purpose — a routine stop, a licence check, a welfare check. S166 applies where an officer is directing traffic or conducting a road check and the driver fails to comply. Both can be charged where relevant, but S163 is the power most commonly used to initiate a routine vehicle stop or the beginning of a pursuit.</div></div>
+      </div>
+    </div>
+
+    <!-- S47 FIREARMS ACT -->
+    <div class="card" data-section="Powers & Offences" data-title="S47 Firearms Act 1968">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">6.4</span><span class="card-title">S47 Firearms Act 1968 — Stop &amp; Search for Firearms</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p><span class="hl">Section 47 of the Firearms Act 1968</span> grants officers the power to stop and search a person or vehicle if there are reasonable grounds to suspect that a <span class="hl-r">firearm is being carried</span> without authority.</p>
+        <table class="sop-table">
+          <thead><tr><th>Element</th><th>Detail</th></tr></thead>
+          <tbody>
+            <tr><td>Power</td><td>Search persons and vehicles for firearms</td></tr>
+            <tr><td>Grounds required</td><td>Reasonable suspicion that a firearm is being carried in a public place without authority</td></tr>
+            <tr><td>Can seize</td><td>Any firearm, ammunition, or prohibited weapon found</td></tr>
+            <tr><td>Key offence</td><td>Possession of a firearm without a certificate — S1 Firearms Act 1968</td></tr>
+          </tbody>
+        </table>
+        <div class="notice danger"><span class="notice-icon">🚫</span><div>If intelligence or grounds suggest a person may be <strong>actively armed</strong>, Constables must <strong>not</strong> approach. Withdraw, contain, and request ARV. S47 searches on suspected armed individuals are conducted by AFOs only.</div></div>
+      </div>
+    </div>
+
+    <!-- KNIFE OFFENCES -->
+    <div class="card" data-section="Powers & Offences" data-title="Knife Offences">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">6.5</span><span class="card-title">Knife Offences</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <table class="sop-table">
+          <thead><tr><th>Legislation</th><th>Offence</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>S1 Prevention of Crime Act 1953</td><td>Possession of an offensive weapon in a public place</td><td>An offensive weapon is any article made, adapted, or intended for causing injury. No blade length threshold — intent or adaptation is the key test.</td></tr>
+            <tr><td>S139 Criminal Justice Act 1988</td><td>Having a bladed / pointed article in a public place</td><td>Covers any knife with a blade over 3 inches, or any pointed article. Exceptions: folding pocketknife with blade under 3 inches, or a good reason (work tool, etc.).</td></tr>
+          </tbody>
+        </table>
+        <div class="notice info"><span class="notice-icon">ℹ️</span><div>The search power for knives on patrol is typically <strong>S1 PACE</strong> (offensive weapon) or <strong>S23 MDA</strong> combined, or a <strong>S60 CJPO</strong> if an Inspector has granted a blanket authority for the area. Always establish your specific power before conducting the search.</div></div>
+      </div>
+    </div>
+
+    <!-- ASSAULT OFFENCES -->
+    <div class="card" data-section="Powers & Offences" data-title="Assault Offences">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">6.6</span><span class="card-title">Assault Offences</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <table class="sop-table">
+          <thead><tr><th>Offence</th><th>Legislation</th><th>Description</th><th>Typical Outcome</th></tr></thead>
+          <tbody>
+            <tr><td><span class="hl-g">Common Assault</span></td><td>S39 Criminal Justice Act 1988</td><td>Any act causing another person to apprehend immediate unlawful force, or minor battery (no injury / minor injury). Includes pushes, threats of force, and minor strikes.</td><td>Arrest / FPN / Caution</td></tr>
+            <tr><td><span class="hl">ABH</span></td><td>S47 Offences Against the Person Act 1861</td><td>Assault causing actual bodily harm — injury that is more than transient or trifling. Bruising, cuts, scratches causing pain. No permanent injury required.</td><td>Arrest — either-way offence</td></tr>
+            <tr><td><span class="hl-r">GBH / Unlawful Wounding</span></td><td>S20 OAPA 1861</td><td>Grievous bodily harm or unlawful wounding without intent. Serious injury — broken bones, lacerations requiring stitches, significant blood loss.</td><td>Arrest — either-way offence</td></tr>
+            <tr><td><span class="hl-r">GBH with Intent</span></td><td>S18 OAPA 1861</td><td>GBH or wounding with <strong>intent</strong> to cause GBH or resist arrest. The most serious assault short of murder. Includes sustained attacks, use of weapons.</td><td>Arrest — indictable only. CID involvement recommended.</td></tr>
+          </tbody>
+        </table>
+        <div class="notice warn"><span class="notice-icon">⚠️</span><div>The distinction between <strong>S20</strong> (no intent) and <strong>S18</strong> (intent) is significant — S18 carries a maximum life sentence. If intent is apparent from the circumstances, charge appropriately and flag for CID review.</div></div>
+      </div>
+    </div>
+
+    <!-- FLEEING / DRIVING OFFENCES -->
+    <div class="card" data-section="Powers & Offences" data-title="Failing to Stop & Driving Offences">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">6.7</span><span class="card-title">Failing to Stop &amp; Driving Offences</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <table class="sop-table">
+          <thead><tr><th>Offence</th><th>Legislation</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><span class="hl">Fail to Stop for Police</span></td><td>S163 / S166 Road Traffic Act 1988</td><td>S163 — failing to stop when required by a uniformed officer (general stop power). S166 — failing to comply with a traffic direction or road check. Both are commonly charged following a pursuit.</td></tr>
+            <tr><td><span class="hl-r">Dangerous Driving</span></td><td>S2 Road Traffic Act 1988</td><td>Driving in a manner that falls far below the standard expected of a competent driver, where it would be obvious to a competent driver that driving in that way would be dangerous. Covers excessive speed, erratic manoeuvres, ignoring signals.</td></tr>
+            <tr><td><span class="hl-amber" style="color:var(--amber);font-weight:700">Careless Driving</span></td><td>S3 Road Traffic Act 1988</td><td>Driving without due care and attention, or without reasonable consideration for other road users. Lower threshold than dangerous driving.</td></tr>
+            <tr><td><span class="hl">TWOC / TDA</span></td><td>S12 Theft Act 1968</td><td>Taking a vehicle without the owner's consent (TWOC). Taking and driving away (TDA) is the common operational shorthand. Arrest power under S24 PACE.</td></tr>
+            <tr><td><span class="hl-r">Aggravated Vehicle Taking</span></td><td>S12A Theft Act 1968</td><td>TWOC where the vehicle was driven dangerously, caused an accident, caused injury, or caused damage. Significantly more serious charge.</td></tr>
+            <tr><td><span class="hl">Fleeing / Obstructing Police</span></td><td>S89(2) Police Act 1996</td><td>Wilfully obstructing a police officer in the execution of their duty. Includes fleeing on foot from an officer attempting to lawfully detain, and refusing to comply with lawful police directions.</td></tr>
+          </tbody>
+        </table>
+        <div class="notice info"><span class="notice-icon">ℹ️</span><div>Where a subject has both failed to stop <strong>and</strong> driven dangerously during a pursuit, <strong>S163 RTA</strong> (fail to stop), <strong>S166 RTA</strong> (fail to comply with direction), and <strong>S2 RTA</strong> (dangerous driving) can all be charged concurrently where evidence supports each. Document driving behaviour in detail during your pursuit commentary and on the MDT log immediately after the incident concludes.</div></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- STOP & SEARCH -->
+  <section class="sop-section" id="stop-search">
+    <div class="section-header"><span class="section-num">07</span><span class="section-icon">🔍</span><h2 class="section-title">Stop &amp; Search</h2></div>
+
+    <div class="card" data-section="Stop & Search" data-title="Grounds for Stop & Search">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">7.1</span><span class="card-title">Grounds for Stop &amp; Search</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Officers must have <span class="hl">reasonable grounds</span> before conducting a stop and search. Reasonable grounds must be based on objective facts, intelligence, or observed behaviour — never on personal characteristics or appearance alone.</p>
+        <div class="notice info"><span class="notice-icon">ℹ️</span><div>Common legislative powers used on Orbit: <strong>S1 PACE</strong> (stolen goods / offensive weapons), <strong>S23 MDA</strong> (controlled drugs), <strong>S60 CJPO</strong> (no-suspicion, inspector authority required).</div></div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Stop & Search" data-title="GOWISELY">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">7.2</span><span class="card-title">GOWISELY — Search Procedure</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Every stop and search must follow the <span class="hl">GOWISELY</span> mnemonic in order. Failure to comply renders the search unlawful.</p>
+        <table class="sop-table">
+          <thead><tr><th>Letter</th><th>Element</th><th>What to say / do</th></tr></thead>
+          <tbody>
+            <tr><td>G</td><td>Grounds</td><td>State the legislative grounds for the search — e.g. Section 1 of PACE, Section 23 MDA.</td></tr>
+            <tr><td>O</td><td>Objective</td><td>State what you are looking for — e.g. offensive weapon, controlled drugs, stolen goods.</td></tr>
+            <tr><td>W</td><td>Warrant Card</td><td>Physically show your warrant card to the person.</td></tr>
+            <tr><td>I</td><td>Identification</td><td>Give your name and callsign — e.g. "My name is [Name], callsign [X]."</td></tr>
+            <tr><td>S</td><td>Station</td><td>State your station — e.g. "Sinners Street Police Station, Orbit Police Department."</td></tr>
+            <tr><td>E</td><td>Entitlement</td><td>Inform them they are entitled to a copy of the search record, obtainable from the police station. Valid for 90 days.</td></tr>
+            <tr><td>L</td><td>Legal Powers</td><td>Confirm the specific legal power you are exercising and what it authorises.</td></tr>
+            <tr><td>Y</td><td>You are detained / Free to Go</td><td>If a prohibited item is found — "You are detained for [reason]." If nothing is found — "You are free to go."</td></tr>
+          </tbody>
+        </table>
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>The <strong>Y step is outcome-dependent</strong>. You do not automatically detain the person — detention at this stage only applies if the search reveals something that justifies it. If nothing is found, you must inform the person they are <strong>free to go</strong>.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Stop & Search" data-title="Stop & Search — Rights Script">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">7.3</span><span class="card-title">Stop &amp; Search — Formal Rights Script</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The following script delivers all GOWISELY elements in the correct order. Officers must follow this sequence for every stop and search. Wording may be adapted naturally but all eight elements must be covered.</p>
+
+        <div class="notice info">
+          <span class="notice-icon">📢</span>
+          <div>
+            <strong>Step 1 — Grounds (G):</strong><br/>
+            <em>"I am stopping and searching you under [e.g. Section 1 of the Police and Criminal Evidence Act 1984 / Section 23 of the Misuse of Drugs Act 1971]."</em><br/><br/>
+            <strong>Step 2 — Objective (O):</strong><br/>
+            <em>"I am searching you for [e.g. an offensive weapon / controlled drugs / stolen property]."</em><br/><br/>
+            <strong>Step 3 — Warrant Card (W):</strong><br/>
+            <em>[Physically present your warrant card to the person.]</em><br/><br/>
+            <strong>Step 4 — Identification (I):</strong><br/>
+            <em>"My name is [Name], callsign [X]."</em><br/><br/>
+            <strong>Step 5 — Station (S):</strong><br/>
+            <em>"I am based at Sinners Street Police Station, Orbit Police Department."</em><br/><br/>
+            <strong>Step 6 — Entitlement (E):</strong><br/>
+            <em>"You are entitled to a copy of this search record. You can obtain one from the police station — it is valid for 90 days."</em><br/><br/>
+            <strong>Step 7 — Legal Powers (L):</strong><br/>
+            <em>"Under this power, I am authorised to search your person and any items you are carrying for the object stated."</em><br/><br/>
+            <strong>Step 8 — You are detained / Free to Go (Y):</strong><br/>
+            <em>If something is found: "You are detained. [State reason — e.g. I have found a [item], I am arresting / further detaining you for [offence].]"</em><br/>
+            <em>If nothing is found: "I have completed my search. Nothing has been found. You are free to go."</em>
+          </div>
+        </div>
+
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div><strong>BWV must be active and recording from the point of initial contact.</strong> All eight steps must be completed before the search begins — with the exception of Step 8, which is delivered after the search concludes based on its outcome. If the subject attempts to leave before the search begins, you may use reasonable force to detain them only if your power of search expressly permits physical detention.</div>
+        </div>
+
+        <p>The person being searched holds the following rights throughout the encounter:</p>
+        <ul class="sop-list">
+          <li>To be told the reason for the search clearly and in plain language.</li>
+          <li>To be shown the officer's warrant card on request.</li>
+          <li>To receive a written copy of the search record from the police station — valid for 90 days.</li>
+          <li>Not to be required to remove any clothing in public beyond outer coat, jacket, or gloves.</li>
+          <li>To have any intimate search conducted out of public view, by an officer of the same gender where possible.</li>
+          <li>If nothing is found, to be told clearly that they are free to go.</li>
+          <li>To make a formal complaint about the search at the police station.</li>
+        </ul>
+
+        <div class="notice danger">
+          <span class="notice-icon">🚫</span>
+          <div><span class="hl-crit">A SEARCH CONDUCTED WITHOUT DELIVERING ALL GOWISELY ELEMENTS IN ORDER IS UNLAWFUL.</span> Any evidence obtained may be inadmissible and the officer may face a complaint and professional standards review. There are <strong>no exceptions</strong> — even where the subject is uncooperative, the full script must be delivered.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Stop & Search" data-title="Conduct During Search">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">7.4</span><span class="card-title">Conduct During Search</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <ul class="sop-list">
+          <li>Searches must be conducted respectfully and professionally.</li>
+          <li>A search requiring removal of clothing beyond outer garments <span class="hl-r">must</span> be conducted out of public view, with an officer of the same gender where possible.</li>
+          <li>BWV must be recording throughout the entire encounter.</li>
+          <li>Use of force during a search must be proportionate and only used if the subject is non-compliant.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Stop & Search" data-title="Recording the Search">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">7.5</span><span class="card-title">Recording the Search</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Every stop and search must be logged on the MDT immediately after the encounter. The record must include: subject details, power used, grounds, outcome (found / nothing found), and officer details.</p>
+      </div>
+    </div>
+
+    <div class="card" data-section="Stop & Search" data-title="Section 60 — No-Suspicion Search">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">7.6</span><span class="card-title">Section 60 — No-Suspicion Search</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>A <span class="hl">Section 60</span> authority permits officers to stop and search any person within a designated area without requiring individual suspicion. This power <span class="hl-r">must be authorised by an Inspector or above</span> and is time-limited. The authorisation reference must be noted on all search records made under S60.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARREST PROCEDURES -->
+  <section class="sop-section" id="arrest">
+    <div class="section-header"><span class="section-num">08</span><span class="section-icon">🚨</span><h2 class="section-title">Arrest Procedures</h2></div>
+
+    <div class="notice danger">
+      <span class="notice-icon">⚠️</span>
+      <div><span class="hl-crit">FORMAL RIGHTS MUST BE READ TO ANY PERSON AT THE POINT THEY ARE DETAINED.</span> Failure to do so may render the detention and any subsequent arrest unlawful and could result in evidence being excluded.</div>
+    </div>
+
+    <div class="card" data-section="Arrest Procedures" data-title="Point of Detention — Formal Rights Script">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">8.0</span><span class="card-title">Point of Detention — Formal Rights Script</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The moment a person is detained — whether under arrest, for a search, or for any other lawful power — the following rights must be communicated clearly and verbally. This is non-negotiable regardless of the circumstances or the subject's behaviour.</p>
+
+        <div class="notice info">
+          <span class="notice-icon">📢</span>
+          <div>
+            <strong>On detaining a person, state the following:</strong><br/><br/>
+            <em>"I am detaining you. You are not free to leave."</em><br/><br/>
+            <strong>State the reason / power:</strong><br/>
+            <em>"I am [arresting / searching] you on suspicion of [offence / under Section X of Y Act]. The reason for this is [brief grounds]."</em><br/><br/>
+            <strong>If placing under arrest, administer the caution:</strong><br/>
+            <em>"You do not have to say anything. But it may harm your defence if you do not mention when questioned something which you later rely on in court. Anything you do say may be given in evidence."</em><br/><br/>
+            <strong>Inform of rights:</strong><br/>
+            <em>"You have the right to have someone informed of your detention. You have the right to consult a solicitor, free and independently, at any time. Do you understand?"</em>
+          </div>
+        </div>
+
+        <p>If the subject does not appear to understand, repeat or simplify as necessary. Document whether the subject confirmed understanding on the MDT log.</p>
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>The rights script must be delivered <strong>at the point of detention</strong> — not on arrival at the station, not after transport. If the subject is violent and it is unsafe to deliver the script immediately, do so at the earliest safe opportunity and note the reason for any delay on the MDT.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Arrest Procedures" data-title="Grounds for Arrest">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">8.1</span><span class="card-title">Grounds for Arrest</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>An arrest is lawful only when the officer has <span class="hl">reasonable grounds to suspect</span> the person has committed, is committing, or is about to commit an offence, <strong>and</strong> it is necessary to arrest (the necessity test).</p>
+        <p>Common necessity grounds: to prevent harm to the subject or others, to prevent loss of evidence, where the subject's name/address cannot be confirmed, or to allow a prompt and effective investigation.</p>
+      </div>
+    </div>
+
+    <div class="card" data-section="Arrest Procedures" data-title="The PACE Caution">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">8.2</span><span class="card-title">The Caution — PACE 1984</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Upon arrest, administer the full caution verbatim:</p>
+        <div class="notice info"><span class="notice-icon">📢</span><div><em>"You do not have to say anything. But it may harm your defence if you do not mention when questioned something which you later rely on in court. Anything you do say may be given in evidence."</em></div></div>
+        <p>The caution must also be administered at the start of any interview under caution.</p>
+      </div>
+    </div>
+
+    <div class="card" data-section="Arrest Procedures" data-title="Use of Handcuffs">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">8.3</span><span class="card-title">Use of Handcuffs</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Handcuffs are a use of force and must be proportionate. They are appropriate where a subject is violent, likely to flee, or where the offence warrants their use as a precaution.</p>
+        <ul class="sop-list">
+          <li>Check handcuffs after application for tightness and double-lock.</li>
+          <li>State reason for handcuffing to the subject.</li>
+          <li>Regularly reassess whether handcuffs remain necessary.</li>
+          <li>Handcuffing is not automatic — it requires justification.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Arrest Procedures" data-title="Transport to Custody">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">8.4</span><span class="card-title">Transport to Custody</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Upon placing a detainee in the vehicle, declare <span class="hl-b">State 9</span> over radio and confirm destination. The prisoner must be secured in the rear. BWV should remain active during transport.</p>
+        <div class="notice warn"><span class="notice-icon">⚠️</span><div>A prisoner must <strong>never</strong> be left unsupervised in a police vehicle. If the arresting officer needs to leave, a second officer must assume supervision.</div></div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Arrest Procedures" data-title="Rights of the Detained Person">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">8.5</span><span class="card-title">Rights of the Detained Person</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>In addition to the verbal rights delivered at the point of detention (see 7.0), detained persons hold the following ongoing rights which must be upheld throughout the detention:</p>
+        <ul class="sop-list">
+          <li>Be informed of the reason for their detention / arrest at all times.</li>
+          <li>Have someone notified of their detention — this must not be unreasonably delayed.</li>
+          <li>Consult a solicitor, free of charge, privately and at any time.</li>
+          <li>Receive a copy of the Codes of Practice upon request.</li>
+          <li>Medical attention if they are injured, unwell, or request it.</li>
+          <li>An interpreter if they do not understand or speak English.</li>
+        </ul>
+        <div class="notice danger"><span class="notice-icon">🚫</span><div><span class="hl-crit">WITHHOLDING OR DELAYING THESE RIGHTS WITHOUT AUTHORISED GROUNDS IS A SERIOUS BREACH OF PACE.</span> It may result in misconduct proceedings and the collapse of any prosecution.</div></div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Arrest Procedures" data-title="Sentencing Guidelines">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">8.6</span><span class="card-title">Sentencing Guidelines</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Officers have sentencing authority up to a defined ceiling. Beyond this, additional safeguards apply — either a solicitor must be present for the suspect, or the sentence must be authorised by a rank with the appropriate command tier.</p>
+
+        <table class="sop-table">
+          <thead><tr><th>Sentence Range</th><th>Authority</th><th>Requirement</th></tr></thead>
+          <tbody>
+            <tr><td><span class="hl-g">Up to 60 months</span></td><td>All Officers</td><td>Standard sentencing authority. No additional approval required.</td></tr>
+            <tr><td><span class="hl">61 – 90 months</span></td><td>Bronze Command (Sgt / Insp / C/Insp)</td><td>Suspect requires a solicitor. If no solicitor is available, Bronze Command can authorise up to 90 months without one.</td></tr>
+            <tr><td><span class="hl-p">91 – 120 months</span></td><td>Silver / Gold Command (Supt / Gold)</td><td>Suspect requires a solicitor. Silver or Gold Command can authorise up to 120 months where no solicitor is available.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>The <span class="hl">60-month threshold</span> is the cut-off where solicitor entitlement becomes mandatory. Officers handing out sentences above 60 months without either (a) a solicitor present, or (b) explicit authorisation from the correct command tier, are in breach of procedure.</div>
+        </div>
+
+        <ul class="sop-list">
+          <li>Always check solicitor availability <strong>before</strong> finalising any sentence above 60 months.</li>
+          <li>Where a sentence will exceed 60 months and no solicitor is available, contact the appropriate command tier <strong>before</strong> issuing the sentence — not after.</li>
+          <li>Authorisations from Bronze, Silver, or Gold Command must be logged on the MDT against the case, including the authorising officer's name and rank.</li>
+          <li>Sentences above 120 months are not authorised under this guideline — refer to Gold Command directly.</li>
+        </ul>
+
+        <div class="notice danger">
+          <span class="notice-icon">🚫</span>
+          <div><span class="hl-crit">DO NOT EXCEED YOUR SENTENCING AUTHORITY.</span> Sentences issued above an officer's tier without proper authorisation may be overturned, the suspect released, and the officer subject to a strike.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Arrest Procedures" data-title="Solicitor Guidelines">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">8.7</span><span class="card-title">Solicitor Guidelines</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Where a solicitor is available and has been appointed to deal with a suspect, the conduct of custody changes. The solicitor becomes the <span class="hl">voice of the suspect</span> — officers work collaboratively with the solicitor rather than directly with the suspect.</p>
+
+        <p><strong>On the solicitor's arrival at custody:</strong></p>
+        <ol class="sop-ol">
+          <li><strong>Hand over all evidence</strong> to the solicitor at the earliest opportunity — BWV references, MDT statements, exhibits, photographs, and any third-party material relevant to the case.</li>
+          <li><strong>Provide the full list of charges</strong> the suspect is facing.</li>
+          <li>Allow the solicitor time to review the material and consult privately with their client.</li>
+          <li>Once the solicitor is briefed, officers and the solicitor work together to deal with the suspect — interview, plea, and sentencing flow through the solicitor.</li>
+        </ol>
+
+        <div class="notice info">
+          <span class="notice-icon">🗣️</span>
+          <div><strong>The solicitor is the voice of the suspect.</strong> Direct questions, plea offers, and procedural exchanges should be made through the solicitor wherever practical — the suspect may still speak directly, but the solicitor speaks on their behalf and is entitled to intervene at any point.</div>
+        </div>
+
+        <ul class="sop-list">
+          <li>Solicitors are entitled to <strong>privately consult</strong> with their client at any point during custody.</li>
+          <li>All evidence handed to the solicitor must be logged on the MDT with the time, item, and receiving solicitor's name.</li>
+          <li>Withholding evidence from a properly appointed solicitor is a <span class="hl-r">serious breach of procedure</span> and may collapse the prosecution.</li>
+          <li>If the solicitor disputes a charge, escalate through Bronze Command rather than amending the charges yourself.</li>
+        </ul>
+
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>If the suspect declines a solicitor where one is available, document this clearly on the MDT — including the time, the suspect's stated reason, and the officer who confirmed the waiver.</div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- VEHICLE PURSUITS -->
+  <section class="sop-section" id="pursuits">
+    <div class="section-header"><span class="section-num">09</span><span class="section-icon">🏎️</span><h2 class="section-title">Vehicle Pursuits</h2></div>
+    <div class="notice danger"><span class="notice-icon">🚫</span><div>Vehicle pursuits carry <strong>significant risk</strong> to officers, the public, and the subject. All pursuit decisions must be continually assessed. <span class="hl-crit">ABANDONMENT IS ALWAYS AN OPTION AND IS NEVER A FAILURE.</span></div></div>
+
+    <div class="card" data-section="Vehicle Pursuits" data-title="Initiating a Pursuit — PLAN Assessment">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">9.1</span><span class="card-title">Initiating a Pursuit — PLAN Assessment</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Before committing to a pursuit, conduct a rapid risk assessment using the <span class="hl">PLAN</span> mnemonic:</p>
+        <table class="sop-table">
+          <thead><tr><th>Letter</th><th>Assessment</th></tr></thead>
+          <tbody>
+            <tr><td>P</td><td><strong>Police capability</strong> — Is the vehicle and officer capable?</td></tr>
+            <tr><td>L</td><td><strong>Location</strong> — Urban, rural, residential, pedestrian areas?</td></tr>
+            <tr><td>A</td><td><strong>Action of the subject</strong> — How are they driving? Armed? Impaired?</td></tr>
+            <tr><td>N</td><td><strong>Need</strong> — Is the pursuit proportionate to the suspected offence?</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" data-section="Vehicle Pursuits" data-title="Pursuit Roles & Positions">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">9.2</span><span class="card-title">Pursuit Roles &amp; Positions</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Each unit in a pursuit has a defined role. Officers must know their position and operate within its scope. Roles should be declared over radio when joining the pursuit.</p>
+        <div class="notice info">
+          <span class="notice-icon">ℹ️</span>
+          <div>The <strong>organisation and coordination of a pursuit is the responsibility of the Traffic Unit</strong> on scene. If no Traffic Unit is available or responding, that responsibility falls upon the <strong>highest ranking officer present</strong> in the pursuit. This officer takes ownership of role assignments, tactical decisions, and the decision to continue or abandon.</div>
+        </div>
+        <table class="sop-table">
+          <thead><tr><th>Role</th><th>Position</th><th>Responsibilities</th></tr></thead>
+          <tbody>
+            <tr><td><span class="hl-g">Primary</span></td><td>Lead vehicle, directly behind the suspect</td><td>The controlling unit of the pursuit. Should be a vehicle capable of matching the suspect's speed. Responsible for all running radio commentary — location, direction, speed, behaviour, and any changes. Initiates and leads tactical decisions.</td></tr>
+            <tr><td><span class="hl-b">Secondary</span></td><td>Directly behind Primary</td><td>Supports the Primary unit. Takes over as lead vehicle immediately if Primary has an RTC, mechanical issue, or is otherwise forced to withdraw. Must maintain safe following distance and be ready to assume Primary role at any moment.</td></tr>
+            <tr><td><span class="hl">Tertiary</span></td><td>Rear of the pursuit convoy</td><td>The last vehicle in the pursuit chain. Monitors the roads behind the convoy — watching for interference, vehicles joining the pursuit uninvited, hazards created in the wake of the chase, and any debris or incidents left behind. Reports anything of note to the pursuit channel immediately.</td></tr>
+            <tr><td><span class="hl-p">Parallel</span></td><td>Running alongside on a parallel route</td><td>A unit designated to shadow the pursuit on a parallel road or route. Not directly in the chase — typically a Roads Policing or Traffic unit with <strong>tactical deployment capability</strong> (e.g. stingers/spikes). Must not enter the primary pursuit route unless directed by the Primary unit.</td></tr>
+            <tr><td><span class="hl-r">I-99 / NPAS</span></td><td>Airborne — above the pursuit</td><td>The air unit (police helicopter / NPAS). Once overhead, I-99 assumes the role of primary intelligence provider. Ground units may be directed to create distance or hold off to avoid risk, with I-99 maintaining covert tracking from altitude. Ground units must follow I-99 direction when it is on station.</td></tr>
+          </tbody>
+        </table>
+        <div class="notice info">
+          <span class="notice-icon">ℹ️</span>
+          <div><strong>Once I-99 is on station</strong>, ground units should announce their position on the pursuit channel and await direction. I-99 will take over commentary and may instruct ground units to hold back or reposition. Do not abandon the pursuit area — maintain a containment posture until I-99 directs otherwise.</div>
+        </div>
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>A maximum of <strong>three ground units</strong> should be actively in the pursuit convoy at any one time. Additional units should hold at a distance or take up Parallel positions rather than joining the convoy and creating further risk.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Vehicle Pursuits" data-title="Running Radio Commentary">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">9.3</span><span class="card-title">Running Radio Commentary</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The lead unit must provide continuous, clear commentary throughout:</p>
+        <ul class="sop-list">
+          <li>Current location and direction of travel.</li>
+          <li>Vehicle description and VRM.</li>
+          <li>Speed estimate and driving behaviour.</li>
+          <li>Number of occupants visible.</li>
+          <li>Any change of direction, vehicle swap, or foot bail.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Vehicle Pursuits" data-title="Tactical Pursuit Disposals (TPACs)">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">9.4</span><span class="card-title">Tactical Pursuit Disposals (TPACs)</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Tactical disposals — stingers, boxing, approved ramming — are <span class="hl-r">Traffic Unit only</span>. These must be authorised by the Traffic Unit coordinating the pursuit, or by the highest ranking officer on scene if no Traffic Unit is present. Constables must not attempt unofficial tactical manoeuvres without the relevant training ticket and explicit authority.</p>
+      </div>
+    </div>
+
+    <div class="card" data-section="Vehicle Pursuits" data-title="Abandoning a Pursuit">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">9.5</span><span class="card-title">Abandoning a Pursuit</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>A pursuit must be abandoned when risk outweighs the benefit of continued engagement:</p>
+        <ul class="sop-list">
+          <li>Risk to the public is too high (dense pedestrian areas, residential streets).</li>
+          <li>Subject's driving reaches a standard beyond police capability.</li>
+          <li>The Traffic Unit coordinator, or highest ranking officer on scene, directs abandonment.</li>          <li>Police vehicle is damaged or becomes unsafe.</li>
+        </ul>
+        <div class="notice success"><span class="notice-icon">✅</span><div>Abandoning a pursuit when risk is high is <strong>correct decision-making</strong>. All abandonments must be logged and reported to the on-duty Sergeant immediately.</div></div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Vehicle Pursuits" data-title="Foot Bail After Pursuit">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">9.6</span><span class="card-title">Foot Bail After Pursuit</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>When a subject flees on foot, update your state and provide a subject description and direction of travel over radio. Foot pursuits must be assessed using the same risk principles as a vehicle pursuit — officer safety and public safety remain paramount.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- USE OF FORCE -->
+  <section class="sop-section" id="uof">
+    <div class="section-header"><span class="section-num">10</span><span class="section-icon">⚡</span><h2 class="section-title">Use of Force</h2></div>
+
+    <div class="card" data-section="Use of Force" data-title="Principles of Use of Force">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">10.1</span><span class="card-title">Principles of Use of Force</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Any use of force must be <span class="hl">lawful, necessary, and proportionate</span>. Force is a last resort — de-escalation must always be attempted first where safe to do so.</p>
+        <div class="notice info"><span class="notice-icon">ℹ️</span><div>Apply the <strong>National Decision Model (NDM)</strong>: Gather information → Assess threats and risk → Consider powers and policies → Identify options → Act and review.</div></div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Use of Force" data-title="Force Options — Graduated Scale">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">10.2</span><span class="card-title">Force Options — Graduated Scale</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <table class="sop-table">
+          <thead><tr><th>Level</th><th>Option</th><th>Justification</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Presence / verbal commands</td><td>Compliance through professional engagement</td></tr>
+            <tr><td>2</td><td>Physical — open hand</td><td>Guiding, restraint, non-pain compliance</td></tr>
+            <tr><td>3</td><td>Physical — pain compliance</td><td>Subject actively resisting</td></tr>
+            <tr><td>4</td><td>PAVA / Incapacitant spray</td><td>Subject posing threat, distance preferred</td></tr>
+            <tr><td>5</td><td>TASER deployment</td><td>Credible threat / armed subject — TASER Certified only</td></tr>
+            <tr><td>6</td><td>Baton / ASP</td><td>Serious assault or defence of life</td></tr>
+            <tr><td>7</td><td>Firearms (lethal force)</td><td>Imminent threat to life — AFO/ARV only, FA required</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" data-section="Use of Force" data-title="TASER Deployment SOP">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">10.3</span><span class="card-title">TASER Deployment SOP</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>TASER may only be deployed by officers holding an <span class="hl">active TASER Certification</span>.</p>
+        <ol class="sop-ol">
+          <li>Warning must be given: <em>"Stand still — Taser! Taser! Taser!"</em></li>
+          <li>A second officer should be present where possible to provide cover.</li>
+          <li>Aim at lower centre mass — not at the head or face.</li>
+          <li>Duration of cycle must be the minimum required to achieve compliance.</li>
+          <li>Post-deployment, a medical assessment must be conducted immediately.</li>
+          <li>All TASER uses must be reported and logged — even drawn and aimed but not fired.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="card" data-section="Use of Force" data-title="Recording Use of Force">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">10.4</span><span class="card-title">Recording Use of Force</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Every use of force, however minor, must be recorded on the MDT. The record must state the level of force used, the justification, the subject's behaviour, and the outcome. Sergeants may review UoF records at any time.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCENE MANAGEMENT -->
+  <section class="sop-section" id="scene">
+    <div class="section-header"><span class="section-num">11</span><span class="section-icon">🔶</span><h2 class="section-title">Scene Management</h2></div>
+
+    <div class="card" data-section="Scene Management" data-title="Scene Commander">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">11.1</span><span class="card-title">Scene Commander</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The role of <span class="hl">Scene Commander</span> falls upon the <strong>first officer to arrive on scene</strong>. This responsibility can be transferred to another officer at any point should it be deemed necessary — for example, if a higher ranking officer arrives or if the first officer is required elsewhere on scene.</p>
+        <div class="notice info">
+          <span class="notice-icon">ℹ️</span>
+          <div>For <strong>serious incidents</strong> — such as firearms events, hostage situations, or critical incidents — the Scene Commander must be a member of <span class="hl-p">Silver Command or above</span> (Superintendent). For incidents that do not meet this threshold but are nonetheless complex, the Scene Commander should be the <strong>most experienced officer available</strong> rather than strictly the highest rank. If no Silver+ rank is on scene for a qualifying serious incident, the highest available rank assumes Scene Commander until a suitable officer arrives and takes over.</div>
+        </div>
+        <p>The Scene Commander does not have a fixed tactical role — their job is to <strong>coordinate</strong>, assign responsibilities, and maintain oversight of the scene. They should position themselves to have the best possible view of the situation without being drawn into individual tasks.</p>
+      </div>
+    </div>
+
+    <div class="card" data-section="Scene Management" data-title="Scene Commander — Role Assignments">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">11.2</span><span class="card-title">Scene Commander — Role Assignments</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Upon taking command of a scene, the Scene Commander must assign roles to arriving units as quickly as possible. The following are the standard role assignments for an active scene:</p>
+        <table class="sop-table">
+          <thead><tr><th>Assignment</th><th>Responsibility</th></tr></thead>
+          <tbody>
+            <tr><td>🖥️ MDT Unit</td><td>1 individual dedicated to the MDT — creating and updating the incident log, running PNC checks on persons and vehicles, and relaying intelligence to units on scene.</td></tr>
+            <tr><td>📷 Evidence Unit</td><td>1 individual responsible for photographing the scene — suspect vehicles, evidence on the ground, injuries, weapon locations, and any other items of evidential value before they are disturbed.</td></tr>
+            <tr><td>🗣️ Hostage / Demands Unit</td><td>1 individual assigned to communications with any hostage-taker, suspect making demands, or subject requiring negotiation. This individual should be calm, experienced, and not directly involved in tactical containment.</td></tr>
+            <tr><td>🚗 Pursuit / Traffic Unit</td><td>1 Traffic Unit individual (or highest ranking officer if no Traffic Unit is present) responsible for organising any vehicle pursuit that develops from the scene, managing pursuit roles, and coordinating tactical options.</td></tr>
+            <tr><td>🚧 Road Blocks Unit</td><td>1 individual responsible for establishing and managing road blocks — closing roads into and around the scene, managing diversions, and preventing unauthorised vehicle access.</td></tr>
+          </tbody>
+        </table>
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>By <strong>units / individuals</strong>, we mean single officers — not teams. Each role is assigned to one person. On smaller scenes with fewer officers, one individual may hold more than one role at the Scene Commander's discretion. <strong>All officers on scene should be equipped with their TASER and/or PAVA</strong> at all times whilst the scene is active.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Scene Management" data-title="Scene Wrap-Up — Staying Behind">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">11.3</span><span class="card-title">Scene Wrap-Up — Stay-Behind Unit</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Before a scene is stood down, the Scene Commander must designate at least <span class="hl">one unit to remain on scene</span> after primary units have cleared. This stay-behind unit is responsible for the following:</p>
+        <ul class="sop-list">
+          <li>Collecting a <strong>witness statement</strong> from any hostage, victim, or witness present — in accordance with MG11 standards.</li>
+          <li>Gathering and logging any <strong>physical evidence</strong> left behind by suspects — weapons, vehicles, discarded items, clothing, or other exhibits.</li>
+          <li>Photographing any remaining evidence not yet captured by the Evidence Unit.</li>
+          <li><strong>Clearing all road blocks</strong> placed during the incident and confirming road reopening over radio.</li>
+          <li>Conducting a final sweep of the scene before standing it down and updating the MDT log to closed.</li>
+        </ul>
+        <div class="notice success">
+          <span class="notice-icon">✅</span>
+          <div>The stay-behind unit should not clear the scene until the MDT log is complete, all evidence is secured, all statements are taken, and all road blocks are removed. Confirm scene clear over radio to the on-duty Sergeant before going available.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Scene Management" data-title="Initial Attendance at Scene">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">11.4</span><span class="card-title">Initial Attendance at Scene</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>On arrival, the first-attending officer is responsible for the initial assessment. Use the <span class="hl">DRA</span> model: Danger → Response → Airway.</p>
+        <ol class="sop-ol">
+          <li>Confirm safe approach — assess for threats, hazards, or ongoing danger.</li>
+          <li>Transmit a scene report: number of persons, nature of incident, resources required.</li>
+          <li>Establish an inner cordon if the scene requires preservation.</li>
+          <li>Request additional resources (HEMS, CID, ARV) proportionately.</li>
+          <li>Designate a common approach path to protect forensic integrity.</li>
+          <li>Assume Scene Commander until relieved or until a more senior officer arrives.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="card" data-section="Scene Management" data-title="Cordons & Scene Preservation">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">11.5</span><span class="card-title">Cordons &amp; Scene Preservation</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <ul class="sop-list">
+          <li><span class="hl">Inner cordon</span> — Immediately surrounds the scene. No unauthorised entry. Log all entries and exits.</li>
+          <li><span class="hl">Outer cordon</span> — Keeps the public and media at distance.</li>
+          <li>A scene log must be maintained recording all personnel entering the inner cordon.</li>
+          <li>Forensic contamination must be minimised — do not touch or disturb anything unnecessarily.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Scene Management" data-title="CHALETS — Major Incident Assessment">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">11.6</span><span class="card-title">CHALETS — Major Incident SITREP</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>When declaring or attending a potential major incident, use <span class="hl">CHALETS</span> for the initial situation report:</p>
+        <table class="sop-table">
+          <thead><tr><th>Letter</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>C</td><td>Casualties — number, type, severity</td></tr>
+            <tr><td>H</td><td>Hazards — present and potential</td></tr>
+            <tr><td>A</td><td>Access — best approach route for emergency services</td></tr>
+            <tr><td>L</td><td>Location — exact address / grid reference</td></tr>
+            <tr><td>E</td><td>Emergency services — who is present, who is needed</td></tr>
+            <tr><td>T</td><td>Type — nature and scale of the incident</td></tr>
+            <tr><td>S</td><td>Safety — immediate safety considerations</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- SITUATIONAL GUIDANCE -->
+  <section class="sop-section" id="situations">
+    <div class="section-header"><span class="section-num">12</span><span class="section-icon">🗂️</span><h2 class="section-title">Situational Guidance</h2></div>
+
+    <div class="notice info">
+      <span class="notice-icon">ℹ️</span>
+      <div>This section provides procedural guidance for common and high-risk situations encountered by Constables on Orbit. These are not exhaustive scripts — officers must apply professional judgement. All actions must be proportionate, lawful, and logged on the MDT.</div>
+    </div>
+
+    <div class="card" data-section="Situational Guidance" data-title="Robbery">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">12.1</span><span class="card-title">Robbery</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Robbery is the theft of property from a person using <span class="hl">force or the threat of force</span> — charged under <strong>S8 Theft Act 1968</strong>. It is an indictable offence and should always be treated as a serious incident.</p>
+        <ol class="sop-ol">
+          <li>On receipt of a robbery call, acknowledge and update to <span class="hl-b">State 5</span>. Respond at Grade 1 if the incident is active or suspects are outstanding in the area.</li>
+          <li>On arrival, declare <span class="hl-b">State 6</span> and conduct an immediate risk assessment — is the threat ongoing? Are suspects still on scene or nearby?</li>
+          <li>Tend to any injured victim first. Request HEMS if injuries are serious.</li>
+          <li>Obtain a suspect description immediately — clothing, direction of travel, vehicle if applicable — and broadcast over radio. Initiate a <span class="hl">MISPER-style area search</span> if suspects are outstanding.</li>
+          <li>Secure the scene. Preserve any evidence — discarded weapons, CCTV angles, footprints, dropped items.</li>
+          <li>Obtain an initial account from the victim. Do not conduct a full formal interview at the scene — that is done in a controlled environment. Note key facts on the MDT.</li>
+          <li>Consider whether a <span class="hl">Section 60 CJPO</span> authority is warranted if suspects are suspected to be armed and in the area — refer to Inspector.</li>
+          <li>Flag for CID involvement where the robbery involved weapons, organised groups, or serious injury.</li>
+        </ol>
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>Robbery is <strong>not</strong> the same as theft. The use or threat of force elevates the offence. Where a weapon was used, consider charging <strong>S8 Theft Act</strong> alongside <strong>S18 or S20 OAPA</strong> (GBH/ABH) depending on the level of violence, and flag for CID review.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Situational Guidance" data-title="Kidnapping of an Emergency Worker">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">12.2</span><span class="card-title">Kidnapping of an Emergency Worker (Forced Off Shift)</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The kidnapping or unlawful detention of an emergency worker — including a police officer, paramedic, or fire service member — who has been forcibly removed from their duties is an <span class="hl-r">extremely serious incident</span>. This constitutes kidnapping under <strong>Common Law</strong> and an offence under the <strong>Emergency Workers (Obstruction) Act 2006</strong> and <strong>Police, Crime, Sentencing and Courts Act 2022</strong>.</p>
+        <ol class="sop-ol">
+          <li>Treat this as a <span class="hl-r">Critical Incident</span> immediately. Notify a Sergeant and escalate to Silver Command as soon as possible.</li>
+          <li>If the worker's last known location is available, broadcast it immediately. Initiate a response to that location.</li>
+          <li>Request <span class="hl">I-99 / NPAS</span> overhead if available. Air support is critical for locating a moving vehicle.</li>
+          <li>Attempt to establish contact with the missing worker via radio or MDT. If their radio is active, attempt a welfare check transmission — they may be able to respond covertly.</li>
+          <li>Do <strong>not</strong> negotiate directly with suspects without authorisation from Silver Command or above.</li>
+          <li>Identify and preserve any last known CCTV, ANPR hits, or witness accounts of the vehicle used.</li>
+          <li>If the worker's vehicle is involved, request an ANPR marker be placed on it immediately via the MDT.</li>
+          <li>Treat any location where the worker is found as a <span class="hl">crime scene</span> — preserve evidence, do not disturb the immediate area until CID is on scene.</li>
+        </ol>
+        <div class="notice danger">
+          <span class="notice-icon">🚫</span>
+          <div>Under <strong>no circumstances</strong> should any officer attempt a solo rescue without backup. If the worker is located, contain and hold — do not breach without sufficient resource, firearms authority if armed suspects are present, and command authorisation.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Situational Guidance" data-title="When to Use a TASER">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">12.3</span><span class="card-title">When to Use a TASER</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>TASER is a <span class="hl">use of force</span> and may only be deployed by officers holding a valid TASER Certification. Deployment must be <strong>lawful, necessary, and proportionate</strong> to the threat at the time.</p>
+
+        <p><strong>TASER is appropriate where:</strong></p>
+        <ul class="sop-list">
+          <li>The subject is <strong>armed with a weapon</strong> (knife, blunt instrument, etc.) and is actively threatening or advancing on officers or the public.</li>
+          <li>The subject is <strong>physically violent</strong> and lower levels of force have failed or are clearly insufficient given the subject's size, behaviour, or intoxication.</li>
+          <li>The subject is making <strong>credible threats</strong> to cause serious harm and their physical capability means officers cannot safely close the distance.</li>
+          <li>The subject is <strong>self-harming</strong> and TASER is the safest means of intervention to prevent further serious injury.</li>
+          <li>Officers are <strong>outnumbered</strong> and face an active, violent threat where physical restraint alone is unsafe.</li>
+        </ul>
+
+        <p><strong>TASER is not appropriate where:</strong></p>
+        <ul class="sop-list">
+          <li>The subject is passively non-compliant — sitting down, refusing to move, or verbally abusive without physical threat.</li>
+          <li>The subject is <strong>fleeing on foot</strong> and poses no immediate threat to officers or the public — pursuit and containment is preferred.</li>
+          <li>The subject is <strong>elderly or visibly pregnant</strong>, unless the threat posed makes no other option viable.</li>
+          <li>The subject is in a location where a fall from TASER would cause <strong>serious injury</strong> — e.g. at height, near water, on stairs — unless the threat justifies the risk.</li>
+          <li>The situation can be resolved through <strong>de-escalation, negotiation, or containment</strong> without immediate risk of harm.</li>
+        </ul>
+
+        <div class="notice danger">
+          <span class="notice-icon">⚠️</span>
+          <div><strong>Red-dot warning must always be given first:</strong> <em>"Stand still — Taser! Taser! Taser!"</em> Give the subject a genuine opportunity to comply before firing. Every deployment — including draw, aim, and red-dot without discharge — must be reported and logged on the MDT immediately after the incident.</div>
+        </div>
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>After any TASER discharge, the subject must receive a <strong>medical assessment</strong> before transport. Probes must be removed by a trained officer or medical professional. Never remove probes from the head, neck, or groin without medical assistance.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Situational Guidance" data-title="Domestic Incidents">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">12.4</span><span class="card-title">Domestic Incidents</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Domestic incidents require a careful, sensitive approach. They are high-risk — both for the victim and the attending officers. Never dismiss a domestic call as minor until you have a full picture on scene.</p>
+        <ol class="sop-ol">
+          <li>Respond at Grade 1 if the call suggests violence is ongoing or a weapon is involved. Otherwise Grade 2.</li>
+          <li>On arrival, do not announce yourself loudly. Approach cautiously and listen for sounds of violence before entry.</li>
+          <li>Separate the parties immediately upon entry. Speak to the victim and the suspect in different rooms — never together.</li>
+          <li>Conduct a <span class="hl">DASH risk assessment</span> (Domestic Abuse, Stalking and Honour-based violence) on the victim to establish the level of risk: Standard, Medium, or High.</li>
+          <li>If an offence has been committed, arrest the suspect. Do not leave the decision to the victim — a domestic assault is still an offence regardless of whether the victim wishes to proceed.</li>
+          <li>Photograph any visible injuries, damage to property, or signs of struggle before leaving the scene.</li>
+          <li>Refer the victim to appropriate support services and note the referral on the MDT.</li>
+        </ol>
+        <div class="notice danger">
+          <span class="notice-icon">🚫</span>
+          <div><span class="hl-crit">NEVER MEDIATE BETWEEN THE PARTIES.</span> Your role is to <strong>protect the victim, gather evidence, and enforce the law</strong>. Officers who fail to arrest where there is clear evidence of an offence may face a professional standards review.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Situational Guidance" data-title="Missing Persons (MISPER)">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">12.5</span><span class="card-title">Missing Persons (MISPER)</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>All missing person reports must be taken seriously from the outset. Grading is applied based on risk, but every MISPER has the potential to escalate.</p>
+        <table class="sop-table">
+          <thead><tr><th>Risk Grade</th><th>Profile</th><th>Response</th></tr></thead>
+          <tbody>
+            <tr><td><span class="hl-r">High Risk</span></td><td>Vulnerable person, known mental health issues, threats of self-harm, missing in dangerous conditions, or victim of suspected abduction.</td><td>Immediate response. Notify Sergeant. Consider I-99 / NPAS. CID notification if abduction suspected.</td></tr>
+            <tr><td><span class="hl">Medium Risk</span></td><td>Adult with some vulnerability, unusual circumstances, or behaviour out of character.</td><td>Prompt response. Full MISPER log on MDT. Area search initiated.</td></tr>
+            <tr><td><span class="hl-g">Standard Risk</span></td><td>Adult, no vulnerability indicators, no immediate danger suggested.</td><td>Routine response. Obtain full description, last known location, and circumstances. Log on MDT.</td></tr>
+          </tbody>
+        </table>
+        <ol class="sop-ol">
+          <li>Obtain a full description from the reporting person — appearance, clothing, last known location, time last seen, mental health history, and any known haunts.</li>
+          <li>Create a MISPER log on the MDT immediately with all details.</li>
+          <li>Broadcast the description to all on-duty units.</li>
+          <li>Conduct an area search of last known location and likely routes.</li>
+          <li>Check CCTV and ANPR if the person may be mobile.</li>
+          <li>For high risk MISPERs, consider requesting I-99 and notifying CID if abduction or foul play is suspected.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="card" data-section="Situational Guidance" data-title="Mental Health Crisis & Section 136">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">12.6</span><span class="card-title">Mental Health Crisis &amp; Section 136</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p><span class="hl">Section 136 of the Mental Health Act 1983</span> allows a police officer to remove a person who appears to be suffering from a mental health disorder from a <strong>public place</strong> to a place of safety — where they can be assessed by a medical professional.</p>
+        <ul class="sop-list">
+          <li>S136 can only be used in a <strong>public place</strong>. It cannot be used inside a private dwelling.</li>
+          <li>The power should only be used when the person appears to be in immediate need of care or control and it is necessary in the interests of their safety or that of others.</li>
+          <li>The place of safety is normally a designated <span class="hl">healthcare facility or custody suite</span> — not a police cell unless no other option exists.</li>
+          <li>De-escalation must always be attempted first. Request HEMS or a mental health professional to attend where possible.</li>
+          <li>Do not use force unless the person poses an immediate risk to themselves or others and de-escalation has failed.</li>
+          <li>Log the use of S136 on the MDT immediately, including grounds, time, and destination.</li>
+        </ul>
+        <div class="notice info">
+          <span class="notice-icon">ℹ️</span>
+          <div>Where a person is suicidal or self-harming on private premises, S136 does not apply — however, officers may enter under <strong>S17 PACE</strong> (power of entry to save life or limb) and should immediately request HEMS and a mental health professional.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Situational Guidance" data-title="Drug Warrants & Premises Searches">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">12.7</span><span class="card-title">Drug Warrants &amp; Premises Searches</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>A warrant to search premises for controlled drugs is granted under <span class="hl">Section 23 of the Misuse of Drugs Act 1971</span>. Warrants are obtained by CID or a supervising officer — Constables may be deployed to assist with execution.</p>
+        <ol class="sop-ol">
+          <li>Before entry, confirm the warrant is valid — correct address, signed, and within its execution window.</li>
+          <li>Nominate a <span class="hl">Exhibits Officer</span> and a <span class="hl">Search Team</span> before entry. Roles should be assigned by the scene lead.</li>
+          <li>Entry must be <span class="hl-b">announced</span> — identify as police and give a reasonable opportunity to open the door before forced entry is considered.</li>
+          <li>All persons found on the premises may be detained for the duration of the search under <strong>S23(2) MDA</strong>. Read their rights.</li>
+          <li>Seize, bag, and exhibit all controlled drugs, drug paraphernalia, cash, and any items that may be proceeds of supply.</li>
+          <li>All items must be photographed in situ before being moved where possible.</li>
+          <li>Complete the MDT log with all persons present, items seized, and the outcome of the search.</li>
+        </ol>
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>If intelligence suggests the premises may be occupied by <strong>armed individuals</strong>, the warrant must not be executed without ARV support and a Firearms Authority. Do not proceed until firearms units are on scene and a safety plan is in place.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Situational Guidance" data-title="Road Traffic Collision (RTC)">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">12.8</span><span class="card-title">Road Traffic Collision (RTC)</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>RTCs are one of the most frequent incidents attended by Constables. Approach, triage, and scene management must be rapid and systematic.</p>
+        <ol class="sop-ol">
+          <li>On approach, assess for secondary hazards — fuel spillage, unstable vehicles, oncoming traffic. Do not park in the path of potential further collisions.</li>
+          <li>Declare <span class="hl-b">State 6</span> and transmit an initial CHALETS report over radio.</li>
+          <li>Request HEMS if there are any casualties. Do not wait to assess severity — request early and stand down if not needed.</li>
+          <li>Apply first aid to casualties whilst awaiting HEMS. Prioritise life over scene preservation at this stage.</li>
+          <li>Establish a road closure in both directions if the carriageway is blocked. Update Comms so diversions can be managed.</li>
+          <li>Gather details of all drivers involved — name, licence, insurance, VRM. Issue a <span class="hl">HORT/1</span> if documents cannot be produced at the scene.</li>
+          <li>Photograph all vehicles, positions, skid marks, debris, and road conditions before vehicles are moved.</li>
+          <li>If a driving offence is suspected — dangerous driving, drunk driving, TWOC — arrest the relevant driver before they leave the scene.</li>
+          <li>Request RPU/Traffic Unit attendance for serious RTCs involving fatalities, serious injury, or suspected criminality.</li>
+        </ol>
+        <div class="notice info">
+          <span class="notice-icon">ℹ️</span>
+          <div>A <strong>fatal RTC</strong> is automatically a critical incident. The scene must be preserved and no vehicles moved until a Sergeant and CID have attended. Treat the scene as a crime scene from the moment fatality is confirmed.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Situational Guidance" data-title="Officer Taken Hostage — Cannot Be Located">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">12.9</span><span class="card-title">Officer Taken Hostage — Cannot Be Located</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>This situation arises when an officer has been forcibly taken and their whereabouts are <span class="hl-r">unknown</span>. This is one of the most serious incidents the department can face. Time is critical — every minute without a location increases risk to the officer's life.</p>
+
+        <div class="notice danger">
+          <span class="notice-icon">🔴</span>
+          <div>Treat this as a <strong>Critical Incident and a State 0 emergency</strong> from the moment the officer's absence is confirmed as hostile. Escalate to Silver Command immediately — this cannot wait.</div>
+        </div>
+
+        <p><strong>Immediate Actions — First Officer / Scene Command on scene:</strong></p>
+        <ol class="sop-ol">
+          <li>Declare a <span class="hl-r">Critical Incident</span> immediately over radio. Notify the on-duty Sergeant who will escalate to Silver Command without delay.</li>
+          <li>Broadcast the missing officer's last known details: name, collar number, physical description, uniform worn, last known location, and the time they were last seen or heard from.</li>
+          <li>Attempt to make contact with the officer on all known radio channels. Try their personal radio, MDT, and any secondary communications. If the radio is active but they are not responding, attempt a coded welfare check — they may be able to respond covertly.</li>
+          <li>Immediately secure and review the officer's <span class="hl">last known MDT log</span> — what was their last attended incident, what was their last declared state, and was there any intelligence on the person or persons they were last dealing with?</li>
+          <li>Place an <span class="hl">ANPR marker</span> on the officer's police vehicle if they were mobile. If their vehicle is still at the scene or station, this confirms they have been moved in another vehicle — obtain a description of any vehicles in the area at the last known time.</li>
+          <li>Request <span class="hl-b">I-99 / NPAS</span> immediately. Air support is the single most effective tool for locating a moving vehicle. Brief I-99 on the officer's description and any suspect vehicle.</li>
+          <li>Identify the last person or persons the officer interacted with. Run PNC checks on all known associates, suspects, or individuals from the officer's last CAD log. Identify any persons of interest who may have a motive.</li>
+          <li>Check CCTV in the last known area. Identify any vehicles that were in proximity to the officer at the time of the incident — VRMs must be circulated immediately.</li>
+          <li>Establish a <span class="hl">dedicated tactical radio channel</span> for this operation. Move all coordination to that channel and keep the main channel clear for general deployments.</li>
+          <li>Do <strong>not</strong> publicly declare the officer's name or details over open channels — suspects may be monitoring radio. Refer to the officer by collar number only on open channels.</li>
+        </ol>
+
+        <p><strong>Ongoing Search Coordination:</strong></p>
+        <ul class="sop-list">
+          <li>Deploy available units to systematically search the last known area, expanding outward. Prioritise industrial areas, isolated roads, and locations with limited footfall.</li>
+          <li>Contact CID immediately — this is a criminal abduction and requires investigative resource beyond standard front-line capacity.</li>
+          <li>Silver Command must authorise all significant tactical decisions — including any approach, entry, or intervention — once a potential location is identified.</li>
+          <li>If a suspect makes contact via any channel — radio, phone, or through a third party — do not engage without Silver Command authorisation. A trained negotiator must lead any communication with the suspect.</li>
+          <li>Maintain a detailed operational log of every action taken, every piece of intelligence received, and every decision made. This is a major investigation from the moment it begins.</li>
+        </ul>
+
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div><span class="hl-crit">NO OFFICER MAY ATTEMPT A SOLO RESCUE OR APPROACH WITHOUT SILVER COMMAND AUTHORITY AND SUFFICIENT RESOURCE.</span> A poorly executed approach risks the officer's life. <strong>Locate. Contain. Wait for command authorisation.</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Situational Guidance" data-title="Officer Held as Hostage — Location Known">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">12.10</span><span class="card-title">Officer Held as Hostage — Location Known</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>This situation covers a scenario where a police officer has been taken and is being held against their will at a <span class="hl">known or identified location</span> by one or more suspects. This is distinct from a public hostage situation such as a bank robbery — this is targeted, deliberate, and personal. The risk to the officer's life must be treated as <span class="hl-r">immediately critical</span>.</p>
+
+        <div class="notice danger">
+          <span class="notice-icon">🔴</span>
+          <div>This is a <strong>Critical Incident requiring Silver Command</strong>. No tactical action — entry, negotiation, or approach — may be taken without Silver Command's explicit authorisation. The officer's safety is the overriding priority in every decision made.</div>
+        </div>
+
+        <p><strong>Immediate Actions on Identifying the Location:</strong></p>
+        <ol class="sop-ol">
+          <li>Immediately declare the location to Comms and Silver Command on the secure tactical channel. Do not broadcast the address on the open main channel.</li>
+          <li>Establish an <span class="hl">outer cordon</span> at a safe distance from the premises — minimum 50 metres unless the terrain requires further. No officer should approach the building or be within line of sight of the premises without explicit authority.</li>
+          <li>Confirm the cordon perimeter with all attending units. Assign each officer a specific cordon position and maintain radio silence on the tactical channel unless absolutely necessary — conserve channel space for command decisions.</li>
+          <li>Request <span class="hl-b">I-99 / NPAS</span> to provide aerial overwatch. I-99 should monitor all exits and report any movement from the premises. Do not spotlight the building — this may provoke the suspect.</li>
+          <li>Request <span class="hl-r">ARV / Firearms Authority</span> immediately. A hostage-taker holding an officer must be treated as an armed threat until confirmed otherwise. AFO units must be on scene before any tactical entry is considered.</li>
+          <li>Identify all entry and exit points of the premises. Obtain any available floor plans, property records, or intelligence about the building from the MDT or via Comms.</li>
+          <li>Attempt to establish the welfare of the hostage officer. If radio contact is possible without compromising the situation, attempt a brief coded check. Do not attempt overt radio contact that could be overheard by the suspect.</li>
+          <li>Do <strong>not</strong> attempt to contact the suspect directly unless a trained <span class="hl">negotiator</span> is present and Silver Command has authorised it. Untrained negotiation attempts frequently escalate the situation and increase risk to the hostage.</li>
+        </ol>
+
+        <p><strong>Negotiation &amp; Tactical Considerations:</strong></p>
+        <ul class="sop-list">
+          <li><span class="hl">Negotiation takes absolute priority</span> over tactical entry. A peaceful resolution preserves the officer's life. Tactical entry is a last resort and carries significant risk to the hostage.</li>
+          <li>Silver Command must request a trained negotiator. Until a negotiator is on scene, no communication with the suspect should occur beyond basic scene management.</li>
+          <li>All demands made by the suspect must be relayed to Silver Command immediately and verbatim. Officers must not agree to or refuse any demand independently.</li>
+          <li>Do not allow the suspect to dictate the terms of media access, personnel changes, or the cordon perimeter without Silver Command approval.</li>
+          <li>Time works in the negotiator's favour — the longer the incident continues without violence, the better the outcome tends to be. Do not rush.</li>
+          <li>I-99 must monitor all exits continuously. If the suspect attempts to move the officer or leave the premises, Silver Command must be alerted immediately for a rapid tactical decision.</li>
+          <li>Maintain a full scene log — every communication, every movement, every decision. This is a major criminal operation and the log will form part of the prosecution file.</li>
+        </ul>
+
+        <p><strong>If the Officer's Life is in Immediate Danger:</strong></p>
+        <div class="notice danger">
+          <span class="notice-icon">🚫</span>
+          <div>If there is <strong>credible, immediate intelligence</strong> that the officer's life is in immediate danger — audible violence, shots fired, explicit threat received — Silver Command may authorise an emergency tactical entry by AFO units. <span class="hl-crit">CONSTABLES DO NOT BREACH THE PREMISES.</span> They hold the outer cordon, prevent escape routes, and support AFOs. <strong>No Constable enters the building during a live hostage situation under any circumstances.</strong></div>
+        </div>
+
+        <p><strong>After Resolution:</strong></p>
+        <ul class="sop-list">
+          <li>The hostage officer must receive an immediate medical assessment regardless of apparent injury.</li>
+          <li>The scene is a crime scene — preserve all evidence, photograph everything, and do not allow unnecessary access.</li>
+          <li>All involved officers must be stood down for a structured debrief led by Silver Command or the Critical Incident Manager before any statements are taken.</li>
+          <li>The hostage officer must not be required to give a formal statement immediately — welfare takes priority. A statement is taken when they are medically and psychologically ready.</li>
+        </ul>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- FIREARMS -->
+  <section class="sop-section" id="firearms">
+    <div class="section-header"><span class="section-num">13</span><span class="section-icon">🔫</span><h2 class="section-title">Firearms Protocols</h2></div>
+    <div class="notice danger"><span class="notice-icon">🚫</span><div><span class="hl-crit">FIREARMS DEPLOYMENT IS RESTRICTED TO AUTHORISED FIREARMS OFFICERS (AFOs) AND ARMED RESPONSE VEHICLES (ARVs) ONLY.</span> Constables without a Firearms Authority <strong>must withdraw to a safe distance and must not approach unsupported.</strong></div></div>
+
+    <div class="card" data-section="Firearms Protocols" data-title="Firearms Authority (FA)">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">13.1</span><span class="card-title">Firearms Authority (FA)</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>A Firearms Authority must be granted by a <span class="hl">Superintendent or above</span> before any officer may carry or deploy a firearm. The FA must specify the nature of the authority, threat level, and applicable force options.</p>
+        <ul class="sop-list">
+          <li>FA reference must be declared over radio and logged on the MDT at time of issue.</li>
+          <li>FA is incident-specific — it does not carry over to unrelated deployments.</li>
+          <li>Officers operating under FA must update their state to <span class="hl-p">State 9</span>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Firearms Protocols" data-title="Responding to a Firearms Incident">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">13.2</span><span class="card-title">Responding to a Firearms Incident</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>On receiving intelligence of a firearm at an incident, all Constables must:</p>
+        <ol class="sop-ol">
+          <li>Immediately withdraw to a safe distance (minimum 50 metres / out of line of sight).</li>
+          <li>Inform Comms and declare a firearms incident on radio.</li>
+          <li>Contain the area without encroaching — outer cordon only.</li>
+          <li>Do not approach or confront the subject until ARV/AFO units arrive and assume command.</li>
+          <li>Provide intelligence to arriving AFOs: subject description, last known position, weapons suspected.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="card" data-section="Firearms Protocols" data-title="Handover to Firearms Units">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">13.3</span><span class="card-title">Handover to Firearms Units</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>When AFO/ARV units arrive, the on-scene Constable must hand over command of the inner area immediately. Constables revert to outer containment, traffic management, and public safety duties only.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MDT -->
+  <section class="sop-section" id="mdt">
+    <div class="section-header"><span class="section-num">14</span><span class="section-icon">💻</span><h2 class="section-title">MDT Usage</h2></div>
+
+    <div class="card" data-section="MDT Usage" data-title="MDT Overview & Responsibilities">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">14.1</span><span class="card-title">MDT Overview &amp; Responsibilities</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The Mobile Data Terminal (MDT) is the primary records management and intelligence system for all Constables. All MDT entries are <span class="hl">official records</span> and may be reviewed, audited, or used as evidence.</p>
+        <ul class="sop-list">
+          <li>Do not search individuals on the MDT without a lawful policing purpose.</li>
+          <li>MDT access is personal — do not share login credentials.</li>
+          <li>All searches conducted on the MDT are logged automatically.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="MDT Usage" data-title="PNC & ANPR Checks">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">14.2</span><span class="card-title">PNC &amp; ANPR Checks</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Officers may run PNC checks on persons or vehicles where there is a legitimate policing purpose. Running checks for personal curiosity or on behalf of a third party is a <span class="hl-r">serious misconduct offence</span>.</p>
+      </div>
+    </div>
+
+    <div class="card" data-section="MDT Usage" data-title="Creating & Closing Incident Logs">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">14.3</span><span class="card-title">Creating &amp; Closing Incident Logs</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Every attended incident must have a CAD log. On attendance, link yourself to the log. On conclusion, add a closure note summarising the outcome, persons involved, actions taken, and any further action required. Incomplete logs must not be left open at end of shift.</p>
+      </div>
+    </div>
+
+    <div class="card" data-section="MDT Usage" data-title="Intelligence Markers & Flags">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">14.4</span><span class="card-title">Intelligence Markers &amp; Flags</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Officers may place intelligence markers on persons or vehicles via the MDT when there is a documented policing basis. All markers must include a reason, intelligence source grading, and an expiry review date. Incorrect or malicious markers constitute a data protection breach.</p>
+      </div>
+    </div>
+
+    <div class="card" data-section="MDT Usage" data-title="MDT Statements &amp; Timing">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">14.5</span><span class="card-title">MDT Statements &amp; Timing</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>MDT statements form a core part of the prosecution file and must be completed in a timely manner. Late statements weaken cases, frustrate the courts, and can lead to charges being dropped.</p>
+        <div class="notice danger">
+          <span class="notice-icon">⚠️</span>
+          <div><span class="hl-crit">ALL MDT STATEMENTS MUST BE FINISHED BY THE TIME THE SUSPECT IS MAKING A PLEA.</span> Any and all statements should be completed at the earliest opportunity following the incident. <strong>Failure to do so may result in a strike.</strong></div>
+        </div>
+        <ul class="sop-list">
+          <li>Statements should be drafted as close to the incident as practical — detail fades quickly.</li>
+          <li>If a statement cannot be completed before end of shift, it must be flagged to the on-duty Sergeant with a reason.</li>
+          <li>A statement is not complete until it is reviewed, signed, and uploaded to the case file on the MDT.</li>
+          <li>Where multiple officers are involved, each must submit their own statement — do not copy another officer's account.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CRITICAL INCIDENTS -->
+  <section class="sop-section" id="critical">
+    <div class="section-header"><span class="section-num">15</span><span class="section-icon">🔴</span><h2 class="section-title">Critical Incidents</h2></div>
+
+    <div class="card" data-section="Critical Incidents" data-title="What is a Critical Incident?">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">15.1</span><span class="card-title">What is a Critical Incident?</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>A critical incident is any incident where the effectiveness of the police response is likely to have a <span class="hl">significant impact on the confidence of the victim, their family, or the community</span>. Examples include:</p>
+        <ul class="sop-list">
+          <li>Death or serious injury as a result of a police interaction.</li>
+          <li>Firearms incidents resulting in discharge.</li>
+          <li>Loss of a prisoner or detainee.</li>
+          <li>Major civil unrest or large-scale public disorder.</li>
+          <li>Death in custody.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Critical Incidents" data-title="Declaring a Critical Incident">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">15.2</span><span class="card-title">Declaring a Critical Incident</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Any officer may declare a critical incident but it must be immediately escalated to a <span class="hl">Sergeant or above</span> who will assume the role of Critical Incident Manager (CIM).</p>
+        <div class="notice danger"><span class="notice-icon">🔴</span><div>Do not leave the scene of a potential critical incident unless relieved by a Sergeant. Scene integrity is paramount from the first moment.</div></div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Critical Incidents" data-title="Death — Scene Protocol">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">15.3</span><span class="card-title">Death — Scene Protocol</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <ol class="sop-ol">
+          <li>Confirm scene safety before approaching.</li>
+          <li>If life is not obviously extinct, perform first aid until HEMS/paramedics arrive.</li>
+          <li>Preserve the scene — do not move the body or disturb the immediate area.</li>
+          <li>Declare to Comms and request a Sergeant, CID, and HEMS if not already en route.</li>
+          <li>Take details of any witnesses present and prevent them from leaving.</li>
+          <li>Maintain a detailed scene log.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="card" data-section="Critical Incidents" data-title="Post-Incident Debrief">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">15.4</span><span class="card-title">Post-Incident Debrief</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Following any critical incident, all involved officers must participate in a structured debrief led by the CIM or Duty Inspector. Officers must not discuss the incident with uninvolved parties until the debrief is concluded. Notes are retained on the MDT case file.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- REPORTS -->
+  <section class="sop-section" id="reports">
+    <div class="section-header"><span class="section-num">16</span><span class="section-icon">📝</span><h2 class="section-title">Reports &amp; Logging</h2></div>
+
+    <div class="card" data-section="Reports & Logging" data-title="General Reporting Standards">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">16.1</span><span class="card-title">General Reporting Standards</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>All written records must be factual, objective, and written in the first person. They must accurately represent what you personally saw, heard, or did. Never exaggerate, speculate, or include another officer's account as your own.</p>
+      </div>
+    </div>
+
+    <div class="card" data-section="Reports & Logging" data-title="Statement Writing (MG11)">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">16.2</span><span class="card-title">Statement Writing (MG11)</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>MG11 statements must be completed when an officer is a witness to a crime or incident that may reach prosecution. The statement must include:</p>
+        <ul class="sop-list">
+          <li>Full name, collar number, and division.</li>
+          <li>A sequential, chronological account of events — what was observed, at what time and location.</li>
+          <li>Factual descriptions only — no opinion, legal conclusion, or speculation.</li>
+          <li>Any exhibits identified (BWV footage reference, items seized).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Reports & Logging" data-title="Exhibit Management">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">16.3</span><span class="card-title">Exhibit Management</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>All physical exhibits seized must be bagged, tagged, and logged with an exhibit reference. The continuity of the exhibit must be maintained — every person who handles it must sign the exhibit log. Exhibits must be submitted to the property store without delay.</p>
+      </div>
+    </div>
+
+    <div class="card" data-section="Reports & Logging" data-title="Use of Force Report Timescale">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">16.4</span><span class="card-title">Use of Force Report Timescale</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>A Use of Force report must be submitted via the MDT within <span class="hl">two hours</span> of the end of the incident. Late or missing UoF reports are flagged to the Duty Sergeant. Persistent non-compliance is treated as a professional standards matter.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRAINING -->
+  <section class="sop-section" id="training">
+    <div class="section-header"><span class="section-num">17</span><span class="section-icon">🎓</span><h2 class="section-title">Training Modules</h2></div>
+
+    <div class="notice info">
+      <span class="notice-icon">ℹ️</span>
+      <div>This area holds the training modules required for all officers across the Police Department. Modules are grouped by training programme. Officers must complete all required modules within their programme before being signed off as operational.</div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- BPT — BASIC POLICE TRAINING -->
+    <!-- ============================================================== -->
+    <div class="module-card" data-section="Training Modules" data-title="BPT — Basic Police Training">
+      <div class="module-header" onclick="toggleModule(this)">
+        <span class="module-num">17.1</span>
+        <span class="module-icon">📘</span>
+        <span class="module-title">BPT — Basic Police Training</span>
+        <span class="module-meta">5 MODULES</span>
+        <span class="module-chevron">▼</span>
+      </div>
+      <div class="module-body">
+
+    <div class="notice info">
+      <span class="notice-icon">📘</span>
+      <div><strong>Basic Police Training (BPT)</strong> is the foundational programme every new Constable must complete before independent deployment. It covers the procedural principles applied to common offences encountered on the streets of Orbit. The <span class="hl">principle is always the same</span> — the nature of the incident dictates the charges applied.</div>
+    </div>
+
+    <div class="card" data-section="Training — BPT" data-title="Robbery — Core Principle">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">BPT.1</span><span class="card-title">Robbery — Core Principle</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Robbery is the theft of property using <span class="hl">force or the threat of force</span> — charged under <strong>S8 Theft Act 1968</strong>. The procedural response is consistent regardless of location, but each setting carries its own risk profile and additional charges.</p>
+
+        <p><strong>Core principle applied to every robbery scene:</strong></p>
+        <ol class="sop-ol">
+          <li>Acknowledge the call, declare <span class="hl-b">State 5</span>, and respond at Grade 1 if active.</li>
+          <li>On arrival, declare <span class="hl-b">State 6</span>.</li>
+          <li>Find the <span class="hl">earliest available tactical channel</span> and request all responding units to attend on that channel. Keep the main channel clear.</li>
+          <li>Conduct a rapid risk assessment — is the threat ongoing, are suspects on scene or fled?</li>
+          <li>Tend to injured victims first. Request HEMS where required.</li>
+          <li>Obtain suspect description, direction of travel, vehicle/VRM and <strong>broadcast immediately</strong>.</li>
+          <li>Secure the scene and preserve evidence — weapons, footprints, dropped items, CCTV angles.</li>
+          <li>Take an initial account from the victim. Full formal interview is conducted later in a controlled environment.</li>
+          <li>Flag for CID involvement where weapons, organised groups, or serious injury are involved.</li>
+          <li>Complete the MDT log fully — see Section 2.6 for required fields.</li>
+        </ol>
+
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>The procedural steps above are the <strong>same for every robbery</strong>. What changes is the setting, the risk profile, and the layered charges that apply. The three sub-modules below cover the specific considerations for each.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Training — BPT" data-title="House Robbery">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">BPT.1a</span><span class="card-title">House Robbery</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>A house robbery — sometimes called an <strong>aggravated burglary</strong> — is the use of force or threat of force against an occupant during the unlawful entry of a dwelling.</p>
+
+        <p><strong>Charges typically applied:</strong></p>
+        <table class="sop-table">
+          <thead><tr><th>Charge</th><th>Legislation</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Robbery</td><td>S8 Theft Act 1968</td><td>Base charge — theft with force.</td></tr>
+            <tr><td>Aggravated Burglary</td><td>S10 Theft Act 1968</td><td>Burglary whilst in possession of a weapon. Indictable only, max life.</td></tr>
+            <tr><td>Burglary</td><td>S9 Theft Act 1968</td><td>If no aggravating weapon present.</td></tr>
+            <tr><td>ABH / GBH</td><td>S47 / S20 / S18 OAPA 1861</td><td>Layer where the occupant was assaulted.</td></tr>
+            <tr><td>False Imprisonment</td><td>Common Law</td><td>Where occupants were restrained or held against their will.</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>Setting-specific considerations:</strong></p>
+        <ul class="sop-list">
+          <li>Treat the property as a <span class="hl-r">crime scene</span> from the moment of arrival — preserve forensic integrity.</li>
+          <li>Suspects may still be on premises — <strong>do not enter alone</strong>. Wait for backup and clear the property as a team.</li>
+          <li>Identify the <strong>point of entry</strong> early — windows, doors, forced locks — and photograph before disturbance.</li>
+          <li>Account for every occupant. Vulnerable persons in the household need a safeguarding consideration.</li>
+          <li>Refer to CID for any organised pattern (multiple addresses, similar MO).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Training — BPT" data-title="Shop Robbery">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">BPT.1b</span><span class="card-title">Shop Robbery</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>A shop robbery is the use of force or threat of force against a shop worker or customer during a theft from a commercial premises. These incidents are usually rapid, captured on CCTV, and involve identifiable witnesses.</p>
+
+        <p><strong>Charges typically applied:</strong></p>
+        <table class="sop-table">
+          <thead><tr><th>Charge</th><th>Legislation</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Robbery</td><td>S8 Theft Act 1968</td><td>Base charge — theft with force.</td></tr>
+            <tr><td>Possession of an Offensive Weapon</td><td>S1 Prevention of Crime Act 1953</td><td>Where any weapon was carried — including imitation firearms.</td></tr>
+            <tr><td>Possession of a Bladed Article</td><td>S139 CJA 1988</td><td>Where a knife was used or carried.</td></tr>
+            <tr><td>Assault on an Emergency Worker</td><td>Assaults on Emergency Workers Act 2018</td><td>Where staff are deemed emergency workers in the moment of intervention.</td></tr>
+            <tr><td>ABH / GBH</td><td>S47 / S20 / S18 OAPA 1861</td><td>Layer where staff or customers were assaulted.</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>Setting-specific considerations:</strong></p>
+        <ul class="sop-list">
+          <li><strong>CCTV is your primary evidence source</strong> — secure and preserve footage before leaving the scene.</li>
+          <li>Identify every staff member and customer present at the time — all are potential witnesses.</li>
+          <li>Note the <strong>till position, layout, and exit points</strong> — useful for suspect identification and ANPR if vehicle used.</li>
+          <li>Shop robberies may involve <strong>hostages</strong> — be prepared to take demands from suspects (see <strong>BPT.1d Demands Protocol</strong>).</li>
+          <li>Request <strong>ARV / AFO units</strong> <span class="hl-r">only if the robbers are confirmed to be armed</span>. Shop robberies are not treated as firearms incidents by default.</li>
+          <li>Liaise with the shop owner / manager regarding stolen items — exact descriptions, value, serial numbers.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Training — BPT" data-title="Bank Robbery">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">BPT.1c</span><span class="card-title">Bank Robbery</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>A bank robbery is one of the most serious property offences attended by police. The presence of staff, customers, and vaults raises the threat profile significantly — and bank robberies frequently involve hostages, making a demands-led negotiation likely on arrival.</p>
+
+        <div class="notice danger">
+          <span class="notice-icon">🔴</span>
+          <div><span class="hl-crit">BANK ROBBERIES OFTEN INVOLVE HOSTAGES.</span> On arrival, contain the scene and prepare to take demands from suspects (see <strong>BPT.1d Demands Protocol</strong>). Only request <strong>ARV / AFO units</strong> where the robbers are confirmed to be armed — bank robberies are not treated as firearms incidents by default.</div>
+        </div>
+
+        <p><strong>Charges typically applied:</strong></p>
+        <table class="sop-table">
+          <thead><tr><th>Charge</th><th>Legislation</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Robbery</td><td>S8 Theft Act 1968</td><td>Base charge — theft with force.</td></tr>
+            <tr><td>Possession of a Firearm with Intent</td><td>S16 / S17 / S18 Firearms Act 1968</td><td>Layer the appropriate firearms charge based on intent and use.</td></tr>
+            <tr><td>False Imprisonment</td><td>Common Law</td><td>Where staff or customers were held against their will.</td></tr>
+            <tr><td>Kidnapping</td><td>Common Law</td><td>Where a person was forcibly removed from the bank.</td></tr>
+            <tr><td>Conspiracy to Rob</td><td>Criminal Law Act 1977</td><td>Where evidence shows planning between two or more suspects.</td></tr>
+            <tr><td>Money Laundering</td><td>Proceeds of Crime Act 2002</td><td>Charge for downstream handling of the proceeds.</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>Setting-specific considerations:</strong></p>
+        <ul class="sop-list">
+          <li>On arrival, <strong>contain the scene</strong> and establish an outer cordon — minimum <span class="hl">50 metres</span> in all directions.</li>
+          <li>Take demands from suspects via the assigned <strong>Hostage / Demands Unit</strong> (see <strong>BPT.1d</strong>).</li>
+          <li>Request <strong>ARV / AFO units</strong> <span class="hl-r">only if the robbers are confirmed to be armed</span>. Imitation or visible firearm during the offence elevates to a firearms response.</li>
+          <li>Request <strong>I-99 / NPAS</strong> for aerial overwatch and to track any vehicle bail — <em>unless</em> "no NPAS" has been agreed as part of demands.</li>
+          <li>Identify all <strong>exits from the bank</strong> and assign units to contain each.</li>
+          <li>Liaise with the bank's <strong>internal security</strong> — they may have direct CCTV feeds, panic alarms, and dye-marker information on stolen cash.</li>
+          <li>Flag for CID and notify Silver Command from the moment of arrival.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Training — BPT" data-title="Demands Protocol">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">BPT.1d</span><span class="card-title">Demands Protocol — Shop &amp; Bank Robberies</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Shop and bank robberies can develop into hostage situations on scene. Where suspects are holding hostages, officers take demands from the suspects in exchange for the safe release of those hostages. <span class="hl-r">This protocol does not apply to house robberies</span> — domestic settings are managed under the standard situational guidance for kidnapping and hostage scenarios.</p>
+
+        <div class="notice info">
+          <span class="notice-icon">🗣️</span>
+          <div>Demands are taken by the assigned <strong>Hostage / Demands Unit</strong> on scene (see Section 11.2). This officer should be calm, experienced, and not directly involved in tactical containment. All demands and counter-offers must be relayed to Silver Command immediately and verbatim.</div>
+        </div>
+
+        <p><strong>Demands typically requested by suspects:</strong></p>
+        <table class="sop-table">
+          <thead><tr><th>Demand</th><th>Status</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Free Passage</td><td><span class="hl-g">ALWAYS GRANTED</span></td><td>Safe exit from the scene without immediate pursuit. This is the standard non-negotiable demand and forms the basis of every demands exchange.</td></tr>
+            <tr><td>No NPAS</td><td><span class="hl">5 MINUTES MAX</span></td><td>I-99 / NPAS stood off the scene for a limited window. Granted only as the second demand alongside free passage.</td></tr>
+            <tr><td>No Spikes</td><td><span class="hl">5 MINUTES MAX</span></td><td>Roads Policing Unit stand off stinger deployment for a limited window. Granted only as the second demand alongside free passage.</td></tr>
+          </tbody>
+        </table>
+
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div><span class="hl-crit">SUSPECTS RECEIVE FREE PASSAGE PLUS ONE ADDITIONAL DEMAND.</span> The additional demand is either <strong>No NPAS</strong> or <strong>No Spikes</strong> — never both. Any additional demand beyond this is refused, and the negotiation continues. The agreed demands are granted in exchange for the <strong>release of all hostages on scene</strong>.</div>
+        </div>
+
+        <div class="notice info">
+          <span class="notice-icon">🎭</span>
+          <div><strong>Content demands (officer discretion):</strong> As a content city, suspects may occasionally request a content-style demand — a sing-song, a dance-off, a joke, or something similar. These are <span class="hl">at the officer's discretion to allow</span> in place of No NPAS or No Spikes. The content demand replaces the operational demand — it is not granted on top of it. Free passage still applies.</div>
+        </div>
+
+        <p><strong>Procedure for taking demands:</strong></p>
+        <ol class="sop-ol">
+          <li>Establish containment first — outer cordon, exits covered, units on the tactical channel.</li>
+          <li>The Hostage / Demands Unit makes contact with the suspects from a position of safety.</li>
+          <li>Note every demand made by suspects, verbatim, and relay to Silver Command.</li>
+          <li>Confirm the exchange: <strong>free passage + one demand (NPAS or Spikes) for the release of all hostages</strong>.</li>
+          <li>Once hostages are released and accounted for, the 5-minute clock starts. Pursuit options re-engage after the window expires.</li>
+          <li>Log every demand, response, and timing on the MDT — this forms part of the prosecution file.</li>
+        </ol>
+
+        <div class="notice danger">
+          <span class="notice-icon">🚫</span>
+          <div>Officers must <strong>not</strong> agree to or refuse a demand independently. All demands are routed through the Hostage / Demands Unit and approved by Silver Command. Going off-script during negotiation risks the hostages and may collapse the resolution.</div>
+        </div>
+      </div>
+    </div>
+
+      </div>
+    </div>
+    <!-- END BPT MODULE -->
+
+    <!-- ============================================================== -->
+    <!-- TASER TRAINING -->
+    <!-- ============================================================== -->
+    <div class="module-card" data-section="Training Modules" data-title="TASER Training &amp; Certification">
+      <div class="module-header" onclick="toggleModule(this)">
+        <span class="module-num">17.2</span>
+        <span class="module-icon">⚡</span>
+        <span class="module-title">TASER Training &amp; Certification</span>
+        <span class="module-meta">4 MODULES</span>
+        <span class="module-chevron">▼</span>
+      </div>
+      <div class="module-body">
+
+    <div class="notice info">
+      <span class="notice-icon">⚡</span>
+      <div>TASER training covers the principles of lawful, necessary, and proportionate deployment of a Conducted Energy Device. Officers must hold a valid <span class="hl">TASER Certification</span> before carrying or deploying. This module covers <strong>when</strong> to taser, <strong>where</strong> to aim, and the <strong>conditions under which TASER must not be used</strong>.</div>
+    </div>
+
+    <div class="card" data-section="Training — TASER" data-title="When to Use a TASER">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">TSR.1</span><span class="card-title">When to Use a TASER</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>TASER may only be deployed when its use is <span class="hl">lawful, necessary, and proportionate</span> to the threat being faced. Deployment must always follow a verbal warning where time and safety permit.</p>
+
+        <p><strong>TASER is appropriate where:</strong></p>
+        <ul class="sop-list">
+          <li>The subject is <strong>armed with a weapon</strong> (knife, blunt instrument) and is actively threatening or advancing on officers or the public.</li>
+          <li>The subject is <strong>physically violent</strong> and lower levels of force have failed or are clearly insufficient.</li>
+          <li>The subject is making <strong>credible threats</strong> to cause serious harm where officers cannot safely close the distance.</li>
+          <li>The subject is <strong>at harm</strong> and TASER is the safest means of intervention to prevent further serious injury.</li>
+          <li>Officers are <strong>outnumbered</strong> and face an active violent threat where physical restraint alone is unsafe.</li>
+        </ul>
+
+        <div class="notice danger">
+          <span class="notice-icon">⚠️</span>
+          <div><span class="hl-crit">RED-DOT WARNING MUST BE GIVEN FIRST:</span> <em>"Stand still — Taser! Taser! Taser!"</em> Give the subject a genuine opportunity to comply before firing. Every deployment — including draw, aim, and red-dot without discharge — must be logged on the MDT.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Training — TASER" data-title="Where to Aim a TASER">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">TSR.2</span><span class="card-title">Where to Aim a TASER</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Probe placement matters. The aim point affects effectiveness and the risk of injury to the subject.</p>
+
+        <table class="sop-table">
+          <thead><tr><th>Zone</th><th>Status</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Lower centre mass</td><td><span class="hl-g">PREFERRED</span></td><td>Belt-line to lower abdomen. Best balance of effectiveness and safety. Wide muscle mass = good probe spread.</td></tr>
+            <tr><td>Back (centre mass)</td><td><span class="hl-g">PREFERRED if facing away</span></td><td>Where the subject is fleeing or turned. Aim for the centre of the back.</td></tr>
+            <tr><td>Upper torso / chest</td><td><span class="hl">ACCEPTABLE</span></td><td>Effective but proximity to the heart raises medical risk. Only where lower mass is not viable.</td></tr>
+            <tr><td>Thighs / legs</td><td><span class="hl">ACCEPTABLE</span></td><td>Where the subject is seated or partially shielded. May give reduced spread.</td></tr>
+            <tr><td>Head / neck / face</td><td><span class="hl-r">PROHIBITED</span></td><td>Serious injury risk — eye, brain, cervical spine. Never aim here.</td></tr>
+            <tr><td>Groin</td><td><span class="hl-r">PROHIBITED</span></td><td>Disproportionate, humiliating, and increases medical complication risk.</td></tr>
+          </tbody>
+        </table>
+
+        <ul class="sop-list">
+          <li>Optimal probe spread is achieved at a range of <strong>2 to 4 metres</strong>.</li>
+          <li>Too close — probes do not spread; reduced effectiveness.</li>
+          <li>Too far — probes may miss or fail to embed.</li>
+          <li>After firing, the subject must be assessed for probe location and any injury before transport.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Training — TASER" data-title="When NOT to Use a TASER">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">TSR.3</span><span class="card-title">When NOT to Use a TASER</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>TASER must <strong>not</strong> be deployed where the risk of secondary injury or death outweighs the operational benefit. The conditions below either prohibit TASER use entirely, or require an elevated justification.</p>
+
+        <p><strong>Environmental conditions:</strong></p>
+        <table class="sop-table">
+          <thead><tr><th>Condition</th><th>Status</th><th>Reason</th></tr></thead>
+          <tbody>
+            <tr><td>Subject in or near water</td><td><span class="hl-crit">PROHIBITED</span></td><td>Risk of drowning if subject incapacitated whilst submerged. Includes rivers, lakes, sea, pools, and flooded areas.</td></tr>
+            <tr><td>Subject at height — cliffs, rooftops, ledges, scaffolding</td><td><span class="hl-crit">PROHIBITED</span></td><td>Fall from height following incapacitation is likely to cause serious or fatal injury.</td></tr>
+            <tr><td>Subject in a moving vehicle</td><td><span class="hl-crit">PROHIBITED</span></td><td>Loss of vehicle control endangers the subject, officers, and the public.</td></tr>
+            <tr><td>Subject on stairs or steep terrain</td><td><span class="hl-r">AVOID</span></td><td>Uncontrolled fall risk. Only deploy if the threat justifies the secondary injury risk.</td></tr>
+            <tr><td>Heavy rain, snow, or strong wind</td><td><span class="hl-r">AVOID</span></td><td>Adverse weather can affect probe trajectory and effectiveness. Re-assess force options.</td></tr>
+            <tr><td>Flammable atmosphere — petrol, gas leak, fuel spillage</td><td><span class="hl-crit">PROHIBITED</span></td><td>TASER arc can ignite vapours. Never deploy where fuel or gas vapour is present.</td></tr>
+            <tr><td>Subject in proximity to live electrical hazards</td><td><span class="hl-r">AVOID</span></td><td>Subject collapse may bring them into contact with live current.</td></tr>
+          </tbody>
+        </table>
+
+        <p><strong>Subject-specific factors:</strong></p>
+        <ul class="sop-list">
+          <li><strong>Elderly persons</strong> — increased risk of secondary injury from falls. Only deploy where threat justifies it.</li>
+          <li><strong>Visibly pregnant individuals</strong> — risk to unborn. Avoid unless no viable alternative.</li>
+          <li><strong>Persons with known heart conditions or pacemakers</strong> — where this is known or visibly indicated.</li>
+          <li>Passive non-compliance — sitting, refusing to move, verbal abuse — is <span class="hl-r">not</span> grounds for TASER deployment.</li>
+          <li>Fleeing on foot with no threat to others — pursuit and containment is preferred over TASER.</li>
+        </ul>
+
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>Where TASER is prohibited or to be avoided, fall back to <strong>de-escalation, containment, PAVA, baton, or empty-hand techniques</strong>. The decision not to taser is just as much a use-of-force decision as the decision to taser — record your reasoning on the MDT.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Training — TASER" data-title="Post-Deployment Procedure">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">TSR.4</span><span class="card-title">Post-Deployment Procedure</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <ol class="sop-ol">
+          <li>Confirm the subject is restrained before approaching to recover probes.</li>
+          <li><strong>Medical assessment is mandatory</strong> before transport — request HEMS or paramedics to attend.</li>
+          <li>Probes must be removed by a trained officer or medical professional. Never remove probes from the <span class="hl-r">head, neck, or groin</span> without medical assistance.</li>
+          <li>Photograph probe locations on the subject for the MDT log.</li>
+          <li>Bag and tag the spent cartridge and probes as evidence — exhibit reference required.</li>
+          <li>Complete a Use of Force report on the MDT within <span class="hl">two hours</span> (see Section 16.4).</li>
+        </ol>
+      </div>
+    </div>
+
+      </div>
+    </div>
+    <!-- END TASER MODULE -->
+
+  </section>
+
+  <footer class="footer">
+    <span>OrbitRP · City of Orbit · Police SOPs · v2.8</span>
+    <span>Created by SR-1 C/Supt R.Jones</span>
+  </footer>
+</main>
+
+<div id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<script>
+function toggleCard(h){h.parentElement.classList.toggle('open')}
+function toggleModule(h){h.parentElement.classList.toggle('open')}
+function setActive(el){document.querySelectorAll('.nav-item').forEach(function(a){a.classList.remove('active')});el.classList.add('active')}
+
+window.addEventListener('scroll',function(){
+  var btn=document.getElementById('back-top');
+  btn.classList.toggle('visible',window.scrollY>300);
+},{passive:true});
+
+var searchData=[];
+document.querySelectorAll('.card').forEach(function(card){
+  var section=card.getAttribute('data-section')||'';
+  var title=card.getAttribute('data-title')||'';
+  var body=card.querySelector('.card-body');
+  var text=body?body.innerText:'';
+  var id=card.querySelector('.card-id')?card.querySelector('.card-id').innerText:'';
+  var anchor=card.closest('.sop-section')?card.closest('.sop-section').id:'';
+  searchData.push({section,title,text,id,anchor,card});
+});
+
+var allSections=document.querySelectorAll('.sop-section');
+var resultsDiv=document.getElementById('search-results');
+
+document.getElementById('search').addEventListener('input',function(){
+  var q=this.value.trim().toLowerCase();
+  if(!q){
+    resultsDiv.classList.remove('active');
+    resultsDiv.innerHTML='';
+    allSections.forEach(function(s){s.style.display=''});
+    return;
+  }
+  allSections.forEach(function(s){s.style.display='none'});
+  resultsDiv.innerHTML='';
+  resultsDiv.classList.add('active');
+  var matches=searchData.filter(function(d){
+    return d.title.toLowerCase().includes(q)||d.section.toLowerCase().includes(q)||d.text.toLowerCase().includes(q);
+  });
+  if(!matches.length){
+    resultsDiv.innerHTML='<p style="color:var(--text-muted);padding:20px 0;font-size:14px;">No results for <strong style="color:var(--text)">"'+q+'"</strong>.</p>';
+    return;
+  }
+  matches.forEach(function(m){
+    var idx=m.text.toLowerCase().indexOf(q);
+    var snippet=idx>-1?'…'+m.text.substring(Math.max(0,idx-40),idx+80).replace(/\n/g,' ')+'…':m.text.substring(0,100)+'…';
+    var hl=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+    var el=document.createElement('div');
+    el.className='result-item';
+    el.innerHTML='<div class="result-section">'+m.section.toUpperCase()+' · '+m.id+'</div><div class="result-title">'+m.title.replace(hl,'<mark>$1</mark>')+'</div><div class="result-snippet">'+snippet.replace(hl,'<mark>$1</mark>')+'</div>';
+    el.addEventListener('click',function(){
+      document.getElementById('search').value='';
+      resultsDiv.classList.remove('active');
+      resultsDiv.innerHTML='';
+      allSections.forEach(function(s){s.style.display=''});
+      m.card.scrollIntoView({behavior:'smooth',block:'center'});
+      m.card.classList.add('open');
+      setTimeout(function(){m.card.style.boxShadow='0 0 0 2px var(--accent)';setTimeout(function(){m.card.style.boxShadow=''},1400)},400);
+    });
+    resultsDiv.appendChild(el);
+  });
+});
+
+var sectionEls=document.querySelectorAll('.sop-section');
+var navLinks=document.querySelectorAll('.nav-item');
+window.addEventListener('scroll',function(){
+  var scrollY=window.scrollY+120;
+  sectionEls.forEach(function(sec){
+    if(scrollY>=sec.offsetTop&&scrollY<sec.offsetTop+sec.offsetHeight){
+      var id=sec.id;
+      navLinks.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+id)});
+    }
+  });
+},{passive:true});
+</script>
+</body>
+</html>

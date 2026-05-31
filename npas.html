@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OrbitRP — NPAS Air Unit SOPs</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Roboto+Condensed:wght@300;400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:        #0a0c10;
+  --surface:   #111318;
+  --surface2:  #171b22;
+  --surface3:  #1e2330;
+  --border:    #252b38;
+  --border2:   #2e3648;
+  --accent:    #2d7dd2;
+  --accent2:   #1a5fa8;
+  --accent-glow: rgba(45,125,210,0.18);
+  --gold:      #e8b84b;
+  --gold-dim:  rgba(232,184,75,0.12);
+  --red:       #e03c3c;
+  --red-dim:   rgba(224,60,60,0.12);
+  --green:     #3cb872;
+  --green-dim: rgba(60,184,114,0.12);
+  --amber:     #e87c3e;
+  --amber-dim: rgba(232,124,62,0.12);
+  --purple:    #9b6dff;
+  --purple-dim:rgba(155,109,255,0.12);
+  --sky:       #38bdf8;
+  --sky-dim:   rgba(56,189,248,0.12);
+  --text:      #dce2ee;
+  --text-dim:  #8b95aa;
+  --text-muted:#525c72;
+  --sidebar-w: 270px;
+  --font-head: 'Rajdhani', sans-serif;
+  --font-body: 'Roboto Condensed', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:18px;line-height:1.65;display:flex;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--accent2)}
+
+/* SIDEBAR */
+#sidebar{width:var(--sidebar-w);min-height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;overflow-y:auto;z-index:100;transition:transform .3s ease}
+.sidebar-brand{padding:24px 20px 20px;border-bottom:1px solid var(--border)}
+.brand-badge{display:inline-flex;align-items:center;gap:6px;background:var(--sky-dim);border:1px solid var(--sky);border-radius:4px;padding:3px 10px;font-family:var(--font-mono);font-size:13px;color:var(--sky);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.brand-badge::before{content:'●';font-size:10px;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.brand-title{font-family:var(--font-head);font-size:25px;font-weight:700;color:#fff;line-height:1.1;letter-spacing:.5px}
+.brand-sub{font-size:14px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px;font-family:var(--font-mono)}
+.sidebar-search{padding:14px 14px 0}
+.search-wrap{position:relative}
+.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none}
+#search{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:8px 10px 8px 34px;color:var(--text);font-family:var(--font-body);font-size:15px;outline:none;transition:border-color .2s}
+#search::placeholder{color:var(--text-muted)}
+#search:focus{border-color:var(--sky)}
+.nav-section-label{padding:18px 16px 6px;font-family:var(--font-mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;color:var(--text-dim);text-decoration:none;font-size:15px;font-family:var(--font-body);border-left:2px solid transparent;transition:all .2s;cursor:pointer}
+.nav-item:hover{background:var(--surface2);color:var(--text);border-left-color:var(--border2)}
+.nav-item.active{background:var(--sky-dim);color:var(--sky);border-left-color:var(--sky)}
+.nav-icon{width:16px;text-align:center;font-size:17px;flex-shrink:0}
+.nav-num{margin-left:auto;font-family:var(--font-mono);font-size:13px;color:var(--text-muted);background:var(--surface3);padding:1px 6px;border-radius:10px}
+
+/* MAIN */
+#main{margin-left:var(--sidebar-w);flex:1;max-width:1500px;padding:48px 52px}
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.version-badge{font-family:var(--font-mono);font-size:13px;padding:3px 10px;border-radius:20px;border:1px solid var(--border2);color:var(--text-muted);letter-spacing:1px}
+.status-pill{font-family:var(--font-mono);font-size:13px;padding:3px 10px;border-radius:20px;background:var(--green-dim);border:1px solid var(--green);color:var(--green);letter-spacing:1px}
+.status-pill::before{content:'● ';font-size:11px}
+.unit-pill{font-family:var(--font-mono);font-size:13px;padding:3px 10px;border-radius:20px;background:var(--sky-dim);border:1px solid var(--sky);color:var(--sky);letter-spacing:1px}
+
+.page-header{margin-bottom:52px}
+.dept-stripe{width:48px;height:4px;background:linear-gradient(90deg,var(--sky),var(--accent));border-radius:2px;margin-bottom:16px}
+.page-title{font-family:var(--font-head);font-size:50px;font-weight:700;color:#fff;line-height:1;letter-spacing:.5px;margin-bottom:10px}
+.page-sub{color:var(--text-dim);font-size:20px;max-width:800px;line-height:1.6}
+
+/* SECTION */
+.sop-section{margin-bottom:56px;animation:fadeUp .4s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.section-header{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.section-num{font-family:var(--font-mono);font-size:15px;color:var(--text-muted);background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 8px;letter-spacing:1px;flex-shrink:0}
+.section-icon{font-size:25px}
+.section-title{font-family:var(--font-head);font-size:29px;font-weight:700;color:#fff;letter-spacing:.3px;flex:1}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:10px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.card:hover{border-color:rgba(255,255,255,0.55);box-shadow:0 0 0 1px rgba(255,255,255,0.15)}
+.card-header{display:flex;align-items:center;gap:15px;padding:14px 18px;cursor:pointer;user-select:none}
+.card-id{font-family:var(--font-mono);font-size:15px;color:var(--sky);flex-shrink:0;min-width:36px}
+.card-title{font-family:var(--font-head);font-size:20px;font-weight:600;color:var(--text);flex:1;letter-spacing:.2px}
+.card-chevron{color:var(--text-muted);font-size:15px;transition:transform .2s;flex-shrink:0}
+.card.open .card-chevron{transform:rotate(180deg)}
+.card.open .card-title{color:#fff}
+.card.open{border-color:var(--sky)}
+.card-body{display:none;padding:0 18px 18px;border-top:1px solid var(--border)}
+.card.open .card-body{display:block;padding-top:16px}
+.card-body p{color:var(--text-dim);font-size:17px;margin-bottom:10px}
+.card-body p:last-child{margin-bottom:0}
+.card-body strong{color:var(--text);font-weight:700}
+
+/* NOTICE */
+.notice{border-radius:6px;padding:13px 16px;margin:14px 0;font-size:16px;display:flex;gap:10px;align-items:flex-start;line-height:1.5}
+.notice-icon{flex-shrink:0;margin-top:1px}
+.notice.info{background:var(--accent-glow);border-left:3px solid var(--accent);color:var(--text-dim)}
+.notice.sky{background:var(--sky-dim);border-left:3px solid var(--sky);color:var(--text-dim)}
+.notice.warn{background:var(--amber-dim);border-left:3px solid var(--amber);color:var(--text-dim)}
+.notice.danger{background:var(--red-dim);border-left:3px solid var(--red);color:var(--text-dim)}
+.notice.success{background:var(--green-dim);border-left:3px solid var(--green);color:var(--text-dim)}
+.notice strong{color:var(--text)}
+
+/* LISTS */
+.sop-list{list-style:none;padding:0;margin:10px 0}
+.sop-list li{display:flex;gap:10px;padding:5px 0;font-size:18px;color:var(--text-dim);border-bottom:1px dashed var(--border)}
+.sop-list li:last-child{border-bottom:none}
+.sop-list li::before{content:'›';color:var(--sky);font-weight:700;flex-shrink:0}
+.sop-ol{list-style:none;counter-reset:sop;padding:0;margin:10px 0}
+.sop-ol li{counter-increment:sop;display:flex;gap:12px;align-items:baseline;padding:6px 0;font-size:18px;color:var(--text-dim);border-bottom:1px dashed var(--border)}
+.sop-ol li:last-child{border-bottom:none}
+.sop-ol li::before{content:counter(sop,decimal-leading-zero);font-family:var(--font-mono);font-size:15px;color:var(--sky);flex-shrink:0;min-width:20px}
+
+/* TABLE */
+.sop-table{width:100%;border-collapse:collapse;font-size:17px;margin:10px 0}
+.sop-table th{background:var(--surface3);color:var(--text);font-family:var(--font-mono);font-size:13px;letter-spacing:1.5px;text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border2)}
+.sop-table td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--text-dim);vertical-align:top}
+.sop-table tr:last-child td{border-bottom:none}
+.sop-table tr:hover td{background:var(--surface2)}
+.sop-table td:first-child{font-family:var(--font-mono);font-size:14px;color:var(--sky)}
+
+/* ALTITUDE DISPLAY */
+.alt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+@media(max-width:640px){.alt-grid{grid-template-columns:1fr}}
+.alt-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:16px 18px;transition:border-color .2s,transform .15s}
+.alt-card:hover{border-color:var(--border2);transform:translateY(-1px)}
+.alt-badge{font-family:var(--font-mono);font-size:13px;font-weight:600;padding:4px 12px;border-radius:5px;letter-spacing:.5px;display:inline-block;margin-bottom:8px}
+.alt-green{background:var(--green-dim);border:1px solid var(--green);color:var(--green)}
+.alt-sky{background:var(--sky-dim);border:1px solid var(--sky);color:var(--sky)}
+.alt-amber{background:var(--amber-dim);border:1px solid var(--amber);color:var(--amber)}
+.alt-red{background:var(--red-dim);border:1px solid var(--red);color:var(--red)}
+.alt-name{font-family:var(--font-head);font-size:18px;font-weight:700;color:#fff;margin-bottom:4px}
+.alt-desc{font-size:14px;color:var(--text-dim);line-height:1.4}
+
+/* HIGHLIGHTS */
+.hl{color:var(--gold);font-weight:700}
+.hl-r{color:var(--red);font-weight:700}
+.hl-g{color:var(--green);font-weight:700}
+.hl-b{color:var(--accent);font-weight:700}
+.hl-s{color:var(--sky);font-weight:700}
+.hl-p{color:var(--purple);font-weight:700}
+
+/* SEARCH */
+#search-results{display:none}
+#search-results.active{display:block}
+.result-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 18px;margin-bottom:8px;cursor:pointer;transition:border-color .2s}
+.result-item:hover{border-color:var(--sky)}
+.result-section{font-family:var(--font-mono);font-size:13px;color:var(--text-muted);margin-bottom:4px;letter-spacing:1px}
+.result-title{font-family:var(--font-head);font-size:20px;color:#fff;font-weight:600}
+.result-snippet{font-size:15px;color:var(--text-muted);margin-top:4px}
+mark{background:var(--sky-dim);color:var(--sky);border-radius:2px;padding:0 2px}
+
+/* BACK TO TOP */
+#back-top{position:fixed;bottom:28px;right:28px;width:40px;height:40px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text-dim);cursor:pointer;font-size:20px;transition:all .2s;opacity:0;pointer-events:none}
+#back-top.visible{opacity:1;pointer-events:all}
+#back-top:hover{background:var(--sky);color:#fff;border-color:var(--sky)}
+
+/* MOBILE */
+.mob-toggle{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;cursor:pointer;font-size:21px}
+@media(max-width:760px){.mob-toggle{display:flex;align-items:center}#sidebar{transform:translateX(-100%)}#sidebar.open{transform:translateX(0)}#main{margin-left:0;padding:32px 20px;padding-top:64px}}
+
+/* FOOTER */
+.footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);font-family:var(--font-mono);font-size:15px;color:var(--text-muted);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+</style>
+</head>
+<body>
+
+<div class="mob-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</div>
+
+<nav id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-badge">ORBIT RP</div>
+    <div class="brand-title">NPAS Air Unit</div>
+    <div class="brand-sub">Standard Operating Procedures</div>
+  </div>
+  <div class="sidebar-search">
+    <div class="search-wrap">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input id="search" type="text" placeholder="Search SOPs…" autocomplete="off"/>
+    </div>
+  </div>
+  <div class="nav-section-label">Contents</div>
+  <a class="nav-item active" href="#overview" onclick="setActive(this)"><span class="nav-icon">🚁</span> Unit Overview <span class="nav-num">4</span></a>
+  <a class="nav-item" href="#eligibility" onclick="setActive(this)"><span class="nav-icon">🎖️</span> Eligibility &amp; Authorisation <span class="nav-num">4</span></a>
+  <a class="nav-item" href="#uniform" onclick="setActive(this)"><span class="nav-icon">👕</span> Uniform &amp; Equipment <span class="nav-num">3</span></a>
+  <a class="nav-item" href="#preflight" onclick="setActive(this)"><span class="nav-icon">📋</span> Pre-Flight Procedures <span class="nav-num">4</span></a>
+  <a class="nav-item" href="#flight" onclick="setActive(this)"><span class="nav-icon">✈️</span> Flight Rules <span class="nav-num">6</span></a>
+  <a class="nav-item" href="#comms" onclick="setActive(this)"><span class="nav-icon">🎙️</span> Air-to-Ground Comms <span class="nav-num">5</span></a>
+  <a class="nav-item" href="#support" onclick="setActive(this)"><span class="nav-icon">🔦</span> Operational Support <span class="nav-num">5</span></a>
+  <a class="nav-item" href="#pursuits" onclick="setActive(this)"><span class="nav-icon">🏎️</span> Pursuit Support <span class="nav-num">4</span></a>
+  <a class="nav-item" href="#incidents" onclick="setActive(this)"><span class="nav-icon">🔴</span> Incident Response <span class="nav-num">4</span></a>
+  <a class="nav-item" href="#postflight" onclick="setActive(this)"><span class="nav-icon">📝</span> Post-Flight &amp; Logging <span class="nav-num">3</span></a>
+  <a class="nav-item" href="#restrictions" onclick="setActive(this)"><span class="nav-icon">🚫</span> Restrictions &amp; Misconduct <span class="nav-num">4</span></a>
+  <div class="nav-section-label" style="margin-top:auto;padding-top:20px;">Version</div>
+  <div style="padding:8px 16px 20px;font-family:var(--font-mono);font-size:12px;color:var(--text-muted)">NPAS SOP v1.0 · City of Orbit<br>Created by SR-1 C/Supt R.Jones</div>
+</nav>
+
+<main id="main">
+  <div class="topbar">
+    <span class="version-badge">NPAS SOP v1.0</span>
+    <span class="status-pill">IN EFFECT</span>
+    <span class="unit-pill">🚁 AIR UNIT</span>
+  </div>
+
+  <header class="page-header">
+    <div class="dept-stripe"></div>
+    <h1 class="page-title">NPAS Air Unit<br>Standard Operating Procedures</h1>
+    <p class="page-sub">This document governs all air operations conducted by the National Police Air Service (NPAS) unit within the City of Orbit. All pilots and observers are expected to be fully familiar with and adhere to these procedures before operating any police aircraft.</p>
+  </header>
+
+  <div id="search-results"></div>
+
+  <!-- UNIT OVERVIEW -->
+  <section class="sop-section" id="overview">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <span class="section-icon">🚁</span>
+      <h2 class="section-title">Unit Overview</h2>
+    </div>
+
+    <div class="notice sky">
+      <span class="notice-icon">🚁</span>
+      <div>The NPAS Air Unit operates as a <strong>support function</strong> to ground units — not as an independent law enforcement unit. The aircraft does not make arrests, does not engage suspects directly, and does not operate outside of an active tasking unless conducting authorised patrol.</div>
+    </div>
+
+    <div class="card" data-section="Unit Overview" data-title="Role of the NPAS Air Unit">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">1.1</span><span class="card-title">Role of the NPAS Air Unit</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The NPAS Air Unit — callsign <span class="hl-s">I-99</span> — provides the following core functions to Orbit Police Department operations:</p>
+        <ul class="sop-list">
+          <li><strong>Surveillance &amp; tracking</strong> — maintaining eyes-on a suspect or vehicle from altitude, removing the need for close ground pursuit.</li>
+          <li><strong>Pursuit support</strong> — providing continuous commentary during vehicle pursuits, guiding ground units, and enabling tactical containment.</li>
+          <li><strong>Intelligence gathering</strong> — identifying individuals, vehicles, and activity from the air that ground units cannot safely observe.</li>
+          <li><strong>Search support</strong> — locating MISPERs, suspects on foot, or abandoned vehicles across a wide area.</li>
+          <li><strong>Scene overview</strong> — providing a birds-eye assessment of major incidents, cordons, and resource positions to the Scene Commander.</li>
+          <li><strong>Officer safety</strong> — monitoring officer welfare during high-risk operations and flagging threats that ground units cannot see.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Unit Overview" data-title="Crew Composition">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">1.2</span><span class="card-title">Crew Composition</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <table class="sop-table">
+          <thead><tr><th>Role</th><th>Responsibility</th><th>Minimum Requirement</th></tr></thead>
+          <tbody>
+            <tr><td>Pilot (P1)</td><td>Aircraft command. Responsible for safe flight, navigation, altitude management, and all flight decisions. Declares I-99 on station over radio.</td><td>Air ticket holder</td></tr>
+            <tr><td>Observer / TFO (P2)</td><td>Tactical Flight Officer. Manages cameras, FLIR, spotlight, and radio communications with ground units. Primary link between air and ground.</td><td>Air ticket or observer-trained officer</td></tr>
+          </tbody>
+        </table>
+        <div class="notice info">
+          <span class="notice-icon">ℹ️</span>
+          <div>A solo pilot may operate I-99 without a TFO if no qualified observer is available — however, solo operation significantly reduces tactical effectiveness. The pilot must manage both flight <strong>and</strong> radio in solo configuration. This should be declared to Comms on departure: <em>"I-99 airborne, solo crew."</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Unit Overview" data-title="Callsign & Identification">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">1.3</span><span class="card-title">Callsign &amp; Identification</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The Orbit NPAS helicopter operates under the callsign <span class="hl-s">I-99</span> at all times. This callsign is used universally across all radio channels and in all MDT logs.</p>
+        <ul class="sop-list">
+          <li>On departure, broadcast: <em>"I-99 airborne, [location], [heading/area of patrol]."</em></li>
+          <li>On landing, broadcast: <em>"I-99 on the ground, [location]."</em></li>
+          <li>When responding to a specific tasking, broadcast: <em>"I-99 received, en route to [tasking]."</em></li>
+          <li>Never use personal officer callsigns or collar numbers when transmitting as I-99 — the aircraft callsign always takes precedence in the air.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Unit Overview" data-title="Chain of Command">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">1.4</span><span class="card-title">Chain of Command</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The NPAS Air Unit operates within the broader police chain of command but holds specific authority in the air during active taskings.</p>
+        <table class="sop-table">
+          <thead><tr><th>Authority</th><th>Detail</th></tr></thead>
+          <tbody>
+            <tr><td>Flight authority</td><td>The Pilot (P1) has absolute authority over flight decisions — altitude, speed, routing, and the decision to land. No ground officer can override a flight safety decision.</td></tr>
+            <tr><td>Tactical authority</td><td>During an active tasking, I-99 takes tactical command of the airspace and provides direction to ground units. Ground units must comply with I-99's directions during a live pursuit or surveillance operation.</td></tr>
+            <tr><td>Deployment authority</td><td>Deployment of I-99 can be requested by any officer but must be confirmed by a Sergeant or above. The Air Unit may also self-deploy to assist a visible live incident.</td></tr>
+            <tr><td>Stand-down authority</td><td>The Pilot may stand down from a tasking if: fuel is critical, weather conditions deteriorate, a technical fault occurs, or it is no longer safe or necessary to remain on station. Stand-down must be declared to Comms immediately.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ELIGIBILITY & AUTHORISATION -->
+  <section class="sop-section" id="eligibility">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <span class="section-icon">🎖️</span>
+      <h2 class="section-title">Eligibility &amp; Authorisation</h2>
+    </div>
+
+    <div class="card" data-section="Eligibility & Authorisation" data-title="Who Can Fly">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">2.1</span><span class="card-title">Who Can Fly</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Operating the NPAS helicopter is restricted to officers who hold a current, valid <span class="hl-s">Air Training Ticket</span> issued by the Orbit Police Department. This ticket is held within the <strong>Response Division</strong> training system.</p>
+        <ul class="sop-list">
+          <li>The Air ticket is obtained through a formal training assessment — officers cannot self-certify.</li>
+          <li>A ticket must be signed off by an Inspector or above following a satisfactory flight assessment.</li>
+          <li>Tickets are reviewed periodically — an officer who has not flown within a set period may be required to requalify.</li>
+          <li>The Air ticket does not expire automatically but may be suspended or revoked following a flight safety incident, misconduct finding, or at the discretion of a Superintendent or above.</li>
+        </ul>
+        <div class="notice danger">
+          <span class="notice-icon">🚫</span>
+          <div>Any officer operating the NPAS helicopter <strong>without a valid Air ticket</strong> is in serious breach of professional standards. This constitutes unauthorised use of a police asset and may result in immediate suspension from duty.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Eligibility & Authorisation" data-title="Requesting Air Support">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">2.2</span><span class="card-title">Requesting Air Support</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Any officer may request I-99 support over the radio. The request should be clear and include:</p>
+        <ol class="sop-ol">
+          <li>Nature of the tasking — pursuit, MISPER, surveillance, scene overview, etc.</li>
+          <li>Last known location of the subject, vehicle, or area of interest.</li>
+          <li>Subject / vehicle description if applicable.</li>
+          <li>Urgency level — is this an immediate life-risk tasking or a routine request?</li>
+        </ol>
+        <div class="notice info">
+          <span class="notice-icon">ℹ️</span>
+          <div>I-99 will confirm or decline the tasking over radio. If already on another tasking, the crew will advise an estimated time before they can assist. <strong>Do not repeatedly request I-99 if already confirmed</strong> — this clutters the radio channel unnecessarily.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Eligibility & Authorisation" data-title="Self-Deployment">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">2.3</span><span class="card-title">Self-Deployment</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The NPAS crew may self-deploy to an incident they directly observe or become aware of without a ground request, provided:</p>
+        <ul class="sop-list">
+          <li>The incident is clearly active and of a nature that warrants air support.</li>
+          <li>Self-deployment is immediately declared to Comms and the on-duty Sergeant over radio.</li>
+          <li>The crew does not abandon a current active tasking to self-deploy — current tasking takes priority unless the new incident is significantly more critical.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Eligibility & Authorisation" data-title="Aircraft Authorisation & Keys">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">2.4</span><span class="card-title">Aircraft Authorisation &amp; Keys</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The police helicopter is a <span class="hl">controlled asset</span>. Access and authorisation must be logged.</p>
+        <ul class="sop-list">
+          <li>The aircraft must only be accessed from the designated NPAS hangar / helipad at the police station.</li>
+          <li>Aircraft access must be logged on the MDT before departure — note crew names, ticket numbers, departure time, and intended tasking area.</li>
+          <li>The aircraft must not be left unattended in a public or unsecured location.</li>
+          <li>Any unauthorised passenger — civilian or otherwise — is strictly prohibited aboard the aircraft.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- UNIFORM & EQUIPMENT -->
+  <section class="sop-section" id="uniform">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <span class="section-icon">👕</span>
+      <h2 class="section-title">Uniform &amp; Equipment</h2>
+    </div>
+
+    <div class="card" data-section="Uniform & Equipment" data-title="Pilot Uniform Requirements">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">3.1</span><span class="card-title">Pilot Uniform Requirements</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>All NPAS crew must be dressed in the correct <span class="hl-s">NPAS pilot uniform</span> before boarding the aircraft. You may not depart in standard patrol uniform, plain clothes, or any non-authorised clothing.</p>
+        <table class="sop-table">
+          <thead><tr><th>Item</th><th>Requirement</th></tr></thead>
+          <tbody>
+            <tr><td>Flight suit / overalls</td><td>Standard NPAS issue flight suit. Must be worn zipped and correctly fitted at all times whilst airborne.</td></tr>
+            <tr><td>Helmet / headset</td><td>Must be worn during all flight operations. The helmet provides hearing protection and connects the crew to the aircraft's radio system.</td></tr>
+            <tr><td>High-visibility vest</td><td>NPAS-marked high-vis vest must be worn over the flight suit when on the ground near the aircraft — on the helipad, during refuelling, or at a landing site.</td></tr>
+            <tr><td>Boots</td><td>Flight-rated footwear must be worn. No trainers, sandals, or non-standard footwear permitted.</td></tr>
+            <tr><td>Rank insignia</td><td>Rank must be visible on the flight suit. NPAS crew do not wear standard patrol epaulettes — rank slides appropriate to the flight suit must be used.</td></tr>
+          </tbody>
+        </table>
+        <div class="notice danger">
+          <span class="notice-icon">🚫</span>
+          <div>Officers found operating the helicopter in incorrect uniform will be stood down from the flight immediately. This is a uniform and safety standard — <strong>no exceptions</strong>.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Uniform & Equipment" data-title="On-Board Equipment">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">3.2</span><span class="card-title">On-Board Equipment</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The following equipment must be present and operational before departure:</p>
+        <ul class="sop-list">
+          <li><strong>Police radio</strong> — aircraft radio must be tuned to the main Response channel on departure. TFO should monitor the correct channel for the active tasking.</li>
+          <li><strong>Camera / FLIR system</strong> — thermal and optical camera systems must be checked for function before departure.</li>
+          <li><strong>Spotlight</strong> — the aerial spotlight must be tested before night operations.</li>
+          <li><strong>MDT access</strong> — the TFO (or pilot in solo ops) must have MDT access to log the tasking and run any PNC checks required from the air.</li>
+          <li><strong>Personal TASER / PAVA</strong> — crew must carry their personal TASER and/or PAVA in the event of an emergency landing at a scene where a threat exists.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Uniform & Equipment" data-title="Weapons & Personal Equipment">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">3.3</span><span class="card-title">Weapons &amp; Personal Equipment</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>NPAS crew are not AFOs and do not carry firearms by virtue of their air role. Firearms may only be carried aboard the aircraft if an active <span class="hl">Firearms Authority</span> has been issued to the individual officer by a Superintendent or above — this would only apply in exceptional tactical circumstances.</p>
+        <ul class="sop-list">
+          <li>Personal TASER must be carried if the officer holds a valid TASER ticket.</li>
+          <li>PAVA spray should be carried as standard.</li>
+          <li>Handcuffs must be carried — in the event of an emergency landing at a scene, crew may be required to assist ground units.</li>
+          <li>No items that are not police-issued or personally authorised may be brought aboard the aircraft.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRE-FLIGHT -->
+  <section class="sop-section" id="preflight">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <span class="section-icon">📋</span>
+      <h2 class="section-title">Pre-Flight Procedures</h2>
+    </div>
+
+    <div class="card" data-section="Pre-Flight Procedures" data-title="Pre-Flight Checklist">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">4.1</span><span class="card-title">Pre-Flight Checklist</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The following steps must be completed <strong>before every departure</strong>, regardless of urgency. Do not skip steps even when under pressure to launch quickly.</p>
+        <ol class="sop-ol">
+          <li>Confirm crew are in correct NPAS uniform — flight suit, helmet, hi-vis, boots.</li>
+          <li>Log crew details, ticket numbers, departure time, and intended area on the MDT.</li>
+          <li>Confirm radio is operational and tuned to the main Response channel.</li>
+          <li>Test camera systems, FLIR, and spotlight (for night ops) before engines start.</li>
+          <li>Confirm personal equipment is on board — TASER, PAVA, handcuffs, MDT access.</li>
+          <li>Conduct a visual walk-around of the aircraft — check for damage, obstructions, or anything that may affect airworthiness.</li>
+          <li>Confirm the departure area is clear of persons and obstacles.</li>
+          <li>Declare departure over radio: <em>"I-99 airborne, [location], proceeding to [area/tasking]."</em></li>
+        </ol>
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>Do not depart without completing the full pre-flight. A rushed departure that results in a flight safety incident will be treated as a failure of duty, regardless of the urgency of the tasking.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Pre-Flight Procedures" data-title="Authorisation to Depart">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">4.2</span><span class="card-title">Authorisation to Depart</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Departure requires either a tasking request from ground command, a self-deployment decision by the crew, or an authorised patrol departure. In all cases:</p>
+        <ul class="sop-list">
+          <li>The on-duty Sergeant must be informed of the departure unless it is in direct response to an active radio tasking.</li>
+          <li>The MDT departure log must be completed before wheels-up.</li>
+          <li>If departing for routine patrol rather than a specific tasking, the pilot must declare a patrol area or route.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Pre-Flight Procedures" data-title="Weather & Visibility">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">4.3</span><span class="card-title">Weather &amp; Visibility Assessment</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The pilot has sole authority to make the decision on whether conditions are safe to fly. No ground officer or supervisor can override a pilot's assessment that conditions are unsafe.</p>
+        <ul class="sop-list">
+          <li>If visibility is significantly reduced — heavy fog, storm conditions — the pilot must stand down and inform Comms.</li>
+          <li>Night operations are permitted provided the aircraft spotlight and crew NVG (night vision) capability are functional.</li>
+          <li>The pilot must reassess conditions continuously throughout the flight and land immediately if conditions deteriorate beyond safe limits.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Pre-Flight Procedures" data-title="Refuelling & Turnaround">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">4.4</span><span class="card-title">Refuelling &amp; Turnaround</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>When returning to base for refuelling or crew change, the crew must:</p>
+        <ol class="sop-ol">
+          <li>Declare over radio: <em>"I-99 returning to base, [reason] — estimating [time] until back on station."</em></li>
+          <li>Hand over any active tracking or tasking to ground units verbally before RTB.</li>
+          <li>Log the return time on the MDT and note any outstanding taskings.</li>
+          <li>Complete the turnaround check before departing again — treat every departure as a fresh pre-flight.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLIGHT RULES -->
+  <section class="sop-section" id="flight">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <span class="section-icon">✈️</span>
+      <h2 class="section-title">Flight Rules</h2>
+    </div>
+
+    <div class="notice danger">
+      <span class="notice-icon">🚫</span>
+      <div>These flight rules are <strong>non-negotiable</strong>. Breaching altitude limits, restricted airspace rules, or reckless flying are serious safety violations and will result in immediate suspension from air operations and a professional standards review.</div>
+    </div>
+
+    <div class="card" data-section="Flight Rules" data-title="Minimum Altitude — General Rule">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">5.1</span><span class="card-title">Minimum Altitude — General Rule</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The NPAS helicopter must maintain a minimum altitude of <span class="hl-s">300 feet above ground level (AGL)</span> at all times during normal operations. This applies over all terrain — urban, rural, coastal, and mountainous.</p>
+        <div class="notice danger">
+          <span class="notice-icon">🚫</span>
+          <div>Flying below 300 feet AGL without an emergency or operational justification is a <strong>flight safety violation</strong>. This rule exists to protect persons on the ground, property, and the aircraft itself from collision risk.</div>
+        </div>
+        <p>The 300-foot minimum may only be temporarily reduced for:</p>
+        <ul class="sop-list">
+          <li>A controlled landing approach to a helipad or designated landing site.</li>
+          <li>An emergency landing due to technical failure or crew emergency.</li>
+          <li>A search and rescue operation where ground-level observation is operationally essential and the area has been confirmed clear of hazards.</li>
+        </ul>
+        <p>Any operation below 300 feet must be declared to Comms immediately and logged on the MDT with justification.</p>
+      </div>
+    </div>
+
+    <div class="card" data-section="Flight Rules" data-title="Altitude Bands & Operational Guidance">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">5.2</span><span class="card-title">Altitude Bands &amp; Operational Guidance</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The following altitude bands are used as operational guidance for different mission types. These are not hard limits above 300 feet — the pilot uses professional judgement — but serve as best-practice benchmarks.</p>
+        <div class="alt-grid">
+          <div class="alt-card">
+            <div class="alt-badge alt-red">300–500 ft AGL</div>
+            <div class="alt-name">Close Surveillance / Search</div>
+            <div class="alt-desc">Active MISPER ground search, close tracking of a slow-moving subject on foot. Low noise, high visibility to subject. Use sparingly and declare to Comms.</div>
+          </div>
+          <div class="alt-card">
+            <div class="alt-badge alt-amber">500–1,000 ft AGL</div>
+            <div class="alt-name">Active Pursuit / Tracking</div>
+            <div class="alt-desc">Standard pursuit support and vehicle tracking. Effective camera range, covert presence. Most common operational altitude band.</div>
+          </div>
+          <div class="alt-card">
+            <div class="alt-badge alt-sky">1,000–1,500 ft AGL</div>
+            <div class="alt-name">Area Patrol / Scene Overview</div>
+            <div class="alt-desc">Routine patrol, scene monitoring, wide-area search. Maximum covert capability — aircraft difficult to hear from ground level.</div>
+          </div>
+          <div class="alt-card">
+            <div class="alt-badge alt-green">1,500 ft+ AGL</div>
+            <div class="alt-name">High Patrol / Transit</div>
+            <div class="alt-desc">Transit between locations, wide-area observation, or when no active tasking requires lower altitude. Reduced camera effectiveness at extreme range.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Flight Rules" data-title="Restricted Airspace">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">5.3</span><span class="card-title">Restricted Airspace &amp; No-Fly Zones</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The following areas are designated <span class="hl-r">restricted or no-fly zones</span> within the City of Orbit. The aircraft must not enter these areas without explicit authorisation from Silver Command or above:</p>
+        <ul class="sop-list">
+          <li><strong>Hospital airspace</strong> — the area directly above and within 200 metres of the hospital helipad is restricted to medical air traffic only.</li>
+          <li><strong>Active firearms cordons</strong> — I-99 must not fly directly over an active firearms incident unless specifically requested by the AFO on scene and authorised by the on-duty Inspector or above.</li>
+          <li><strong>Prison / secure facility airspace</strong> — no overflights of correctional or secure government facilities without prior authorisation.</li>
+          <li><strong>Civilian airfields</strong> — if the map contains a civilian airport or airfield, I-99 must not enter the immediate approach/departure corridors of that facility.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Flight Rules" data-title="Speed & Manoeuvring">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">5.4</span><span class="card-title">Speed &amp; Manoeuvring</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <ul class="sop-list">
+          <li>Speed must be appropriate for the task. Tracking a slow-moving vehicle requires reduced speed; transit between locations may be at full cruise.</li>
+          <li>Aggressive or reckless manoeuvring — sharp banking, low-level dives, deliberate loss of altitude — is prohibited outside of genuine emergency situations.</li>
+          <li>The aircraft must never be used to buzz, intimidate, or harass persons on the ground — this constitutes misuse of a police asset.</li>
+          <li>Hovering for extended periods at low altitude over a residential area is to be avoided where possible — use slow-speed tracking circuits instead.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Flight Rules" data-title="Emergency Landing Protocol">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">5.5</span><span class="card-title">Emergency Landing Protocol</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>In the event of a technical failure, medical emergency aboard the aircraft, or any situation requiring immediate landing:</p>
+        <ol class="sop-ol">
+          <li>Declare immediately over radio: <em>"I-99 MAYDAY, MAYDAY — [nature of emergency], emergency landing at [location]."</em></li>
+          <li>Select the nearest safe landing zone — a flat, open surface clear of persons and obstacles.</li>
+          <li>Ground units must respond to the declared landing site — treat as a State 0 emergency for crew safety.</li>
+          <li>On landing, ensure crew are safe before addressing the aircraft. Declare safe landing over radio.</li>
+          <li>The aircraft must not be re-flown after an emergency landing until it has been assessed and cleared.</li>
+        </ol>
+        <div class="notice danger">
+          <span class="notice-icon">🔴</span>
+          <div>An I-99 MAYDAY declaration takes absolute priority over <strong>all other radio traffic</strong>. Every unit must clear the channel immediately and respond.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Flight Rules" data-title="Night Operations">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">5.6</span><span class="card-title">Night Operations</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Night operations are authorised provided the aircraft is equipped with a functioning spotlight and the crew are comfortable operating in low-light conditions. The following additional rules apply at night:</p>
+        <ul class="sop-list">
+          <li>The minimum altitude rule of <span class="hl-s">300 feet AGL</span> is strictly enforced — terrain is harder to judge visually at night.</li>
+          <li>Spotlight use must be proportionate — do not illuminate residential windows unnecessarily or hold the beam on a person who has complied.</li>
+          <li>FLIR (thermal imaging) is the primary tracking tool at night. Camera operators should switch to thermal as the default mode in low light.</li>
+          <li>If at any point the pilot is unable to maintain safe situational awareness due to darkness or obscured terrain, altitude must be increased immediately.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- AIR TO GROUND COMMS -->
+  <section class="sop-section" id="comms">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <span class="section-icon">🎙️</span>
+      <h2 class="section-title">Air-to-Ground Communications</h2>
+    </div>
+
+    <div class="card" data-section="Air-to-Ground Comms" data-title="Radio Channel Discipline">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">6.1</span><span class="card-title">Radio Channel Discipline</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>I-99 monitors and transmits on the main Response channel by default. During active taskings, the crew may be moved to a dedicated tactical channel by Comms.</p>
+        <ul class="sop-list">
+          <li>Always identify as <span class="hl-s">I-99</span> before transmitting.</li>
+          <li>Keep transmissions brief and information-focused — avoid unnecessary chat over the air channel.</li>
+          <li>During a live pursuit, I-99 owns the radio channel for commentary. Ground units should hold transmissions unless urgent.</li>
+          <li>If moved to a tactical channel, the handover must be declared on the main channel first: <em>"I-99 moving to TAC 2 for the ongoing."</em></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Air-to-Ground Comms" data-title="Airborne Commentary Format">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">6.2</span><span class="card-title">Airborne Commentary Format</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>When providing live commentary from the air — especially during pursuits and surveillance — transmissions should follow a consistent format so ground units can act immediately:</p>
+        <div class="notice sky">
+          <span class="notice-icon">📢</span>
+          <div>
+            <strong>Standard commentary format:</strong><br/><br/>
+            <em>"I-99 — [vehicle/subject description], [current location], [direction of travel], [speed estimate], [behaviour / notable observations]."</em><br/><br/>
+            <strong>Example:</strong><br/>
+            <em>"I-99 — dark blue BMW, now on Moorfield Road heading north towards the junction, speed approximately 60 miles per hour, driver is making erratic lane changes, single occupant."</em>
+          </div>
+        </div>
+        <ul class="sop-list">
+          <li>Update commentary every 10–15 seconds during a fast-moving pursuit.</li>
+          <li>Call any change of direction, vehicle change, or foot bail immediately — these are the most critical updates for ground units.</li>
+          <li>If the subject is lost visually, declare immediately: <em>"I-99 — visual lost, last seen [location] heading [direction]."</em> Do not go silent.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Air-to-Ground Comms" data-title="Directing Ground Units">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">6.3</span><span class="card-title">Directing Ground Units</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>When I-99 is on station and has eyes on the subject, the crew may direct ground units to positions for containment, intercept, or arrest.</p>
+        <ul class="sop-list">
+          <li>Directions must be clear and use recognisable landmarks, road names, or compass directions.</li>
+          <li>I-99 should place units ahead of the subject, not behind — anticipate the route, don't chase it.</li>
+          <li>When directing units to a foot bail location: <em>"I-99 — subject has bailed on foot, heading east through the car park behind [landmark]. Unit required at [exit point]."</em></li>
+          <li>Confirm when a ground unit has a visual on the subject: <em>"Unit has visual, I-99 maintain overwatch."</em></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Air-to-Ground Comms" data-title="Declaring On Station & Standing Down">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">6.4</span><span class="card-title">Declaring On Station &amp; Standing Down</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <table class="sop-table">
+          <thead><tr><th>Situation</th><th>Radio Transmission</th></tr></thead>
+          <tbody>
+            <tr><td>Arriving on scene / tasking</td><td><em>"I-99 on station over [location]. I have visual on [subject/vehicle/scene]."</em></td></tr>
+            <tr><td>Taking over commentary from ground</td><td><em>"I-99 has control — ground units, hold commentary."</em></td></tr>
+            <tr><td>Standing down from tasking</td><td><em>"I-99 standing down from [tasking] — [reason]. Returning to [area/base]."</em></td></tr>
+            <tr><td>Visual lost</td><td><em>"I-99 — visual lost on [subject], last seen [location/direction]."</em></td></tr>
+            <tr><td>Returning to base</td><td><em>"I-99 RTB — [reason]. ETA back on station approximately [time]."</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" data-section="Air-to-Ground Comms" data-title="MDT from the Air">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">6.5</span><span class="card-title">MDT Usage from the Air</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The TFO is responsible for MDT usage during flight. The pilot must not operate the MDT whilst the aircraft is in motion or at low altitude — this is a flight safety rule.</p>
+        <ul class="sop-list">
+          <li>PNC checks on vehicles observed from the air should be run by the TFO immediately.</li>
+          <li>All taskings attended must be linked in the MDT log in real time where possible.</li>
+          <li>In solo operations, MDT use by the pilot is only permitted when in a stable hover or safely on the ground.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- OPERATIONAL SUPPORT -->
+  <section class="sop-section" id="support">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <span class="section-icon">🔦</span>
+      <h2 class="section-title">Operational Support</h2>
+    </div>
+
+    <div class="card" data-section="Operational Support" data-title="Surveillance & Covert Tracking">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">7.1</span><span class="card-title">Surveillance &amp; Covert Tracking</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>I-99 is highly effective as a covert surveillance platform. When conducting covert tracking:</p>
+        <ul class="sop-list">
+          <li>Operate at <span class="hl-s">1,000 feet or above</span> to reduce auditory signature — the aircraft becomes very difficult to hear from ground level at this altitude.</li>
+          <li>Do not use the spotlight during covert operations — it immediately betrays the aircraft's position.</li>
+          <li>Avoid flying a direct circle above the subject — use offset orbiting patterns to reduce the chance of the subject looking up and identifying surveillance.</li>
+          <li>Camera and FLIR systems must be used in preference to spotlight wherever possible.</li>
+          <li>If the subject appears to have identified the aircraft, inform ground units immediately — covert advantage is lost and tactics must adapt.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Operational Support" data-title="Spotlight Use">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">7.2</span><span class="card-title">Spotlight Use</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The aerial spotlight is a powerful tool but must be used <strong>proportionately</strong>. Indiscriminate spotlight use compromises covert operations and is intrusive to uninvolved members of the public.</p>
+        <ul class="sop-list">
+          <li>Spotlight is appropriate during night foot pursuits to illuminate a fleeing subject for ground units.</li>
+          <li>Spotlight may be used to illuminate a search area during a MISPER or suspect search.</li>
+          <li>Do not illuminate residential properties, windows, or gardens unless a specific subject is believed to be in that location.</li>
+          <li>When a subject has been detained, turn off the spotlight promptly — it is no longer necessary and is uncomfortable and distressing to shine on someone who is compliant.</li>
+          <li>Spotlight use must be noted in the MDT flight log.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Operational Support" data-title="MISPER & Suspect Search">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">7.3</span><span class="card-title">MISPER &amp; Suspect Search from the Air</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>I-99 is one of the most effective tools for locating missing persons or outstanding suspects over a wide area. When conducting an aerial search:</p>
+        <ol class="sop-ol">
+          <li>Obtain a full subject description from ground units before beginning the search — clothing colour is the most important visual identifier from altitude.</li>
+          <li>Agree a search pattern with ground units — I-99 typically covers outer areas while ground units focus closer to the last known location.</li>
+          <li>Use FLIR (thermal) as the primary search tool in low light or dense foliage — body heat signatures cut through cover that optical cameras cannot penetrate.</li>
+          <li>When a possible subject is located, do not immediately spotlight or transmit location loudly — confirm visual first, then advise ground units on a tactical channel where possible.</li>
+          <li>Maintain the subject in view until a ground unit has confirmed contact or detention.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="card" data-section="Operational Support" data-title="Scene Overview & Cordon Support">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">7.4</span><span class="card-title">Scene Overview &amp; Cordon Support</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>At major incidents, I-99 can provide the Scene Commander with a bird's-eye view that is impossible from ground level. This includes:</p>
+        <ul class="sop-list">
+          <li>Confirming cordon coverage — identifying gaps that need to be filled by ground units.</li>
+          <li>Monitoring crowd or vehicle movement around the outer cordon perimeter.</li>
+          <li>Identifying approach routes for incoming emergency services.</li>
+          <li>Confirming suspect positions during a firearms or hostage incident — this intelligence is provided to the Scene Commander on a designated tactical channel.</li>
+        </ul>
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>During firearms incidents, I-99 must not fly directly over the subject's position at low altitude — this may provoke a response. Maintain a safe altitude and use optical zoom to observe. The aircraft is not armoured.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Operational Support" data-title="Evidence Capture from the Air">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">7.5</span><span class="card-title">Evidence Capture from the Air</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Footage and imagery captured by the NPAS camera system constitutes <span class="hl">official police evidence</span> and is subject to the same standards as BWV.</p>
+        <ul class="sop-list">
+          <li>All footage must be logged in the MDT with the corresponding incident CAD reference.</li>
+          <li>Camera footage of a pursuit, suspect identification, or incident scene must not be deleted or overwritten — it must be preserved for the relevant investigation or prosecution.</li>
+          <li>If footage is of evidential value, it must be flagged to CID or the investigating officer as soon as possible after the flight.</li>
+          <li>The TFO is responsible for ensuring footage is correctly saved and referenced in the post-flight log.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PURSUIT SUPPORT -->
+  <section class="sop-section" id="pursuits">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <span class="section-icon">🏎️</span>
+      <h2 class="section-title">Pursuit Support</h2>
+    </div>
+
+    <div class="notice sky">
+      <span class="notice-icon">ℹ️</span>
+      <div>When I-99 is overhead and has eyes on a pursuit, it assumes the role of <strong>primary tactical intelligence provider</strong>. Ground units should hold their commentary and defer to I-99 — the aerial view is almost always superior to any ground position.</div>
+    </div>
+
+    <div class="card" data-section="Pursuit Support" data-title="Taking Over a Pursuit">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">8.1</span><span class="card-title">Taking Over a Pursuit</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>When I-99 arrives at an active pursuit:</p>
+        <ol class="sop-ol">
+          <li>Declare on station: <em>"I-99 on station, I have visual on the vehicle."</em></li>
+          <li>Ground Primary unit acknowledges and reduces proximity — they no longer need to maintain close pursuit to keep visual contact.</li>
+          <li>I-99 takes over all running commentary. Ground units go quiet on the channel unless they have urgent information.</li>
+          <li>Direct ground units to optimal positions — ahead of the vehicle, at likely exit points, or to set up a containment.</li>
+          <li>If the vehicle stops and subjects flee on foot, provide immediate direction to ground units for the foot bail.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="card" data-section="Pursuit Support" data-title="Creating Ground Distance">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">8.2</span><span class="card-title">Creating Ground Distance</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>One of the most powerful advantages of air support is the ability to <span class="hl-g">reduce the risk of a vehicle pursuit</span> by creating ground distance between police vehicles and the suspect.</p>
+        <ul class="sop-list">
+          <li>Once I-99 has a confirmed visual, the Primary ground unit may be instructed to back off significantly — removing the cat-and-mouse dynamic that causes suspects to drive dangerously.</li>
+          <li>With I-99 maintaining track at altitude, ground units can approach ahead of the vehicle to set up a containment rather than chasing from behind.</li>
+          <li>This technique significantly reduces risk to the public and to officers.</li>
+          <li>The decision to create ground distance is made by I-99 in coordination with the Traffic Unit or highest rank coordinating the pursuit.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Pursuit Support" data-title="Pursuit Termination from the Air">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">8.3</span><span class="card-title">Pursuit Termination from the Air</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>I-99 may recommend abandonment of a vehicle pursuit to ground units when, from the air, the risk to the public is clearly unacceptable. The Traffic Unit coordinator or highest ranking officer on scene retains the authority to terminate, but I-99's risk assessment from altitude carries significant weight.</p>
+        <p>If the pursuit is terminated, I-99 continues to track the vehicle covertly from altitude, providing direction to units that are holding back. The aim is to follow the vehicle to a stop point rather than chase it.</p>
+      </div>
+    </div>
+
+    <div class="card" data-section="Pursuit Support" data-title="Foot Bail Management">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">8.4</span><span class="card-title">Foot Bail Management</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Foot bails are one of the most chaotic moments in any pursuit. I-99 is uniquely effective at maintaining track through foot bails:</p>
+        <ul class="sop-list">
+          <li>Call the foot bail the moment it occurs: <em>"I-99 — vehicle has stopped, [number] subjects bailing on foot, [location], [direction of travel for each subject]."</em></li>
+          <li>Prioritise the highest-risk subject if multiple bail simultaneously — e.g. the driver, or anyone carrying something.</li>
+          <li>Track continuously through gardens, car parks, and narrow routes that ground units struggle to navigate at speed.</li>
+          <li>When a subject stops moving or hides, update ground units with precise location: <em>"I-99 — subject is static, hiding behind [landmark], ground unit approach from [direction]."</em></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- INCIDENT RESPONSE -->
+  <section class="sop-section" id="incidents">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <span class="section-icon">🔴</span>
+      <h2 class="section-title">Incident Response</h2>
+    </div>
+
+    <div class="card" data-section="Incident Response" data-title="Responding to a State 0 / Officer Down">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">9.1</span><span class="card-title">Responding to a State 0 / Officer Down</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>A <span class="hl-r">State 0</span> declaration by any ground officer is an immediate priority tasking for I-99. All other taskings are suspended.</p>
+        <ol class="sop-ol">
+          <li>Respond immediately to the declared location. Acknowledge over radio: <em>"I-99 received State 0, en route."</em></li>
+          <li>On arrival, provide an immediate scene assessment to Comms — how many persons are visible, is the threat still active, where is the downed officer.</li>
+          <li>Track any suspect(s) fleeing the scene. Officer safety takes priority — I-99 stays on the threat rather than the scene.</li>
+          <li>Direct responding ground units using live commentary until they are on scene.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="card" data-section="Incident Response" data-title="Major Incidents & Firearms">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">9.2</span><span class="card-title">Major Incidents &amp; Firearms</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>At a declared major incident or firearms event, I-99 provides overwatch and intelligence to the Scene Commander and AFO units.</p>
+        <ul class="sop-list">
+          <li>Maintain a safe altitude above the incident — do not fly low over an active firearms scene.</li>
+          <li>Transmit suspect positions and movements on the tactical channel designated by the Scene Commander.</li>
+          <li>Do not spotlight the area without approval from the AFO on scene — light may affect officer safety in a firearms situation.</li>
+          <li>If the subject attempts to flee, track and provide running commentary immediately.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Incident Response" data-title="Emergency Landing at a Scene">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">9.3</span><span class="card-title">Emergency Landing at a Scene</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>In exceptional circumstances, I-99 may land at a scene — for example, to provide immediate first aid to a critically injured officer or civilian where HEMS is delayed.</p>
+        <ul class="sop-list">
+          <li>An emergency scene landing must be declared to Comms before touchdown.</li>
+          <li>The landing zone must be confirmed clear by ground units before I-99 descends.</li>
+          <li>Once on the ground, crew operate under the authority of the Scene Commander.</li>
+          <li>The aircraft must be secured and guarded — it must not be left unattended at any scene.</li>
+          <li>Crew must re-don hi-vis over their flight suit before exiting the aircraft at any scene.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Incident Response" data-title="Critical Incident Notification">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">9.4</span><span class="card-title">Critical Incident Notification</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>If I-99 observes or becomes aware of any of the following from the air, it must immediately notify Comms and the on-duty Sergeant, regardless of whether a ground unit is already responding:</p>
+        <ul class="sop-list">
+          <li>A vehicle collision with serious casualties.</li>
+          <li>A person in the water, on a rooftop, or in a location suggesting imminent self-harm.</li>
+          <li>A group assault or serious public disorder.</li>
+          <li>A fire or explosion.</li>
+          <li>Any incident where the crew assess life to be at immediate risk.</li>
+        </ul>
+        <p>I-99 does not have to be formally tasked to report what it observes — the obligation to report is unconditional.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- POST-FLIGHT -->
+  <section class="sop-section" id="postflight">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <span class="section-icon">📝</span>
+      <h2 class="section-title">Post-Flight &amp; Logging</h2>
+    </div>
+
+    <div class="card" data-section="Post-Flight & Logging" data-title="Post-Flight Procedure">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">10.1</span><span class="card-title">Post-Flight Procedure</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Upon landing at base at the end of a deployment, the crew must complete the following before standing down:</p>
+        <ol class="sop-ol">
+          <li>Declare over radio: <em>"I-99 on the ground at [location], standing down."</em></li>
+          <li>Secure the aircraft — engines off, aircraft secured at the hangar/helipad.</li>
+          <li>Complete the MDT flight log — record departure time, total flight time, all taskings attended, and any notable observations.</li>
+          <li>Flag any footage of evidential value to the relevant case officer or CID.</li>
+          <li>Note any technical faults or equipment issues observed during the flight in the aircraft log — do not leave a fault unreported.</li>
+          <li>Return all personal equipment to the appropriate storage.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="card" data-section="Post-Flight & Logging" data-title="MDT Flight Log Requirements">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">10.2</span><span class="card-title">MDT Flight Log Requirements</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Every flight must have a corresponding MDT log entry. The log must include:</p>
+        <ul class="sop-list">
+          <li>Pilot name, collar number, and Air ticket reference.</li>
+          <li>TFO name and collar number (if crewed).</li>
+          <li>Departure time, landing time, and total flight duration.</li>
+          <li>All incidents attended — CAD references must be linked.</li>
+          <li>Whether spotlight was used, and if so, for what purpose.</li>
+          <li>Whether footage was captured that is of evidential value.</li>
+          <li>Any altitude deviations below 300 feet and the justification.</li>
+          <li>Any technical faults or equipment defects observed.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Post-Flight & Logging" data-title="Debrief Following Significant Operations">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">10.3</span><span class="card-title">Debrief Following Significant Operations</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Following any flight that involved a critical incident, a State 0 response, a firearms operation, or a significant pursuit, the NPAS crew must attend or contribute to the post-incident debrief alongside ground units. Air unit observations from altitude often contain intelligence that ground units were not aware of — this information must be shared in the debrief.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESTRICTIONS & MISCONDUCT -->
+  <section class="sop-section" id="restrictions">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <span class="section-icon">🚫</span>
+      <h2 class="section-title">Restrictions &amp; Misconduct</h2>
+    </div>
+
+    <div class="card" data-section="Restrictions & Misconduct" data-title="Prohibited Conduct — Absolute Rules">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">11.1</span><span class="card-title">Prohibited Conduct — Absolute Rules</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The following actions are absolutely prohibited and will result in <span class="hl-r">immediate suspension from air operations</span> and a full professional standards review:</p>
+        <ul class="sop-list">
+          <li>Operating the aircraft without a valid Air training ticket.</li>
+          <li>Flying below 300 feet AGL outside of authorised exceptions.</li>
+          <li>Carrying an unauthorised passenger — civilian or otherwise.</li>
+          <li>Using the aircraft or its equipment for any purpose that is not a legitimate police function.</li>
+          <li>Operating the aircraft in incorrect or non-standard uniform.</li>
+          <li>Deliberately using the spotlight to harass, intimidate, or torment a member of the public.</li>
+          <li>Flying under the influence of anything that impairs judgement or reaction time.</li>
+          <li>Failing to declare an emergency MAYDAY when one exists — delaying a distress call endangers crew and ground units.</li>
+          <li>Deliberately concealing a flight safety incident, fault, or near-miss from the post-flight log.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Restrictions & Misconduct" data-title="Misuse of the Aircraft">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">11.2</span><span class="card-title">Misuse of the Aircraft</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The NPAS helicopter is a publicly-funded operational asset. It exists solely to support police operations. The following are considered <span class="hl-r">misuse</span> and are subject to disciplinary action:</p>
+        <ul class="sop-list">
+          <li>Using the aircraft for personal sightseeing or joy rides — including for friends, family, or other officers not on duty.</li>
+          <li>Engaging in aerial stunts, reckless manoeuvring, or low-level flying for entertainment purposes.</li>
+          <li>Using the aircraft to follow or surveil persons without a legitimate policing basis.</li>
+          <li>Flying over known events or gatherings purely for spectacle rather than an operational reason.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Restrictions & Misconduct" data-title="Reporting Flight Safety Concerns">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">11.3</span><span class="card-title">Reporting Flight Safety Concerns</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Any pilot or observer who has a concern about flight safety — whether related to equipment, another crew member's conduct, or a near-miss incident — has an <span class="hl">unconditional duty to report it</span> to a Sergeant or above.</p>
+        <ul class="sop-list">
+          <li>Flight safety concerns must never be suppressed due to rank, social pressure, or fear of embarrassment.</li>
+          <li>Reports can be made confidentially to the on-duty Sergeant — the reporting officer will be protected from retaliation.</li>
+          <li>Near-miss incidents must be logged on the MDT and flagged to an Inspector or above on the same shift.</li>
+        </ul>
+        <div class="notice success">
+          <span class="notice-icon">✅</span>
+          <div>Reporting a safety concern is <strong>correct and professional behaviour</strong>. The only failure is in staying silent. An unreported fault or near-miss today could cause a serious incident tomorrow.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Restrictions & Misconduct" data-title="Ticket Suspension & Revocation">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">11.4</span><span class="card-title">Ticket Suspension &amp; Revocation</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>An Air ticket may be <strong>suspended</strong> or <strong>permanently revoked</strong> by a Superintendent or above in the following circumstances:</p>
+        <ul class="sop-list">
+          <li>A flight safety incident deemed to be caused by the officer's conduct or negligence.</li>
+          <li>A serious breach of these SOPs — particularly the 300-foot rule, uniform requirements, or prohibited conduct.</li>
+          <li>An ongoing professional standards investigation where the use of air operations is relevant.</li>
+          <li>A sustained period of inactivity where currency of flight skills cannot be confirmed.</li>
+        </ul>
+        <p>Suspension is reviewed after a defined period or following a satisfactory requalification assessment. Revocation is permanent unless overturned by a Superintendent or above on appeal.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span>OrbitRP · City of Orbit · NPAS Air Unit SOPs · v1.0</span>
+    <span>Created by SR-1 C/Supt R.Jones</span>
+  </footer>
+</main>
+
+<div id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<script>
+function toggleCard(h){h.parentElement.classList.toggle('open')}
+function setActive(el){document.querySelectorAll('.nav-item').forEach(function(a){a.classList.remove('active')});el.classList.add('active')}
+
+window.addEventListener('scroll',function(){
+  document.getElementById('back-top').classList.toggle('visible',window.scrollY>300);
+},{passive:true});
+
+var searchData=[];
+document.querySelectorAll('.card').forEach(function(card){
+  var section=card.getAttribute('data-section')||'';
+  var title=card.getAttribute('data-title')||'';
+  var body=card.querySelector('.card-body');
+  var text=body?body.innerText:'';
+  var id=card.querySelector('.card-id')?card.querySelector('.card-id').innerText:'';
+  searchData.push({section,title,text,id,card});
+});
+
+var allSections=document.querySelectorAll('.sop-section');
+var resultsDiv=document.getElementById('search-results');
+
+document.getElementById('search').addEventListener('input',function(){
+  var q=this.value.trim().toLowerCase();
+  if(!q){
+    resultsDiv.classList.remove('active');
+    resultsDiv.innerHTML='';
+    allSections.forEach(function(s){s.style.display=''});
+    return;
+  }
+  allSections.forEach(function(s){s.style.display='none'});
+  resultsDiv.innerHTML='';
+  resultsDiv.classList.add('active');
+  var matches=searchData.filter(function(d){
+    return d.title.toLowerCase().includes(q)||d.section.toLowerCase().includes(q)||d.text.toLowerCase().includes(q);
+  });
+  if(!matches.length){
+    resultsDiv.innerHTML='<p style="color:var(--text-muted);padding:20px 0;font-size:16px;">No results for <strong style="color:var(--text)">"'+q+'"</strong>.</p>';
+    return;
+  }
+  matches.forEach(function(m){
+    var idx=m.text.toLowerCase().indexOf(q);
+    var snippet=idx>-1?'…'+m.text.substring(Math.max(0,idx-40),idx+80).replace(/\n/g,' ')+'…':m.text.substring(0,100)+'…';
+    var hl=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+    var el=document.createElement('div');
+    el.className='result-item';
+    el.innerHTML='<div class="result-section">'+m.section.toUpperCase()+' · '+m.id+'</div><div class="result-title">'+m.title.replace(hl,'<mark>$1</mark>')+'</div><div class="result-snippet">'+snippet.replace(hl,'<mark>$1</mark>')+'</div>';
+    el.addEventListener('click',function(){
+      document.getElementById('search').value='';
+      resultsDiv.classList.remove('active');
+      resultsDiv.innerHTML='';
+      allSections.forEach(function(s){s.style.display=''});
+      m.card.scrollIntoView({behavior:'smooth',block:'center'});
+      m.card.classList.add('open');
+      setTimeout(function(){m.card.style.boxShadow='0 0 0 2px var(--sky)';setTimeout(function(){m.card.style.boxShadow=''},1400)},400);
+    });
+    resultsDiv.appendChild(el);
+  });
+});
+
+var sectionEls=document.querySelectorAll('.sop-section');
+var navLinks=document.querySelectorAll('.nav-item');
+window.addEventListener('scroll',function(){
+  var scrollY=window.scrollY+120;
+  sectionEls.forEach(function(sec){
+    if(scrollY>=sec.offsetTop&&scrollY<sec.offsetTop+sec.offsetHeight){
+      var id=sec.id;
+      navLinks.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+id)});
+    }
+  });
+},{passive:true});
+</script>
+</body>
+</html>

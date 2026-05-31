@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OrbitRP — CID SOPs</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Roboto+Condensed:wght@300;400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:        #0a0c10;
+  --surface:   #111318;
+  --surface2:  #171b22;
+  --surface3:  #1e2330;
+  --border:    #252b38;
+  --border2:   #2e3648;
+  --accent:    #2d7dd2;
+  --accent2:   #1a5fa8;
+  --accent-glow: rgba(45,125,210,0.18);
+  --gold:      #a472f0;
+  --gold-dim:  rgba(164,114,240,0.14);
+  --red:       #e03c3c;
+  --red-dim:   rgba(224,60,60,0.12);
+  --green:     #3cb872;
+  --green-dim: rgba(60,184,114,0.12);
+  --amber:     #e87c3e;
+  --amber-dim: rgba(232,124,62,0.12);
+  --purple:    #9b6dff;
+  --purple-dim:rgba(155,109,255,0.12);
+  --text:      #dce2ee;
+  --text-dim:  #8b95aa;
+  --text-muted:#525c72;
+  --sidebar-w: 270px;
+  --font-head: 'Rajdhani', sans-serif;
+  --font-body: 'Roboto Condensed', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:18px;line-height:1.65;display:flex;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--accent2)}
+
+/* SIDEBAR */
+#sidebar{width:var(--sidebar-w);height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;overflow-y:auto;overflow-x:hidden;z-index:100;transition:transform .3s ease;scrollbar-width:thin;scrollbar-color:var(--border2) var(--surface)}
+#sidebar::-webkit-scrollbar{width:8px}
+#sidebar::-webkit-scrollbar-track{background:var(--surface)}
+#sidebar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;border:1px solid var(--surface)}
+#sidebar::-webkit-scrollbar-thumb:hover{background:var(--accent2)}
+.sidebar-brand{padding:24px 20px 20px;border-bottom:1px solid var(--border)}
+.brand-badge{display:inline-flex;align-items:center;gap:6px;background:var(--gold-dim);border:1px solid var(--gold);border-radius:4px;padding:3px 10px;font-family:var(--font-mono);font-size:13px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.brand-badge::before{content:'●';font-size:10px;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.brand-title{font-family:var(--font-head);font-size:25px;font-weight:700;color:#fff;line-height:1.1;letter-spacing:.5px}
+.brand-sub{font-size:14px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px;font-family:var(--font-mono)}
+.sidebar-search{padding:14px 14px 0}
+.search-wrap{position:relative}
+.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none}
+#search{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:8px 10px 8px 34px;color:var(--text);font-family:var(--font-body);font-size:13px;outline:none;transition:border-color .2s}
+#search::placeholder{color:var(--text-muted)}
+#search:focus{border-color:var(--gold)}
+.nav-section-label{padding:18px 16px 6px;font-family:var(--font-mono);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;color:var(--text-dim);text-decoration:none;font-size:15px;font-family:var(--font-body);border-left:2px solid transparent;transition:all .2s;cursor:pointer}
+.nav-item:hover{background:var(--surface2);color:var(--text);border-left-color:var(--border2)}
+.nav-item.active{background:var(--gold-dim);color:var(--gold);border-left-color:var(--gold)}
+.nav-icon{width:16px;text-align:center;font-size:17px;flex-shrink:0}
+.nav-num{margin-left:auto;font-family:var(--font-mono);font-size:13px;color:var(--text-muted);background:var(--surface3);padding:1px 6px;border-radius:10px}
+
+/* MAIN */
+#main{margin-left:var(--sidebar-w);flex:1;max-width:1500px;padding:48px 52px}
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.version-badge{font-family:var(--font-mono);font-size:13px;padding:3px 10px;border-radius:20px;border:1px solid var(--border2);color:var(--text-muted);letter-spacing:1px}
+.status-pill{font-family:var(--font-mono);font-size:13px;padding:3px 10px;border-radius:20px;background:var(--gold-dim);border:1px solid var(--gold);color:var(--gold);letter-spacing:1px}
+.status-pill::before{content:'● ';font-size:11px}
+.page-header{margin-bottom:52px}
+.dept-stripe{width:48px;height:4px;background:linear-gradient(90deg,var(--gold),var(--accent));border-radius:2px;margin-bottom:16px}
+.page-title{font-family:var(--font-head);font-size:50px;font-weight:700;color:#fff;line-height:1;letter-spacing:.5px;margin-bottom:10px}
+.page-sub{color:var(--text-dim);font-size:25px;max-width:800px;line-height:1.6}
+
+/* SECTION */
+.sop-section{margin-bottom:56px;animation:fadeUp .4s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.section-header{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.section-num{font-family:var(--font-mono);font-size:15px;color:var(--text-muted);background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 8px;letter-spacing:1px;flex-shrink:0}
+.section-icon{font-size:25px}
+.section-title{font-family:var(--font-head);font-size:29px;font-weight:700;color:#fff;letter-spacing:.3px;flex:1}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:10px;overflow:hidden;transition:border-color .2s}
+.card:hover{border-color:rgba(255,255,255,0.55);box-shadow:0 0 0 1px rgba(255,255,255,0.15)}
+.card-header{display:flex;align-items:center;gap:15px;padding:14px 18px;cursor:pointer;user-select:none}
+.card-id{font-family:var(--font-mono);font-size:15px;color:var(--gold);flex-shrink:0;min-width:36px}
+.card-title{font-family:var(--font-head);font-size:20px;font-weight:600;color:var(--text);flex:1;letter-spacing:.2px}
+.card-chevron{color:var(--text-muted);font-size:15px;transition:transform .2s;flex-shrink:0}
+.card.open .card-chevron{transform:rotate(180deg)}
+.card.open .card-title{color:#fff}
+.card.open{border-color:var(--gold)}
+.card-body{display:none;padding:0 18px 18px;border-top:1px solid var(--border)}
+.card.open .card-body{display:block;padding-top:16px}
+.card-body p{color:var(--text-dim);font-size:17px;margin-bottom:10px}
+.card-body p:last-child{margin-bottom:0}
+.card-body strong{color:var(--text);font-weight:700}
+
+/* NOTICE */
+.notice{border-radius:6px;padding:13px 16px;margin:14px 0;font-size:16px;display:flex;gap:10px;align-items:flex-start;line-height:1.5}
+.notice-icon{flex-shrink:0;margin-top:1px}
+.notice.info{background:var(--accent-glow);border-left:3px solid var(--accent);color:var(--text-dim)}
+.notice.warn{background:var(--amber-dim);border-left:3px solid var(--amber);color:var(--text-dim)}
+.notice.danger{background:var(--red-dim);border-left:3px solid var(--red);color:var(--text-dim)}
+.notice.success{background:var(--green-dim);border-left:3px solid var(--green);color:var(--text-dim)}
+.notice.gold{background:var(--gold-dim);border-left:3px solid var(--gold);color:var(--text-dim)}
+.notice strong{color:var(--text)}
+
+/* LISTS */
+.sop-list{list-style:none;padding:0;margin:10px 0}
+.sop-list li{display:flex;gap:10px;padding:5px 0;font-size:18px;color:var(--text-dim);border-bottom:1px dashed var(--border)}
+.sop-list li:last-child{border-bottom:none}
+.sop-list li::before{content:'›';color:var(--gold);font-weight:700;flex-shrink:0}
+.sop-ol{list-style:none;counter-reset:sop;padding:0;margin:10px 0}
+.sop-ol li{counter-increment:sop;display:flex;gap:12px;align-items:baseline;padding:6px 0;font-size:18px;color:var(--text-dim);border-bottom:1px dashed var(--border)}
+.sop-ol li:last-child{border-bottom:none}
+.sop-ol li::before{content:counter(sop,decimal-leading-zero);font-family:var(--font-mono);font-size:15px;color:var(--gold);flex-shrink:0;min-width:20px}
+
+/* TABLE */
+.sop-table{width:100%;border-collapse:collapse;font-size:20px;margin:10px 0}
+.sop-table th{background:var(--surface3);color:var(--text);font-family:var(--font-mono);font-size:15px;letter-spacing:1.5px;text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border2)}
+.sop-table td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--text-dim);vertical-align:top}
+.sop-table tr:last-child td{border-bottom:none}
+.sop-table tr:hover td{background:var(--surface2)}
+.sop-table td:first-child{font-family:var(--font-mono);font-size:15px;color:var(--gold)}
+
+/* RANK GRID */
+.rank-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+@media(max-width:640px){.rank-grid{grid-template-columns:1fr}}
+.rank-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;display:flex;align-items:flex-start;gap:14px;transition:border-color .2s,transform .15s}
+.rank-card:hover{border-color:var(--gold);transform:translateY(-1px)}
+.rank-badge{font-family:var(--font-mono);font-size:14px;font-weight:600;padding:5px 9px;border-radius:5px;letter-spacing:.5px;flex-shrink:0;min-width:62px;text-align:center;margin-top:2px;background:var(--gold-dim);border:1px solid var(--gold);color:var(--gold)}
+.rank-info .rank-name{font-family:var(--font-head);font-size:20px;font-weight:700;color:#fff;letter-spacing:.2px}
+.rank-info .rank-desc{font-size:15px;color:var(--text-dim);margin-top:2px;line-height:1.4}
+
+/* HIGHLIGHTS */
+.hl{color:var(--gold);font-weight:700}
+.hl-r{color:var(--red);font-weight:700}
+.hl-g{color:var(--green);font-weight:700}
+.hl-b{color:var(--accent);font-weight:700}
+.hl-p{color:var(--purple);font-weight:700}
+.hl-crit{background:var(--red-dim);color:var(--red);font-weight:700;padding:1px 7px;border-radius:4px;border:1px solid rgba(224,60,60,0.45);text-shadow:0 0 1px rgba(224,60,60,0.3)}
+
+/* SEARCH RESULTS */
+#search-results{display:none}
+#search-results.active{display:block}
+.result-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 18px;margin-bottom:8px;cursor:pointer;transition:border-color .2s}
+.result-item:hover{border-color:var(--gold)}
+.result-section{font-family:var(--font-mono);font-size:15px;color:var(--text-muted);margin-bottom:4px;letter-spacing:1px}
+.result-title{font-family:var(--font-head);font-size:20px;color:#fff;font-weight:600}
+.result-snippet{font-size:16px;color:var(--text-muted);margin-top:4px}
+mark{background:var(--gold-dim);color:var(--gold);border-radius:2px;padding:0 2px}
+
+/* BACK TO TOP */
+#back-top{position:fixed;bottom:28px;right:28px;width:40px;height:40px;background:var(--surface2);border:1px solid var(--border2);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--text-dim);cursor:pointer;font-size:20px;transition:all .2s;opacity:0;pointer-events:none}
+#back-top.visible{opacity:1;pointer-events:all}
+#back-top:hover{background:var(--gold);color:#fff;border-color:var(--gold)}
+
+/* MOBILE */
+.mob-toggle{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:8px 12px;cursor:pointer;font-size:21px}
+@media(max-width:760px){.mob-toggle{display:flex;align-items:center}#sidebar{transform:translateX(-100%)}#sidebar.open{transform:translateX(0)}#main{margin-left:0;padding:32px 20px;padding-top:64px}}
+
+/* FOOTER */
+.footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--border);font-family:var(--font-mono);font-size:15px;color:var(--text-muted);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+
+/* UNIFORM CARDS */
+.uniform-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+@media(max-width:760px){.uniform-grid{grid-template-columns:1fr}}
+.uniform-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px 16px}
+.uniform-card-title{font-family:var(--font-head);font-size:18px;font-weight:700;color:var(--gold);margin-bottom:8px;letter-spacing:.3px;display:flex;align-items:center;gap:8px}
+.uniform-card ul{list-style:none;padding:0;margin:0}
+.uniform-card li{font-size:15px;color:var(--text-dim);padding:3px 0;display:flex;gap:8px}
+.uniform-card li::before{content:'•';color:var(--gold);flex-shrink:0}
+</style>
+</head>
+<body>
+
+<div class="mob-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</div>
+
+<nav id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-badge">ORBIT PD · CID</div>
+    <div class="brand-title">CID</div>
+    <div class="brand-sub">Standard Operating Procedures</div>
+  </div>
+  <div class="sidebar-search">
+    <div class="search-wrap">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input id="search" type="text" placeholder="Search SOPs…" autocomplete="off"/>
+    </div>
+  </div>
+  <div class="nav-section-label">Contents</div>
+  <a class="nav-item active" href="#definitions" onclick="setActive(this)"><span class="nav-icon">📖</span> Definitions <span class="nav-num">6</span></a>
+  <a class="nav-item" href="#mission" onclick="setActive(this)"><span class="nav-icon">🎯</span> Mission Statement <span class="nav-num">1</span></a>
+  <a class="nav-item" href="#operations" onclick="setActive(this)"><span class="nav-icon">🔍</span> Operations <span class="nav-num">6</span></a>
+  <a class="nav-item" href="#vehicles" onclick="setActive(this)"><span class="nav-icon">🚗</span> Vehicles <span class="nav-num">3</span></a>
+  <a class="nav-item" href="#undercover" onclick="setActive(this)"><span class="nav-icon">🕵️</span> Undercover Operations <span class="nav-num">1</span></a>
+  <a class="nav-item" href="#evidence" onclick="setActive(this)"><span class="nav-icon">🧪</span> Evidence Handling <span class="nav-num">4</span></a>
+  <a class="nav-item" href="#training" onclick="setActive(this)"><span class="nav-icon">🎓</span> Training &amp; Accreditation <span class="nav-num">5</span></a>
+  <div class="nav-section-label" style="padding-top:20px;">Version</div>
+  <div style="padding:8px 16px 20px;font-family:var(--font-mono);font-size:10px;color:var(--text-muted)">SOP v1.1 · CID Orbit<br>Created by River Moore</div>
+</nav>
+
+<main id="main">
+  <div class="topbar">
+    <span class="version-badge">SOP v1.1</span>
+    <span class="status-pill">IN EFFECT</span>
+  </div>
+
+  <header class="page-header">
+    <div class="dept-stripe"></div>
+    <h1 class="page-title">Criminal Investigations<br>Department</h1>
+    <p class="page-sub">Standard Operating Procedure for all officers attached to the Criminal Investigation Department of the Orbit Police. Intelligence-led, evidence-driven, professional at all times.</p>
+  </header>
+
+  <div id="search-results"></div>
+
+  <!-- DEFINITIONS -->
+  <section class="sop-section" id="definitions">
+    <div class="section-header">
+      <span class="section-num">00</span>
+      <span class="section-icon">📖</span>
+      <h2 class="section-title">Definitions</h2>
+    </div>
+    <div class="notice info">
+      <span class="notice-icon">ℹ️</span>
+      <div>The following terms appear throughout this SOP. CID officers are expected to use them accurately in reports, briefings, and radio communications.</div>
+    </div>
+    <table class="sop-table">
+      <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+      <tbody>
+        <tr><td>CID</td><td>Criminal Investigation Department — responsible for serious and complex crime investigations.</td></tr>
+        <tr><td>Callsign</td><td>Unique identifier assigned to each officer.</td></tr>
+        <tr><td>MDT</td><td>Mobile Data Terminal — in-game system used for records, intelligence, and reporting.</td></tr>
+        <tr><td>UC</td><td>Undercover — officer operating with a concealed identity.</td></tr>
+        <tr><td>Covert</td><td>Activity conducted without police identification or visibility.</td></tr>
+        <tr><td>Overt</td><td>Visible policing activity with identifiable police presence.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- MISSION STATEMENT -->
+  <section class="sop-section" id="mission">
+    <div class="section-header">
+      <span class="section-num">M</span>
+      <span class="section-icon">🎯</span>
+      <h2 class="section-title">Mission Statement</h2>
+    </div>
+    <div class="notice gold">
+      <span class="notice-icon">🎯</span>
+      <div>The Criminal Investigation Department is committed to investigating serious and organised crime through <strong>intelligence-led policing, professional conduct, and evidential integrity</strong>. CID officers will operate with discretion and diligence to ensure successful prosecutions and maintain public confidence.</div>
+    </div>
+  </section>
+
+  <!-- OPERATIONS -->
+  <section class="sop-section" id="operations">
+    <div class="section-header"><span class="section-num">01</span><span class="section-icon">🔍</span><h2 class="section-title">Operations</h2></div>
+
+    <div class="card" data-section="Operations" data-title="Conduct &amp; Responsibilities">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">1.1</span><span class="card-title">Conduct &amp; Responsibilities</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>CID officers shall hold themselves to the highest professional standards. The integrity of any case rests on the conduct of those investigating it.</p>
+        <ul class="sop-list">
+          <li>Act with <span class="hl">professionalism, integrity, and impartiality</span> at all times.</li>
+          <li>Prioritise <strong>evidence-based investigations</strong> over immediate enforcement.</li>
+          <li>Maintain <span class="hl-r">strict confidentiality</span> regarding ongoing investigations.</li>
+          <li>Use force only when necessary and proportionate.</li>
+          <li>Work collaboratively with uniformed units and specialist divisions.</li>
+        </ul>
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div><span class="hl-crit">DISCLOSURE OF AN ONGOING INVESTIGATION TO ANY UNAUTHORISED PERSON IS A SERIOUS BREACH OF CONDUCT.</span> This includes other officers not attached to the case, family, friends, or members of the public.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Operations" data-title="Structure &amp; Supervision">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">1.2</span><span class="card-title">Structure &amp; Supervision</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>CID operates under a structured rank system. Every operation must be authorised and recorded through the appropriate supervisory rank.</p>
+        <div class="rank-grid">
+          <div class="rank-card"><span class="rank-badge">DCI</span><div class="rank-info"><div class="rank-name">Detective Chief Inspector</div><div class="rank-desc">Unit Command. Strategic oversight of CID operations.</div></div></div>
+          <div class="rank-card"><span class="rank-badge">DI</span><div class="rank-info"><div class="rank-name">Detective Inspector</div><div class="rank-desc">Operational oversight. Authorises significant deployments.</div></div></div>
+          <div class="rank-card"><span class="rank-badge">DS</span><div class="rank-info"><div class="rank-name">Detective Sergeant</div><div class="rank-desc">Case supervision. Authorises undercover deployments.</div></div></div>
+          <div class="rank-card"><span class="rank-badge">DC</span><div class="rank-info"><div class="rank-name">Detective Constable</div><div class="rank-desc">Front-line investigations and case work.</div></div></div>
+          <div class="rank-card"><span class="rank-badge">FO</span><div class="rank-info"><div class="rank-name">Forensic Officer</div><div class="rank-desc">Probationary CID officer. Forensic and evidence focus.</div></div></div>
+        </div>
+        <div class="notice info">
+          <span class="notice-icon">ℹ️</span>
+          <div>All CID operations <strong>must be authorised and recorded</strong> through the appropriate supervisory rank. No officer operates independently of the chain — every case is owned, every action is logged.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Operations" data-title="Callsign">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">1.3</span><span class="card-title">Callsign</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <ul class="sop-list">
+          <li>Officers must <strong>display their callsign number</strong> when in overt operations.</li>
+          <li>Callsigns <span class="hl">may be concealed</span> during undercover or covert deployments.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Operations" data-title="Issued Equipment">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">1.4</span><span class="card-title">Issued Equipment</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>CID officers may be issued the following equipment, depending on role and deployment type:</p>
+        <ul class="sop-list">
+          <li><strong>TASER / Baton</strong> — for personal safety and use of force where required.</li>
+          <li><strong>Radio communications device</strong> — primary tactical comms.</li>
+          <li><strong>MDT access</strong> — for records, intelligence, and case file management.</li>
+          <li><strong>Evidence collection kit</strong> — bags, markers, camera.</li>
+          <li><strong>Covert recording equipment</strong> — when authorised by a DS or above.</li>
+          <li><strong>Drone</strong> — requires drone certification before deployment.</li>
+        </ul>
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>All issued equipment is the personal responsibility of the officer. Loss, damage, or misuse must be reported to a Detective Sergeant or above immediately.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Operations" data-title="Dress Code">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">1.5</span><span class="card-title">Dress Code</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>CID dress code varies by deployment. A more detailed view of dress code is available in the <span class="hl">Uniform SOP</span>. The four primary categories are summarised below.</p>
+
+        <div class="uniform-grid">
+          <div class="uniform-card">
+            <div class="uniform-card-title">🦺 1.5a — Overt Attire</div>
+            <ul>
+              <li>Day-to-day duty attire.</li>
+              <li>Smart casual — suits, blouse, jeans, etc.</li>
+              <li>CID vest must be worn at all times outside the station.</li>
+            </ul>
+          </div>
+          <div class="uniform-card">
+            <div class="uniform-card-title">👔 1.5b — Plain Clothes</div>
+            <ul>
+              <li>Primary CID operating attire.</li>
+              <li>Clothing must suit the operational environment (realistic RP standard).</li>
+              <li>No visible police identifiers during covert or UC roles.</li>
+            </ul>
+          </div>
+          <div class="uniform-card">
+            <div class="uniform-card-title">🕶️ 1.5c — Covert Clothes</div>
+            <ul>
+              <li>Attire relating to the undercover profile.</li>
+              <li>Casual or formal as the cover identity requires.</li>
+              <li>Must be disguisable — no police markers visible at all.</li>
+            </ul>
+          </div>
+          <div class="uniform-card">
+            <div class="uniform-card-title">🧫 1.5d — Forensic Uniform</div>
+            <ul>
+              <li>White full-body forensic coveralls.</li>
+              <li>Protective face mask &amp; disposable gloves.</li>
+              <li>Steel toe-capped boots.</li>
+              <li>Hair secured / tied up at all times.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Operations" data-title="Operational Duties">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">1.6</span><span class="card-title">Operational Duties</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>CID officers are responsible for the investigation of serious and organised crime within the City of Orbit. Core duties include:</p>
+        <ul class="sop-list">
+          <li>Investigating <strong>serious and organised crime</strong>.</li>
+          <li>Conducting <strong>PACE-compliant interviews</strong> where applicable in RP.</li>
+          <li><strong>Surveillance</strong> and <strong>intelligence gathering</strong>.</li>
+          <li>Executing <strong>warrants</strong> and planned operations.</li>
+          <li>Building <strong>case files</strong> for prosecution.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- VEHICLES -->
+  <section class="sop-section" id="vehicles">
+    <div class="section-header"><span class="section-num">02</span><span class="section-icon">🚗</span><h2 class="section-title">Vehicles</h2></div>
+
+    <div class="notice info">
+      <span class="notice-icon">ℹ️</span>
+      <div>CID has access to three vehicle classes. The right vehicle for the right job — using a marked car for a surveillance task or a covert car for routine patrol both compromise operational effectiveness.</div>
+    </div>
+
+    <div class="card" data-section="Vehicles" data-title="Marked Vehicles">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">2.1</span><span class="card-title">Marked Vehicles</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <ul class="sop-list">
+          <li>Primary CID transport for patrolling normal duties.</li>
+          <li>Used for <strong>support roles</strong> or <strong>joint operations</strong> with uniformed units.</li>
+          <li><span class="hl-r">Not recommended</span> for surveillance or sensitive deployments — fully identifiable as police.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Vehicles" data-title="Unmarked Vehicles">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">2.2</span><span class="card-title">Unmarked Vehicles</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <ul class="sop-list">
+          <li>Secondary CID transport.</li>
+          <li>Used for <strong>surveillance</strong> and <strong>rapid response without drawing attention</strong>.</li>
+          <li>Retains police identifiers on closer inspection — not suitable for sustained covert work.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Vehicles" data-title="Covert Vehicles">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">2.3</span><span class="card-title">Covert Vehicles</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <ul class="sop-list">
+          <li><strong>Fully civilian</strong> in appearance.</li>
+          <li><span class="hl-r">No emergency lighting or police identifiers.</span></li>
+          <li>Reserved for <strong>undercover</strong> or <strong>high-level surveillance</strong> operations.</li>
+        </ul>
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>Covert vehicles must not be used outside of their intended operational purpose. Deploying a covert vehicle for routine duties compromises its value when it is genuinely needed.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- UNDERCOVER OPERATIONS -->
+  <section class="sop-section" id="undercover">
+    <div class="section-header"><span class="section-num">03</span><span class="section-icon">🕵️</span><h2 class="section-title">Undercover Operations</h2></div>
+
+    <div class="notice danger">
+      <span class="notice-icon">⚠️</span>
+      <div><span class="hl-crit">UNDERCOVER OPERATIONS MUST BE AUTHORISED BY A DETECTIVE SERGEANT OR ABOVE.</span> No officer may deploy in a UC capacity without an MDT operation report filed and approval logged.</div>
+    </div>
+
+    <div class="card" data-section="Undercover Operations" data-title="UC Deployment Protocol">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">3.1</span><span class="card-title">UC Deployment Protocol</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Undercover work is one of the most sensitive functions of CID. Identity, cover, and safety must be planned before any deployment commences.</p>
+        <ol class="sop-ol">
+          <li>Operation must be <strong>authorised by a Detective Sergeant or above</strong>.</li>
+          <li>Officers must file a <span class="hl">detailed MDT report</span> on the undercover operation <strong>before deployment</strong>.</li>
+          <li>Establish and maintain a <strong>consistent cover identity</strong> — names, history, mannerisms, attire all aligned.</li>
+          <li><span class="hl-r">No use of overt police equipment</span> while undercover. This includes radios visible to the public, warrant cards, body armour, and standard issue items.</li>
+          <li><strong>Backup units</strong> should be available where practical — a covert support presence within reach.</li>
+          <li><span class="hl-crit">ANY COMPROMISE OF IDENTITY MUST BE REPORTED IMMEDIATELY.</span> Extraction takes priority over the operation itself.</li>
+        </ol>
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>Cover identities are not improvised — they are built. Officers operating without a properly documented UC profile risk both their own safety and the integrity of any evidence gathered.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVIDENCE HANDLING -->
+  <section class="sop-section" id="evidence">
+    <div class="section-header"><span class="section-num">04</span><span class="section-icon">🧪</span><h2 class="section-title">Evidence Handling</h2></div>
+
+    <div class="notice danger">
+      <span class="notice-icon">🧪</span>
+      <div><span class="hl-crit">EVIDENTIAL CONTINUITY IS THE FOUNDATION OF EVERY PROSECUTION.</span> A break in chain of custody, mislabelled item, or unrecorded handling can collapse a case at trial. Every exhibit, every handover, every action — logged.</div>
+    </div>
+
+    <div class="card" data-section="Evidence Handling" data-title="Evidence Collection">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">4.1</span><span class="card-title">Evidence Collection</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <ul class="sop-list">
+          <li>Evidence must be collected in accordance with <strong>RP realism standards</strong>.</li>
+          <li><span class="hl">Photograph evidence prior to collection</span> wherever possible — original position is part of the evidence itself.</li>
+          <li>Avoid <strong>contamination</strong> of scenes — forensic uniform where required, gloves at minimum.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Evidence Handling" data-title="Packaging &amp; Storage">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">4.2</span><span class="card-title">Packaging &amp; Storage</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>All evidence must be:</p>
+        <ul class="sop-list">
+          <li><strong>Bagged appropriately</strong> — correct evidence bag for the item type.</li>
+          <li><strong>Labelled clearly</strong> using the evidence pack.</li>
+          <li><strong>Logged into the MDT</strong> or evidence system once back at the station.</li>
+        </ul>
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div><strong>Separate items to prevent cross-contamination.</strong> For example: blood samples must be packaged in one flat pack and the suspect's belongings in another. Never mix biological samples with general exhibits.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Evidence Handling" data-title="Evidence Examination">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">4.3</span><span class="card-title">Evidence Examination</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <ul class="sop-list">
+          <li><span class="hl-r">Only trained officers</span> may process or test evidence.</li>
+          <li>Results must be <strong>documented clearly and accurately</strong> — no shortcuts, no informal notes.</li>
+          <li><strong>Maintain continuity of evidence</strong> at all times — every transfer, every handover, every signature.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Evidence Handling" data-title="Documentation &amp; Submission">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">4.4</span><span class="card-title">Documentation &amp; Submission</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>All evidence must include the following details on submission:</p>
+        <table class="sop-table">
+          <thead><tr><th>Field</th><th>Detail</th></tr></thead>
+          <tbody>
+            <tr><td>Description</td><td>Clear description of the item — including make, model, colour, condition.</td></tr>
+            <tr><td>Location</td><td>Where the item was recovered (room, position, surface).</td></tr>
+            <tr><td>Time &amp; Date</td><td>When the item was collected.</td></tr>
+            <tr><td>Officer</td><td>Collecting officer's name and callsign.</td></tr>
+          </tbody>
+        </table>
+        <p>Reports must be:</p>
+        <ul class="sop-list">
+          <li><strong>Clear</strong> — no ambiguity, no jargon for its own sake.</li>
+          <li><strong>Detailed</strong> — enough that another officer can pick up the file without questions.</li>
+          <li><strong>Written professionally</strong> — court-ready from the moment of submission.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRAINING & ACCREDITATION -->
+  <section class="sop-section" id="training">
+    <div class="section-header"><span class="section-num">05</span><span class="section-icon">🎓</span><h2 class="section-title">Training &amp; Accreditation</h2></div>
+
+    <div class="notice info">
+      <span class="notice-icon">ℹ️</span>
+      <div>All CID specialist functions require formal certification before deployment. Operating outside your accreditation is a serious breach of conduct and may compromise prosecutions.</div>
+    </div>
+
+    <div class="card" data-section="Training" data-title="Drone Operations">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">5.1</span><span class="card-title">Drone Operations</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <ul class="sop-list">
+          <li><span class="hl-r">Requires certification</span> before deployment.</li>
+          <li>Used for <strong>surveillance, search, and crime scene overview</strong>.</li>
+          <li>Drone footage forms part of the evidence file — handle as you would any other exhibit.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Training" data-title="Crime Scene Management">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">5.2</span><span class="card-title">Crime Scene Management</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <ul class="sop-list">
+          <li><strong>Scene preservation</strong> techniques.</li>
+          <li><strong>Evidence identification</strong> and marking.</li>
+          <li><strong>Contamination prevention</strong> — cordons, forensic suits, common approach paths.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Training" data-title="Evidence Handling">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">5.3</span><span class="card-title">Evidence Handling</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <ul class="sop-list">
+          <li>Proper <strong>collection and packaging</strong>.</li>
+          <li><strong>Chain of custody</strong> procedures.</li>
+          <li><strong>Court-ready documentation</strong>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="Training" data-title="MDT Usage">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">5.4</span><span class="card-title">MDT Usage</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <ul class="sop-list">
+          <li><strong>Recording crimes</strong> and intelligence.</li>
+          <li><strong>Managing case files</strong>.</li>
+          <li>Conducting <strong>background checks</strong>.</li>
+        </ul>
+        <div class="notice danger">
+          <span class="notice-icon">⚠️</span>
+          <div><span class="hl-crit">ALL MDT STATEMENTS MUST BE FINISHED BY THE TIME THE SUSPECT IS MAKING A PLEA.</span> Any and all statements should be completed at the earliest opportunity. <strong>Failure to do so may result in a strike.</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Training" data-title="Undercover Accreditation">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">5.5</span><span class="card-title">Undercover Accreditation</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <ul class="sop-list">
+          <li><strong>Scenario-based training</strong> — realistic deployment simulations.</li>
+          <li>Maintaining <strong>cover identity</strong> under pressure.</li>
+          <li><strong>Communication and emergency protocols</strong> — extraction signals, code words.</li>
+          <li>Building and managing <strong>undercover profiles</strong>.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span>OrbitRP · City of Orbit · CID SOPs · v1.1</span>
+    <span>Created by River Moore</span>
+  </footer>
+</main>
+
+<div id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<script>
+function toggleCard(h){h.parentElement.classList.toggle('open')}
+function setActive(el){document.querySelectorAll('.nav-item').forEach(function(a){a.classList.remove('active')});el.classList.add('active')}
+
+window.addEventListener('scroll',function(){
+  var btn=document.getElementById('back-top');
+  btn.classList.toggle('visible',window.scrollY>300);
+},{passive:true});
+
+var searchData=[];
+document.querySelectorAll('.card').forEach(function(card){
+  var section=card.getAttribute('data-section')||'';
+  var title=card.getAttribute('data-title')||'';
+  var body=card.querySelector('.card-body');
+  var text=body?body.innerText:'';
+  var id=card.querySelector('.card-id')?card.querySelector('.card-id').innerText:'';
+  var anchor=card.closest('.sop-section')?card.closest('.sop-section').id:'';
+  searchData.push({section,title,text,id,anchor,card});
+});
+
+var allSections=document.querySelectorAll('.sop-section');
+var resultsDiv=document.getElementById('search-results');
+
+document.getElementById('search').addEventListener('input',function(){
+  var q=this.value.trim().toLowerCase();
+  if(!q){
+    resultsDiv.classList.remove('active');
+    resultsDiv.innerHTML='';
+    allSections.forEach(function(s){s.style.display=''});
+    return;
+  }
+  allSections.forEach(function(s){s.style.display='none'});
+  resultsDiv.innerHTML='';
+  resultsDiv.classList.add('active');
+  var matches=searchData.filter(function(d){
+    return d.title.toLowerCase().includes(q)||d.section.toLowerCase().includes(q)||d.text.toLowerCase().includes(q);
+  });
+  if(!matches.length){
+    resultsDiv.innerHTML='<p style="color:var(--text-muted);padding:20px 0;font-size:14px;">No results for <strong style="color:var(--text)">"'+q+'"</strong>.</p>';
+    return;
+  }
+  matches.forEach(function(m){
+    var idx=m.text.toLowerCase().indexOf(q);
+    var snippet=idx>-1?'…'+m.text.substring(Math.max(0,idx-40),idx+80).replace(/\n/g,' ')+'…':m.text.substring(0,100)+'…';
+    var hl=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+    var el=document.createElement('div');
+    el.className='result-item';
+    el.innerHTML='<div class="result-section">'+m.section.toUpperCase()+' · '+m.id+'</div><div class="result-title">'+m.title.replace(hl,'<mark>$1</mark>')+'</div><div class="result-snippet">'+snippet.replace(hl,'<mark>$1</mark>')+'</div>';
+    el.addEventListener('click',function(){
+      document.getElementById('search').value='';
+      resultsDiv.classList.remove('active');
+      resultsDiv.innerHTML='';
+      allSections.forEach(function(s){s.style.display=''});
+      m.card.scrollIntoView({behavior:'smooth',block:'center'});
+      m.card.classList.add('open');
+      setTimeout(function(){m.card.style.boxShadow='0 0 0 2px var(--gold)';setTimeout(function(){m.card.style.boxShadow=''},1400)},400);
+    });
+    resultsDiv.appendChild(el);
+  });
+});
+
+var sectionEls=document.querySelectorAll('.sop-section');
+var navLinks=document.querySelectorAll('.nav-item');
+window.addEventListener('scroll',function(){
+  var scrollY=window.scrollY+120;
+  sectionEls.forEach(function(sec){
+    if(scrollY>=sec.offsetTop&&scrollY<sec.offsetTop+sec.offsetHeight){
+      var id=sec.id;
+      navLinks.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+id)});
+    }
+  });
+},{passive:true});
+</script>
+</body>
+</html>

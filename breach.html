@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OrbitRP — Robbery Response SOP</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Roboto+Condensed:wght@300;400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:          #0a0c10;
+  --surface:     #111318;
+  --surface2:    #171b22;
+  --surface3:    #1e2330;
+  --border:      #252b38;
+  --border2:     #2e3648;
+  --accent:      #2d7dd2;
+  --accent2:     #1a5fa8;
+  --accent-glow: rgba(45,125,210,0.18);
+  --gold:        #e8b84b;
+  --gold-dim:    rgba(232,184,75,0.12);
+  --red:         #e03c3c;
+  --red-dim:     rgba(224,60,60,0.12);
+  --green:       #3cb872;
+  --green-dim:   rgba(60,184,114,0.12);
+  --amber:       #e87c3e;
+  --amber-dim:   rgba(232,124,62,0.12);
+  --text:        #dce2ee;
+  --text-dim:    #8b95aa;
+  --text-muted:  #525c72;
+  --sidebar-w:   270px;
+  --font-head:   'Rajdhani', sans-serif;
+  --font-body:   'Roboto Condensed', sans-serif;
+  --font-mono:   'JetBrains Mono', monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:15px;line-height:1.7;display:flex;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--accent2)}
+
+/* ── SIDEBAR ── */
+#sidebar{width:var(--sidebar-w);height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;overflow-y:auto;z-index:100;scrollbar-width:thin;scrollbar-color:var(--border2) var(--surface)}
+#sidebar::-webkit-scrollbar{width:4px}
+#sidebar::-webkit-scrollbar-track{background:var(--surface)}
+#sidebar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+
+.sidebar-brand{padding:24px 20px 20px;border-bottom:1px solid var(--border)}
+.brand-badge{display:inline-flex;align-items:center;gap:6px;background:var(--gold-dim);border:1px solid var(--gold);border-radius:4px;padding:3px 10px;font-family:var(--font-mono);font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.brand-badge::before{content:'●';font-size:7px;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.brand-title{font-family:var(--font-head);font-size:22px;font-weight:700;color:#fff;line-height:1.1;letter-spacing:.5px}
+.brand-sub{font-size:11px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px;font-family:var(--font-mono)}
+
+.sidebar-search{padding:14px 14px 0}
+.search-wrap{position:relative}
+.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none}
+#search{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:8px 10px 8px 34px;color:var(--text);font-family:var(--font-body);font-size:13px;outline:none;transition:border-color .2s}
+#search::placeholder{color:var(--text-muted)}
+#search:focus{border-color:var(--gold)}
+
+.nav-section-label{padding:18px 16px 6px;font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;color:var(--text-dim);text-decoration:none;font-size:13.5px;font-family:var(--font-body);border-left:2px solid transparent;transition:all .2s;cursor:pointer}
+.nav-item:hover{background:var(--surface2);color:var(--text);border-left-color:var(--border2)}
+.nav-item.active{background:var(--gold-dim);color:var(--gold);border-left-color:var(--gold)}
+.nav-icon{width:16px;text-align:center;font-size:14px;flex-shrink:0}
+.nav-num{margin-left:auto;font-family:var(--font-mono);font-size:10px;color:var(--text-muted);background:var(--surface3);padding:1px 6px;border-radius:10px}
+
+/* ── MAIN ── */
+#main{margin-left:var(--sidebar-w);flex:1;max-width:900px;padding:48px 52px}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:48px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.topbar-title{font-family:var(--font-head);font-size:32px;font-weight:700;color:#fff;letter-spacing:.5px;flex:1}
+.version-badge{font-family:var(--font-mono);font-size:10px;padding:4px 12px;border-radius:20px;border:1px solid var(--border2);color:var(--text-muted);white-space:nowrap}
+.status-pill{font-family:var(--font-mono);font-size:10px;padding:4px 12px;border-radius:20px;background:var(--green-dim);border:1px solid var(--green);color:var(--green);white-space:nowrap}
+
+/* ── SECTION ── */
+.sop-section{margin-bottom:52px}
+.section-header{display:flex;align-items:center;gap:16px;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.section-num{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);background:var(--surface3);border:1px solid var(--border2);padding:4px 10px;border-radius:4px;letter-spacing:1px}
+.section-icon{font-size:20px}
+.section-title{font-family:var(--font-head);font-size:24px;font-weight:700;color:#fff;letter-spacing:.5px}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:10px;overflow:hidden;transition:border-color .2s}
+.card:hover{border-color:var(--border2)}
+.card.open{border-color:var(--gold)}
+.card-header{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;user-select:none;transition:background .2s}
+.card-header:hover{background:var(--surface2)}
+.card.open .card-header{background:var(--gold-dim)}
+.card-id{font-family:var(--font-mono);font-size:11px;color:var(--gold);background:var(--gold-dim);border:1px solid rgba(232,184,75,0.3);padding:2px 8px;border-radius:4px;white-space:nowrap}
+.card-title{font-family:var(--font-head);font-size:17px;font-weight:600;color:var(--text);flex:1;letter-spacing:.3px}
+.card.open .card-title{color:#fff}
+.card-chevron{font-size:11px;color:var(--text-muted);transition:transform .25s}
+.card.open .card-chevron{transform:rotate(180deg);color:var(--gold)}
+.card-body{display:none;padding:20px 22px 24px;border-top:1px solid var(--border)}
+.card.open .card-body{display:block}
+.card-body p{color:var(--text-dim);margin-bottom:12px}
+.card-body p:last-child{margin-bottom:0}
+
+/* ── NOTICES ── */
+.notice{display:flex;gap:14px;padding:14px 18px;border-radius:6px;margin:16px 0;border:1px solid}
+.notice-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.notice.info{background:var(--accent-glow);border-color:var(--accent2);color:var(--text-dim)}
+.notice.warn{background:var(--amber-dim);border-color:var(--amber);color:#f0c080}
+.notice.danger{background:var(--red-dim);border-color:var(--red);color:#f0a0a0}
+.notice.success{background:var(--green-dim);border-color:var(--green);color:#90d8a0}
+.notice.gold{background:var(--gold-dim);border-color:var(--gold);color:#f0d080}
+.notice div{line-height:1.6}
+
+/* ── TABLES ── */
+.sop-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px}
+.sop-table th{background:var(--surface3);color:var(--text);font-family:var(--font-head);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;padding:10px 14px;border:1px solid var(--border2);text-align:left}
+.sop-table td{padding:9px 14px;border:1px solid var(--border);color:var(--text-dim);vertical-align:top}
+.sop-table tr:nth-child(even) td{background:var(--surface2)}
+.sop-table tr:hover td{background:var(--surface3)}
+
+/* ── LISTS ── */
+.sop-ul,.sop-ol{padding-left:22px;margin:10px 0}
+.sop-ul li,.sop-ol li{color:var(--text-dim);margin-bottom:7px;padding-left:4px;line-height:1.65}
+.sop-ul li::marker{color:var(--gold)}
+.sop-ol li::marker{color:var(--gold);font-family:var(--font-mono);font-size:13px}
+
+/* ── HIGHLIGHTS ── */
+.hl{background:var(--gold-dim);color:var(--gold);padding:1px 6px;border-radius:3px;font-weight:600}
+.hl-r{background:var(--red-dim);color:var(--red);padding:1px 6px;border-radius:3px;font-weight:600}
+.hl-b{background:var(--accent-glow);color:var(--accent);padding:1px 6px;border-radius:3px;font-weight:600}
+.hl-g{background:var(--green-dim);color:var(--green);padding:1px 6px;border-radius:3px;font-weight:600}
+.hl-crit{background:var(--red);color:#fff;padding:2px 8px;border-radius:3px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;font-size:12px}
+
+/* ── STRIKE BADGES ── */
+.strike-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+.strike-card{background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:16px;text-align:center}
+.strike-card.s1{border-top:3px solid var(--amber)}
+.strike-card.s2{border-top:3px solid #e06030}
+.strike-card.s3{border-top:3px solid var(--red)}
+.strike-num{font-family:var(--font-head);font-size:32px;font-weight:700;margin-bottom:4px}
+.strike-card.s1 .strike-num{color:var(--amber)}
+.strike-card.s2 .strike-num{color:#e06030}
+.strike-card.s3 .strike-num{color:var(--red)}
+.strike-label{font-size:12px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px}
+.strike-desc{font-size:13px;color:var(--text-dim);line-height:1.5}
+
+/* ── BREACH CONDITIONS ── */
+.condition-list{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+.condition-item{display:flex;align-items:flex-start;gap:14px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:14px 16px}
+.condition-item.red{border-left:3px solid var(--red)}
+.condition-item.amber{border-left:3px solid var(--amber)}
+.condition-item.green{border-left:3px solid var(--green)}
+.condition-tag{font-family:var(--font-mono);font-size:10px;padding:3px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;align-self:center;flex-shrink:0}
+.condition-item.red .condition-tag{background:var(--red-dim);color:var(--red);border:1px solid var(--red)}
+.condition-item.amber .condition-tag{background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber)}
+.condition-item.green .condition-tag{background:var(--green-dim);color:var(--green);border:1px solid var(--green)}
+.condition-text{color:var(--text-dim);font-size:14px;line-height:1.55}
+.condition-text strong{color:var(--text);display:block;margin-bottom:3px;font-size:14.5px}
+
+/* ── SEQUENCE STEPS ── */
+.seq-list{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+.seq-step{display:flex;gap:16px;align-items:flex-start;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:14px 16px}
+.seq-num{font-family:var(--font-head);font-size:22px;font-weight:700;color:var(--gold);min-width:32px;line-height:1}
+.seq-content{color:var(--text-dim);font-size:14px;line-height:1.6}
+.seq-content strong{color:var(--text);display:block;font-size:15px;margin-bottom:3px}
+
+/* ── PHILOSOPHY BANNER ── */
+.philosophy-banner{background:linear-gradient(135deg,rgba(232,184,75,0.08) 0%,rgba(45,125,210,0.08) 100%);border:1px solid var(--gold);border-radius:10px;padding:22px 26px;margin-bottom:32px}
+.philosophy-banner .ph-title{font-family:var(--font-head);font-size:18px;font-weight:700;color:var(--gold);letter-spacing:.5px;margin-bottom:8px}
+.philosophy-banner p{color:var(--text-dim);font-size:14.5px;line-height:1.7;margin-bottom:0}
+
+/* ── NO RESULTS ── */
+.no-results{text-align:center;padding:60px 20px;color:var(--text-muted);font-family:var(--font-mono);font-size:13px;display:none}
+mark{background:var(--gold-dim);color:var(--gold);border-radius:2px;padding:0 2px}
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══════════════════════════════════════════════════════════════ -->
+<nav id="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-badge">ORBIT RP</div>
+    <div class="brand-title">Robbery Response</div>
+    <div class="brand-sub">Standard Operating Procedure</div>
+  </div>
+  <div class="sidebar-search">
+    <div class="search-wrap">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input id="search" type="text" placeholder="Search SOP…" autocomplete="off"/>
+    </div>
+  </div>
+  <div class="nav-section-label">Contents</div>
+  <a class="nav-item active" href="#overview" onclick="setActive(this)"><span class="nav-icon">📋</span> Overview</a>
+  <a class="nav-item" href="#attending" onclick="setActive(this)"><span class="nav-icon">🚔</span> Attending the Scene <span class="nav-num">3</span></a>
+  <a class="nav-item" href="#negotiation" onclick="setActive(this)"><span class="nav-icon">🗣️</span> Negotiation <span class="nav-num">3</span></a>
+  <a class="nav-item" href="#when-to-breach" onclick="setActive(this)"><span class="nav-icon">⚡</span> When to Breach <span class="nav-num">2</span></a>
+  <a class="nav-item" href="#the-breach" onclick="setActive(this)"><span class="nav-icon">🚪</span> The Breach <span class="nav-num">2</span></a>
+  <a class="nav-item" href="#after" onclick="setActive(this)"><span class="nav-icon">✅</span> After the Breach <span class="nav-num">2</span></a>
+</nav>
+
+<!-- ══ MAIN ═════════════════════════════════════════════════════════════════ -->
+<main id="main">
+  <div class="topbar">
+    <div class="topbar-title">Robbery Response & Breach Procedure</div>
+    <div class="version-badge">ORP-POL-004 · v1.1</div>
+    <div class="status-pill">IN EFFECT</div>
+  </div>
+
+  <!-- ── SECTION 1: OVERVIEW ────────────────────────────────────────────── -->
+  <section class="sop-section" id="overview">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <span class="section-icon">📋</span>
+      <h2 class="section-title">Overview</h2>
+    </div>
+
+    <div class="philosophy-banner">
+      <div class="ph-title">Orbit is a Content City</div>
+      <p>Every robbery is an opportunity for good roleplay — for both sides. Officers should arrive on scene with one goal: <strong style="color:var(--text)">make this scene as engaging and meaningful as possible</strong>. That means talking, negotiating, and giving the situation room to breathe. A breach should never be the plan walking in. It is the last resort when everything else has genuinely failed.</p>
+    </div>
+
+    <div class="card open" data-section="Overview" data-title="What This SOP Covers">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">1.1</span><span class="card-title">What This SOP Covers</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>This procedure applies to any active robbery in the City of Orbit where suspects are refusing to comply, have taken hostages, or are barricaded inside a location. It sets out how officers should:</p>
+        <ul class="sop-ul">
+          <li>Establish and hold a safe perimeter while allowing the scene to develop</li>
+          <li>Open and sustain meaningful negotiation with suspects</li>
+          <li>Recognise the narrow set of circumstances that justify a breach</li>
+          <li>Execute a safe and coordinated entry if it comes to that</li>
+          <li>Manage the scene and make arrests afterwards</li>
+        </ul>
+        <div class="notice gold">
+          <span class="notice-icon">⭐</span>
+          <div>The longer a scene runs with good communication on both sides, the better the experience for everyone involved. <strong>Patience is not weakness — it is good policing.</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 2: ATTENDING THE SCENE ────────────────────────────────── -->
+  <section class="sop-section" id="attending">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <span class="section-icon">🚔</span>
+      <h2 class="section-title">Attending the Scene</h2>
+    </div>
+
+    <div class="card open" data-section="Attending the Scene" data-title="Who is in Charge?">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">2.1</span><span class="card-title">Who is in Charge?</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>The <span class="hl">first officer to arrive on scene takes charge</span> as Scene Commander. There is no rank requirement — if you got there first, that role is yours unless a more senior officer arrives and decides to take over.</p>
+        <p>As Scene Commander, you are responsible for:</p>
+        <ul class="sop-ul">
+          <li>Assessing the situation and broadcasting what you know over radio</li>
+          <li>Directing incoming units to positions and assigning roles</li>
+          <li>Leading or delegating negotiation</li>
+          <li>Making the final call if a breach becomes necessary</li>
+        </ul>
+        <div class="notice info">
+          <span class="notice-icon">ℹ️</span>
+          <div>If a more senior officer arrives and takes over, hand over clearly: what you know, what has been said, what stage you are at, and what the suspects' demeanour has been.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Attending the Scene" data-title="Setting Up a Perimeter">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">2.2</span><span class="card-title">Setting Up a Perimeter</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Before anything else, get units around the location. <span class="hl">Nobody gets in or out without your say-so.</span></p>
+        <ul class="sop-ul">
+          <li>Cover all visible exits — doors, windows, car parks, back alleys</li>
+          <li>Keep a safe distance. Do not crowd the building or line up in front of windows</li>
+          <li>Move civilians back and keep them out of the scene</li>
+          <li>If a breach is looking likely, stage an ambulance nearby before it happens — not after</li>
+        </ul>
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>Do not park police vehicles directly in front of the building. You are giving the suspects a clear view of your positions.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Attending the Scene" data-title="Making Contact">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">2.3</span><span class="card-title">Making Contact</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Once the perimeter is set, the Scene Commander attempts to make contact with the suspects — usually by calling their in-game phone or approaching a window at a safe distance.</p>
+        <p>When you first make contact, keep it simple:</p>
+        <ul class="sop-ul">
+          <li>Identify yourself as police, presenting your Warrant Card</li>
+          <li>Ask how many people are inside and whether anyone is hurt</li>
+          <li>Make clear you are there to resolve this without anyone getting harmed</li>
+        </ul>
+        <div class="notice info">
+          <span class="notice-icon">ℹ️</span>
+          <div>First contact sets the tone for the whole scene. <strong>Listen more than you talk.</strong> A suspect who feels heard is far more likely to engage with negotiation.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 3: NEGOTIATION ─────────────────────────────────────────── -->
+  <section class="sop-section" id="negotiation">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <span class="section-icon">🗣️</span>
+      <h2 class="section-title">Negotiation</h2>
+    </div>
+
+    <div class="notice gold">
+      <span class="notice-icon">⭐</span>
+      <div>Negotiation is not a holding pattern while you wait to breach — <strong>it is the job</strong>. Every robbery should be treated as resolvable through conversation unless the suspects make that genuinely impossible. Give it time. Give it effort. Good negotiation creates good scenes for everyone.</div>
+    </div>
+
+    <div class="card open" data-section="Negotiation" data-title="What You Can Offer">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">3.1</span><span class="card-title">What You Can Offer</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>There are things you can legitimately offer suspects to encourage a peaceful resolution:</p>
+        <table class="sop-table">
+          <thead><tr><th>Offer</th><th>What to Say</th></tr></thead>
+          <tbody>
+            <tr><td><span class="hl-g">Safe surrender</span></td><td>Come out now, hands up, no sudden movements — you will not be harmed</td></tr>
+            <tr><td><span class="hl-g">Cooperation noted</span></td><td>A peaceful resolution will be communicated. CID will be made aware they assisted</td></tr>
+            <tr><td><span class="hl-g">Medical access</span></td><td>If anyone inside is hurt, medical support can be staged at the door immediately</td></tr>
+            <tr><td><span class="hl-g">Time</span></td><td>You are not going anywhere and neither are we. A calm resolution is still on the table</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" data-section="Negotiation" data-title="What You Cannot Agree To">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">3.2</span><span class="card-title">What You Cannot Agree To</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Some demands are non-starters regardless of pressure:</p>
+        <table class="sop-table">
+          <thead><tr><th>Demand</th><th>Why it's refused</th></tr></thead>
+          <tbody>
+            <tr><td><span class="hl-r">A getaway vehicle</span></td><td>You are not facilitating their escape</td></tr>
+            <tr><td><span class="hl-r">Safe passage out of the city</span></td><td>Not within your power and creates a dangerous pursuit situation</td></tr>
+            <tr><td><span class="hl-r">Release of suspects in custody</span></td><td>Not a negotiating chip you hold</td></tr>
+            <tr><td><span class="hl-r">Weapons or ammunition</span></td><td>Under no circumstances</td></tr>
+            <tr><td><span class="hl-r">Media access or live coverage</span></td><td>Escalates the situation and endangers bystanders</td></tr>
+          </tbody>
+        </table>
+        <div class="notice info">
+          <span class="notice-icon">ℹ️</span>
+          <div>If a suspect makes an impossible demand, calmly tell them that is not something you can make happen and redirect the conversation toward what you can offer. Do not make the negotiation confrontational.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="Negotiation" data-title="The Three Strikes Rule">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">3.3</span><span class="card-title">The Three Strikes Rule</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>If suspects begin actively threatening or harming hostages during negotiation, they are given up to <span class="hl">three formal warnings</span> before a breach is considered. These are issued by the Scene Commander — clearly, calmly, and over radio so all units are aware.</p>
+        <div class="strike-grid">
+          <div class="strike-card s1">
+            <div class="strike-num">1</div>
+            <div class="strike-label">First Warning</div>
+            <div class="strike-desc">Suspect makes an active threat toward a hostage or carries out a hostile act. Scene Commander issues a clear verbal warning and logs it over radio.</div>
+          </div>
+          <div class="strike-card s2">
+            <div class="strike-num">2</div>
+            <div class="strike-label">Second Warning</div>
+            <div class="strike-desc">Suspect repeats threatening behaviour or escalates further. Second warning issued. Entry team is told to prepare — breach is now a real possibility.</div>
+          </div>
+          <div class="strike-card s3">
+            <div class="strike-num">3</div>
+            <div class="strike-label">Breach Authorised</div>
+            <div class="strike-desc">Further active hostile action toward a hostage. Three strikes reached. Breach may now be authorised by the Scene Commander. See Section 4.</div>
+          </div>
+        </div>
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>Strikes are only counted for <strong>active threatening behaviour directed at a hostage</strong>. Suspects being uncooperative, rude, or making impossible demands during negotiation does <strong>not</strong> count as a strike.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 4: WHEN TO BREACH ─────────────────────────────────────── -->
+  <section class="sop-section" id="when-to-breach">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <span class="section-icon">⚡</span>
+      <h2 class="section-title">When to Breach</h2>
+    </div>
+
+    <div class="notice danger">
+      <span class="notice-icon">🚫</span>
+      <div><span class="hl-crit">No scene should be attended with the intention of breaching.</span> A breach is the end of the scene — it cuts off roleplay for everyone involved. It should only happen when continuing to negotiate is no longer a realistic option.</div>
+    </div>
+
+    <div class="card open" data-section="When to Breach" data-title="Authorised Breach Conditions">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">4.1</span><span class="card-title">Authorised Breach Conditions</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>A breach may only be authorised when one of the following conditions is clearly and unambiguously met. The <span class="hl">Scene Commander makes the final call.</span></p>
+        <div class="condition-list">
+
+          <div class="condition-item red">
+            <div class="condition-tag">Immediate</div>
+            <div class="condition-text"><strong>Hostage Actively Harmed</strong>A hostage has been physically injured or killed during the incident. A breach may be authorised immediately, regardless of strike count.</div>
+          </div>
+
+          <div class="condition-item red">
+            <div class="condition-tag">Strike 3</div>
+            <div class="condition-text"><strong>Three Strikes Reached</strong>Suspects have received all three formal warnings and have continued to make active threats toward or harm a hostage. Breach is authorised.</div>
+          </div>
+
+          <div class="condition-item amber">
+            <div class="condition-tag">No Hostage</div>
+            <div class="condition-text"><strong>No Hostage Present</strong>If there are no hostages inside, officers may move in once a perimeter is established. Negotiation is still encouraged where practical, but is not required.</div>
+          </div>
+
+          <div class="condition-item amber">
+            <div class="condition-tag">Fake Hostage</div>
+            <div class="condition-text"><strong>Confirmed Fake Hostage</strong>If it becomes clear — without any doubt — that the person being used as a hostage is complicit and not a genuine hostage, a breach may be authorised. This must be confirmed, not assumed. Do not act on a hunch.</div>
+          </div>
+
+          <div class="condition-item amber">
+            <div class="condition-tag">No Return</div>
+            <div class="condition-text"><strong>Point of No Return</strong>In rare cases, a situation may escalate to the point where negotiation has completely broken down and continuing to wait creates a more dangerous outcome than acting. This is a serious judgement call and should not be used lightly. If there is any doubt, keep negotiating.</div>
+          </div>
+
+        </div>
+        <div class="notice info">
+          <span class="notice-icon">ℹ️</span>
+          <div>When in doubt, wait. A breach that goes wrong creates a worse scene for everyone — police and suspects alike. The bar for breach is deliberately high.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-section="When to Breach" data-title="How to Call a Breach">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">4.2</span><span class="card-title">How to Call a Breach</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>When the Scene Commander decides a breach is happening, the following must happen <strong>before anyone moves</strong>:</p>
+        <div class="seq-list">
+          <div class="seq-step"><div class="seq-num">1</div><div class="seq-content"><strong>Announce over radio</strong>State which condition has been met and confirm you are authorising a breach.</div></div>
+          <div class="seq-step"><div class="seq-num">2</div><div class="seq-content"><strong>Give units a 10-second standby</strong>Perimeter units need to be set and ready to cut off all exits the moment entry begins.</div></div>
+          <div class="seq-step"><div class="seq-num">3</div><div class="seq-content"><strong>Assign roles</strong>At minimum: a Breacher, a Cover Officer, and units holding every exit. No one moves without a role.</div></div>
+          <div class="seq-step"><div class="seq-num">4</div><div class="seq-content"><strong>Confirm everyone is in position</strong>Do not give the entry command until all units confirm they are set and ready.</div></div>
+        </div>
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>Do not rush a breach. A fast but uncoordinated entry is <strong>more dangerous</strong> than a slow coordinated one.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 5: THE BREACH ──────────────────────────────────────────── -->
+  <section class="sop-section" id="the-breach">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <span class="section-icon">🚪</span>
+      <h2 class="section-title">The Breach</h2>
+    </div>
+
+    <div class="card open" data-section="The Breach" data-title="Entry Team Roles">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">5.1</span><span class="card-title">Entry Team Roles</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Before entry, every officer needs to know exactly what they are doing. <span class="hl">Three officers who know their roles are more effective than six who are confused.</span></p>
+        <table class="sop-table">
+          <thead><tr><th>Role</th><th>What They Do</th></tr></thead>
+          <tbody>
+            <tr><td><span class="hl">Scene Commander</span></td><td>Stays at the threshold or just outside. Calls the entry, monitors radio, coordinates perimeter units. Does not enter unless absolutely necessary.</td></tr>
+            <tr><td><span class="hl">Breacher</span></td><td>Goes in first. Forces the door if needed and announces police presence the moment they cross the threshold.</td></tr>
+            <tr><td><span class="hl">Cover Officer</span></td><td>Enters directly behind the Breacher. Covers the room ahead while the Breacher clears the entry point.</td></tr>
+            <tr><td><span class="hl">Perimeter Units</span></td><td>Hold all exits outside. Do not enter unless called in by the Scene Commander. Stop anyone trying to run.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" data-section="The Breach" data-title="The Breach Sequence">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">5.2</span><span class="card-title">The Breach Sequence</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Follow these steps in order. Do not skip ahead.</p>
+        <div class="seq-list">
+          <div class="seq-step"><div class="seq-num">1</div><div class="seq-content"><strong>Go / No-Go</strong>Scene Commander gives the final go over radio. Everyone confirms they are ready.</div></div>
+          <div class="seq-step"><div class="seq-num">2</div><div class="seq-content"><strong>Move into position</strong>Breacher approaches the entry point silently. No noise, no rushing until the signal.</div></div>
+          <div class="seq-step"><div class="seq-num">3</div><div class="seq-content"><strong>Enter</strong>On the Scene Commander's word, the Breacher forces or opens the door and goes in immediately.</div></div>
+          <div class="seq-step"><div class="seq-num">4</div><div class="seq-content"><strong>Announce</strong>The moment you are through the door: <em style="color:var(--gold)">"POLICE! GET ON THE GROUND! HANDS WHERE I CAN SEE THEM!"</em></div></div>
+          <div class="seq-step"><div class="seq-num">5</div><div class="seq-content"><strong>Cover Officer follows</strong>Enters directly behind the Breacher and takes the opposite side of the room.</div></div>
+          <div class="seq-step"><div class="seq-num">6</div><div class="seq-content"><strong>Move through systematically</strong>Clear each room before moving on. Do not leave unchecked rooms behind you.</div></div>
+          <div class="seq-step"><div class="seq-num">7</div><div class="seq-content"><strong>Engage suspects</strong>Give one clear command to comply. If they comply — cuff and pass to an arrest officer. If not — use appropriate force.</div></div>
+          <div class="seq-step"><div class="seq-num">8</div><div class="seq-content"><strong>All clear</strong>Once all suspects are secured and all rooms checked, call <em style="color:var(--green)">"ALL CLEAR"</em> over radio. Scene Commander stands down the perimeter.</div></div>
+        </div>
+        <div class="notice warn">
+          <span class="notice-icon">⚠️</span>
+          <div>If you encounter a hostage during entry, get them <strong>out of the immediate threat area first</strong>. Do not stop to speak to them — move them outside and hand them to a perimeter officer.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SECTION 6: AFTER THE BREACH ───────────────────────────────────── -->
+  <section class="sop-section" id="after">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <span class="section-icon">✅</span>
+      <h2 class="section-title">After the Breach</h2>
+    </div>
+
+    <div class="card open" data-section="After the Breach" data-title="Securing the Scene">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">6.1</span><span class="card-title">Securing the Scene</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>Once the location is clear, lock it down before anything else happens:</p>
+        <ul class="sop-ul">
+          <li>All suspects should be outside the building and cuffed before any conversation happens</li>
+          <li>Any injured persons — hostage or suspect — get medical attention immediately</li>
+          <li>Keep the scene intact. Do not move evidence, weapons, or vehicles until noted</li>
+          <li>Witnesses and freed hostages should be kept separate from suspects and kept calm</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" data-section="After the Breach" data-title="Arrests">
+      <div class="card-header" onclick="toggleCard(this)"><span class="card-id">6.2</span><span class="card-title">Arrests</span><span class="card-chevron">▼</span></div>
+      <div class="card-body">
+        <p>When arresting suspects following a breach:</p>
+        <ul class="sop-ul">
+          <li>Each suspect is arrested individually — state what they are being arrested for, clearly</li>
+          <li>Read their rights: <em style="color:var(--text-dim)">"You are under arrest on suspicion of [offence]. You do not have to say anything, but it may harm your defence if you do not mention when questioned something you later rely on in court. Anything you do say may be given in evidence."</em></li>
+          <li>Transport suspects to custody in separate units where possible — keep them apart</li>
+          <li>The Scene Commander should put a brief summary over radio for dispatch logs</li>
+        </ul>
+        <div class="notice success">
+          <span class="notice-icon">✅</span>
+          <div>The job is not done until all suspects are in custody, the scene is handed over, and all hostages are accounted for and safe.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="no-results" id="no-results">No results found for "<span id="search-term"></span>"</div>
+</main>
+
+<script>
+function toggleCard(header) {
+  const card = header.closest('.card');
+  card.classList.toggle('open', !card.classList.contains('open'));
+}
+function setActive(el) {
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+}
+const searchInput = document.getElementById('search');
+const noResults   = document.getElementById('no-results');
+const searchTerm  = document.getElementById('search-term');
+searchInput.addEventListener('input', function() {
+  const q = this.value.trim().toLowerCase();
+  if (!q) {
+    document.querySelectorAll('.card').forEach(c => c.style.display = '');
+    document.querySelectorAll('.sop-section').forEach(s => s.style.display = '');
+    noResults.style.display = 'none';
+    return;
+  }
+  let found = 0;
+  document.querySelectorAll('.sop-section').forEach(section => {
+    let hit = false;
+    section.querySelectorAll('.card').forEach(card => {
+      const match = (card.dataset.title||'').toLowerCase().includes(q)
+                 || (card.dataset.section||'').toLowerCase().includes(q)
+                 || ((card.querySelector('.card-body')||{}).textContent||'').toLowerCase().includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) { hit = true; found++; }
+    });
+    section.style.display = hit ? '' : 'none';
+  });
+  noResults.style.display = found ? 'none' : 'block';
+  searchTerm.textContent = this.value.trim();
+});
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id;
+      document.querySelectorAll('.nav-item').forEach(n => {
+        n.classList.toggle('active', n.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { threshold: 0.25, rootMargin: '-80px 0px -60% 0px' });
+document.querySelectorAll('.sop-section').forEach(s => obs.observe(s));
+</script>
+</body>
+</html>
